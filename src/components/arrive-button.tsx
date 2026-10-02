@@ -16,7 +16,11 @@ export function ArriveButton({ id, arrived }: { id: string; arrived: boolean }) 
     <button
       type="button"
       disabled={pending}
-      onClick={() => startTransition(async () => markTableArrived(id))}
+      onClick={() =>
+        startTransition(() => {
+          void markTableArrived(id);
+        })
+      }
       className="rounded-full border border-line px-3 py-1.5 text-sm hover:border-cream"
     >
       {t("markArrived")}

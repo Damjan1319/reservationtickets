@@ -36,11 +36,20 @@ export function Scanner({ locale }: { locale: string }) {
   const lastCode = useRef("");
   const lastAt = useRef(0);
 
-  function applyResult(result: Awaited<ReturnType<typeof lookupTicket>> & { warning?: "allIn" }) {
-    if ("reservation" in result && result.reservation) {
+  function applyResult(result: {
+    error?: string;
+    reservation?: ScannedTicket;
+    warning?: "allIn";
+    ok?: boolean;
+  }) {
+    if (result.reservation) {
       setError(null);
       setTicket(result.reservation);
       setNotice(result.warning === "allIn" || result.reservation.allIn ? "allIn" : null);
+      return;
+    }
+    if (result.ok) {
+      setTicket((current) => (current ? { ...current, paymentStatus: "PAID" } : current));
       return;
     }
     setTicket(null);
