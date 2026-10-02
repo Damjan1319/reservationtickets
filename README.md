@@ -5,8 +5,9 @@ Rezervacije i QR karte za klubove, kafiće i restorane. Svaki lokal dobija svoj 
 ## Pokretanje
 
 ```bash
+docker compose up -d
 npm install
-npx prisma db push
+npx prisma migrate deploy
 npm run db:seed
 npm run dev
 ```
@@ -14,6 +15,8 @@ npm run dev
 Otvori [http://localhost:3000](http://localhost:3000).
 
 Seed pravi samo superadmin nalog: `damjan@ulaznice.rs`.
+
+Lokalna baza je Postgres (`docker compose`). Produkcija na Vercel koristi Neon.
 
 ## Plaćanje
 
