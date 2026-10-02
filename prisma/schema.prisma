@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  locale       String   @default("sr")
+  isAdmin      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  ownedVenues  Venue[]
+  memberships  StaffMembership[]
+  reservations Reservation[]
+}
+
+model Venue {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  type        String
+  city        String
+  address              String
+  description          String
+  phone                String   @default("")
+  pib                  String   @default("")
+  proofUrl             String   @default("")
+  verificationStatus   String   @default("PENDING")
+  coverHue             Int      @default(32)
+  ownerId              String
+  owner       User     @relation(fields: [ownerId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members      StaffMembership[]
+  events       Event[]
+  reservations Reservation[]
+}
+
+model StaffMembership {
+  id        String   @id @default(cuid())
+  userId    String
+  venueId   String
+  role      String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  venue     Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, venueId])
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  venueId     String
+  venue       Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  startsAt    DateTime
+  capacity    Int
+  price       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  reservations Reservation[]
+}
+
+model Reservation {
+  id            String    @id @default(cuid())
+  kind          String    @default("EVENT")
+  venueId       String
+  venue         Venue     @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  eventId       String?
+  event         Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guests        Int
+  mealType      String?
+  visitAt       DateTime
+  paymentMethod String
+  paymentStatus String
+  qrToken         String?   @unique
+  checkedInCount  Int       @default(0)
+  checkedInAt     DateTime?
+  createdAt       DateTime  @default(now())
+  tickets         Ticket[]
+}
+
+model Ticket {
+  id            String    @id @default(cuid())
+  reservationId String
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  qrToken       String    @unique
+  seat          Int
+  checkedInAt   DateTime?
+  createdAt     DateTime  @default(now())
+}

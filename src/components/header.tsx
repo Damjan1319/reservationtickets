@@ -1,0 +1,60 @@
+import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { auth, signOut } from "@/auth";
+import { prisma } from "@/lib/prisma";
+import { getStaffContext } from "@/lib/staff";
+import { SiteNav } from "@/components/site-nav";
+import { getTheme } from "@/lib/theme";
+
+export async function Header() {
+  const t = await getTranslations("nav");
+  const theme = await getTheme();
+  const session = await auth();
+  const staff = session ? await getStaffContext() : null;
+  const admin = session?.user?.id
+    ? await prisma.user.findUnique({ where: { id: session.user.id }, select: { isAdmin: true } })
+    : null;
+
+  const links = session
+    ? [
+        { href: "/#venues", label: t("venues") },
+        { href: "/tickets", label: t("tickets") },
+        ...(staff
+          ? [
+              {
+                href: staff.role === "STAFF" ? "/dashboard/scan" : "/dashboard",
+                label: staff.role === "STAFF" ? t("scan") : t("dashboard"),
+              },
+            ]
+          : []),
+        ...(admin?.isAdmin ? [{ href: "/admin", label: t("admin") }] : []),
+      ]
+    : [
+        { href: "/#venues", label: t("venues") },
+        { href: "/login", label: t("login"), kind: "ghost" as const },
+        { href: "/register-venue", label: t("registerVenue"), kind: "primary" as const },
+      ];
+
+  return (
+    <header className="site-header sticky top-0 z-40 bg-bg/80 backdrop-blur-md">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+        <Link href="/" className="text-[1.15rem] font-semibold tracking-tight text-cream">
+          Ulaznice
+        </Link>
+        <SiteNav
+          links={links}
+          theme={theme}
+          logoutLabel={session ? t("logout") : undefined}
+          logoutAction={
+            session
+              ? async () => {
+                  "use server";
+                  await signOut({ redirectTo: "/" });
+                }
+              : undefined
+          }
+        />
+      </div>
+    </header>
+  );
+}

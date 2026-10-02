@@ -1,0 +1,196 @@
+@import "tailwindcss";
+
+:root,
+html.dark {
+  --bg: #353532;
+  --surface: #3f3f3c;
+  --surface-2: #4a4a46;
+  --line: #5c5c57;
+  --cream: #ecebe6;
+  --muted: #b4b3ac;
+  --gold: #ecebe6;
+  --gold-soft: #f6f5f1;
+  --on-gold: #2f2f2c;
+  --danger: #c47a76;
+  --success: #7a9484;
+  --cal-table: #3f6e66;
+  --cal-event: #8a5a42;
+  --cal-both: #4a5d78;
+  --cal-ink: #f3f1ec;
+  --paper: #d9d7d1;
+  --paper-2: #cccac3;
+  --paper-text: #242422;
+  --paper-muted: #5c5c57;
+  --paper-line: #c4c2bb;
+  color-scheme: dark;
+}
+
+html.light {
+  --bg: #ecebe7;
+  --surface: #f6f5f2;
+  --surface-2: #e4e3de;
+  --line: #d4d2cc;
+  --cream: #1f1f1d;
+  --muted: #6a6a65;
+  --gold: #1f1f1d;
+  --gold-soft: #3a3a37;
+  --on-gold: #f6f5f2;
+  --danger: #b42318;
+  --success: #3f6b56;
+  --cal-table: #cfe6df;
+  --cal-event: #f1d9c8;
+  --cal-both: #d5deec;
+  --cal-ink: #1c1c1c;
+  --paper: #f7f6f3;
+  --paper-2: #ecebe6;
+  --paper-text: #1f1f1d;
+  --paper-muted: #6a6a65;
+  --paper-line: #d8d6d0;
+  color-scheme: light;
+}
+
+@theme inline {
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-cream: var(--cream);
+  --color-muted: var(--muted);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-on-gold: var(--on-gold);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-cal-table: var(--cal-table);
+  --color-cal-event: var(--cal-event);
+  --color-cal-both: var(--cal-both);
+  --color-cal-ink: var(--cal-ink);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-paper-text: var(--paper-text);
+  --color-paper-muted: var(--paper-muted);
+  --color-paper-line: var(--paper-line);
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--cream);
+}
+
+body {
+  font-family: var(--font-manrope), sans-serif;
+  min-height: 100%;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--gold) 28%, transparent);
+  color: var(--cream);
+}
+
+input,
+select,
+textarea {
+  color-scheme: normal;
+}
+
+.btn {
+  letter-spacing: -0.01em;
+  border-radius: 0.625rem;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.62rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.15;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, opacity 0.15s;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+}
+
+.btn-primary {
+  background: var(--cream);
+  color: var(--bg);
+}
+
+.btn-primary:hover {
+  background: var(--gold-soft);
+}
+
+.btn-ghost {
+  border: 1px solid color-mix(in srgb, currentColor 42%, transparent);
+  background: color-mix(in srgb, currentColor 6%, transparent);
+  color: inherit;
+}
+
+.btn-ghost:hover {
+  border-color: color-mix(in srgb, currentColor 62%, transparent);
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.bg-paper .btn-primary,
+.text-paper-text .btn-primary {
+  background: var(--paper-text);
+  color: var(--paper);
+}
+
+.bg-paper .btn-primary:hover,
+.text-paper-text .btn-primary:hover {
+  background: color-mix(in srgb, var(--paper-text) 86%, white);
+}
+
+.bg-paper .btn-ghost:hover,
+.text-paper-text .btn-ghost:hover {
+  background: color-mix(in srgb, var(--paper-text) 8%, var(--paper));
+  border-color: color-mix(in srgb, var(--paper-text) 28%, transparent);
+}
+
+.bg-paper input,
+.bg-paper select,
+.bg-paper textarea,
+.text-paper-text input,
+.text-paper-text select,
+.text-paper-text textarea {
+  border-color: var(--paper-line);
+  background: var(--paper-2);
+  color: var(--paper-text);
+}
+
+.band-paper {
+  background: #4c4c48;
+  color: var(--cream);
+}
+
+html.light .band-paper {
+  background: var(--paper);
+  color: var(--paper-text);
+}
+
+.site-header {
+  position: sticky;
+}
+
+.site-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, var(--cream) 12%, transparent) 18%,
+    color-mix(in srgb, var(--cream) 12%, transparent) 82%,
+    transparent
+  );
+}
