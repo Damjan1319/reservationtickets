@@ -64,15 +64,16 @@ export default async function DashboardPage({
     <div className="space-y-8">
       <PageHeader eyebrow={t("overview")} title={context.venue.name} description={t("statsIntro")} />
 
-      <div className="grid gap-3 sm:grid-cols-3">
-        {actions.map((action) => (
+      <div className="grid gap-4 sm:grid-cols-3">
+        {actions.map((action, index) => (
           <Link
             key={action.href}
             href={action.href}
-            className="overflow-hidden rounded-2xl border border-paper-line bg-paper p-5 text-paper-text transition hover:border-paper-text/30"
+            className="rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6"
           >
-            <p className="text-lg font-semibold">{action.title}</p>
-            <p className="mt-1 text-sm text-paper-muted">{action.hint}</p>
+            <p className="text-sm text-paper-muted">{String(index + 1).padStart(2, "0")}</p>
+            <h2 className="mt-2 text-xl font-semibold tracking-tight">{action.title}</h2>
+            <p className="mt-3 text-sm leading-relaxed text-paper-muted">{action.hint}</p>
           </Link>
         ))}
       </div>
@@ -93,9 +94,9 @@ export default async function DashboardPage({
           legendFree={t("calFree")}
         />
 
-        <section className="rounded-2xl border border-paper-line bg-paper p-5 text-paper-text">
+        <section className="rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-lg font-semibold">{t("tonight")}</h2>
+            <h2 className="text-xl font-semibold tracking-tight">{t("tonight")}</h2>
             <Link href="/dashboard/events" className="text-sm text-paper-muted hover:text-paper-text">
               {t("parties")}
             </Link>

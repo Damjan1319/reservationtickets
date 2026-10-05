@@ -31,8 +31,8 @@ export async function ReservationList({ items }: { items: Item[] }) {
             ? `${tt("table")} · ${tb(`meals.${item.mealType}`)}`
             : (item.event?.title ?? "—");
         return (
-          <article key={item.id} className="rounded-2xl border border-paper-line bg-paper p-4 text-paper-text">
-            <p className="text-base font-semibold">{title}</p>
+          <article key={item.id} className="rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
+            <p className="text-xl font-semibold tracking-tight">{title}</p>
             <p className="text-sm text-paper-muted">{formatDateTime(item.visitAt, locale)}</p>
             <p className="mt-2 text-sm">
               {item.user.name} · {item.user.email}

@@ -23,7 +23,7 @@ export default async function StaffPage() {
         {members.map((member) => (
           <div
             key={member.id}
-            className="flex items-center justify-between rounded-2xl border border-paper-line bg-paper px-5 py-4 text-paper-text"
+            className="flex items-center justify-between rounded-2xl border border-paper-line bg-paper px-5 py-5 text-paper-text sm:px-6"
           >
             <div>
               <p className="text-paper-text">{member.user.name}</p>

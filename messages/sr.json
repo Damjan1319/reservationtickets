@@ -48,7 +48,7 @@
   },
   "auth": {
     "loginTitle": "Prijava",
-    "loginSubtitle": "Uđi emailom i nastavi rezervaciju ili rad u lokalu.",
+    "loginSubtitle": "Uđi emailom ili Google nalogom i nastavi rezervaciju ili rad u lokalu.",
     "registerTitle": "Napravi nalog",
     "registerSubtitle": "Gosti i osoblje koriste isti email nalog.",
     "email": "Email",
@@ -56,10 +56,21 @@
     "name": "Ime",
     "submitLogin": "Prijavi se",
     "submitRegister": "Registruj se",
+    "working": "Sačekaj…",
+    "google": "Nastavi sa Google",
+    "orEmail": "ili emailom",
     "noAccount": "Nemaš nalog?",
     "hasAccount": "Već imaš nalog?",
     "invalid": "Pogrešan email ili lozinka.",
-    "exists": "Nalog sa ovim emailom već postoji."
+    "wrongPassword": "Lozinka nije tačna.",
+    "noAccountExists": "Nalog sa ovim emailom ne postoji. Registruj se.",
+    "useGoogle": "Ovaj nalog je napravljen preko Google-a. Prijavi se dugmetom Google.",
+    "exists": "Nalog sa ovim emailom već postoji. Prijavi se.",
+    "required": "Popuni sva polja.",
+    "failed": "Registracija nije uspela. Pokušaj ponovo.",
+    "createdNowLogin": "Nalog je napravljen. Sada se prijavi.",
+    "welcome": "Nalog je napravljen. Preusmeravam…",
+    "googleFailed": "Google prijava nije uspela. Pokušaj ponovo ili koristi email."
   },
   "venue": {
     "registerTitle": "Registruj svoj lokal",

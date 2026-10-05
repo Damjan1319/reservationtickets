@@ -147,7 +147,7 @@ export function Scanner({ locale }: { locale: string }) {
         </form>
       </div>
 
-      <div className="rounded-2xl bg-paper-2 p-5">
+      <div className="rounded-2xl border border-paper-line bg-paper p-5 sm:p-6">
         {error ? <p className="text-danger">{t(error)}</p> : null}
         {ticket ? (
           <div className="space-y-4">

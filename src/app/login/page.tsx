@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 import { LoginForm } from "@/components/login-form";
+import { googleAuthEnabled } from "@/lib/auth-callback";
 
 export default async function LoginPage() {
   const t = await getTranslations("auth");
@@ -12,7 +13,7 @@ export default async function LoginPage() {
         <p className="mt-2 text-sm text-paper-muted">{t("loginSubtitle")}</p>
         <div className="mt-8">
           <Suspense>
-            <LoginForm />
+            <LoginForm googleEnabled={googleAuthEnabled()} />
           </Suspense>
         </div>
       </div>

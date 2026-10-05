@@ -11,7 +11,7 @@ datasource db {
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
-  passwordHash String
+  passwordHash String?
   name         String
   locale       String   @default("sr")
   isAdmin      Boolean  @default(false)

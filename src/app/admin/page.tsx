@@ -71,7 +71,7 @@ export default async function AdminPage({
         />
       </div>
 
-      <nav className="mt-8 flex flex-wrap gap-2 rounded-2xl border border-paper-line bg-paper p-2 text-paper-text">
+      <nav className="mt-8 flex flex-wrap gap-2">
         {(
           [
             ["stats", t("statsTab")],
@@ -84,8 +84,8 @@ export default async function AdminPage({
             key={key}
             href={viewHref(key)}
             className={cn(
-              "rounded-xl px-4 py-2 text-sm font-semibold",
-              view === key ? "bg-paper-text text-paper" : "text-paper-muted hover:bg-paper-2 hover:text-paper-text",
+              "rounded-full px-3.5 py-1.5 text-sm font-medium transition",
+              view === key ? "bg-paper text-paper-text" : "border border-line text-muted hover:text-cream",
             )}
           >
             {label}
@@ -189,7 +189,7 @@ function VenueAdminCard({
               <p className="text-xs font-medium text-paper-muted">
                 {tv(`types.${venue.type}`)} · {venue.city}
               </p>
-              <h2 className="mt-1 text-xl font-semibold">{venue.name}</h2>
+              <h2 className="mt-1 text-xl font-semibold tracking-tight">{venue.name}</h2>
               <p className="mt-1 text-sm text-paper-muted">{venue.address}</p>
               <p className="mt-2 text-sm">
                 {tv("pib")}: {venue.pib} · {venue.phone}

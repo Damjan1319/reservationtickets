@@ -48,7 +48,7 @@
   },
   "auth": {
     "loginTitle": "Log in",
-    "loginSubtitle": "Sign in with email to book or run your venue.",
+    "loginSubtitle": "Sign in with email or Google to book or run your venue.",
     "registerTitle": "Create an account",
     "registerSubtitle": "Guests and staff use the same email account.",
     "email": "Email",
@@ -56,10 +56,21 @@
     "name": "Name",
     "submitLogin": "Log in",
     "submitRegister": "Sign up",
+    "working": "Please wait…",
+    "google": "Continue with Google",
+    "orEmail": "or use email",
     "noAccount": "No account?",
     "hasAccount": "Already have an account?",
     "invalid": "Wrong email or password.",
-    "exists": "An account with this email already exists."
+    "wrongPassword": "That password is not correct.",
+    "noAccountExists": "No account with this email. Sign up first.",
+    "useGoogle": "This account was created with Google. Use the Google button.",
+    "exists": "An account with this email already exists. Log in.",
+    "required": "Fill in every field.",
+    "failed": "Sign-up failed. Try again.",
+    "createdNowLogin": "Account created. Log in now.",
+    "welcome": "Account created. Redirecting…",
+    "googleFailed": "Google sign-in failed. Try again or use email."
   },
   "venue": {
     "registerTitle": "Register your venue",

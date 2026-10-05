@@ -18,7 +18,7 @@ export function DashboardNav({ links }: { links: { href: string; label: string }
             className={cn(
               "whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition",
               active
-                ? "bg-paper-text text-paper"
+                ? "bg-paper-2 text-paper-text"
                 : "text-paper-muted hover:bg-paper-2 hover:text-paper-text",
             )}
           >

@@ -34,9 +34,9 @@ export default async function DashboardEventsPage() {
           {events.map((event) => {
             const reserved = event.reservations.reduce((sum, item) => sum + item.guests, 0);
             return (
-              <div key={event.id} className="flex flex-col gap-3 rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:flex-row sm:items-center sm:justify-between">
+              <div key={event.id} className="flex flex-col gap-3 rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:flex-row sm:items-center sm:justify-between sm:p-6">
                 <div>
-                  <p className="text-base font-semibold">{event.title}</p>
+                  <p className="text-xl font-semibold tracking-tight">{event.title}</p>
                   <p className="text-sm text-paper-muted">{formatDateTime(event.startsAt, locale)}</p>
                   <p className="mt-1 text-xs text-paper-muted">
                     {reserved}/{event.capacity}

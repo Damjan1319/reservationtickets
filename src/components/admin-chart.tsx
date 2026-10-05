@@ -13,11 +13,11 @@ export function AdminChart({
     <div>
       <div className="flex flex-wrap gap-4 text-xs text-paper-muted">
         <span className="inline-flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-cal-event" />
+          <span className="h-2 w-2 rounded-full bg-paper-text" />
           {reservationsLabel}
         </span>
         <span className="inline-flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-cal-table" />
+          <span className="h-2 w-2 rounded-full bg-paper-text/30" />
           {arrivedLabel}
         </span>
       </div>
@@ -29,12 +29,12 @@ export function AdminChart({
           <div key={day.label} className="flex h-full flex-col items-center justify-end gap-1">
             <div className="flex w-full flex-1 items-end justify-center gap-0.5">
               <div
-                className="w-1/2 min-h-0.5 rounded-sm bg-cal-event"
+                className="w-1/2 min-h-0.5 rounded-sm bg-paper-text"
                 style={{ height: `${(day.reservations / max) * 100}%` }}
                 title={`${reservationsLabel}: ${day.reservations}`}
               />
               <div
-                className="w-1/2 min-h-0.5 rounded-sm bg-cal-table"
+                className="w-1/2 min-h-0.5 rounded-sm bg-paper-text/30"
                 style={{ height: `${(day.arrived / max) * 100}%` }}
                 title={`${arrivedLabel}: ${day.arrived}`}
               />

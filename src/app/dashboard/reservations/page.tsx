@@ -89,14 +89,14 @@ export default async function TableReservationsPage({
           name="q"
           defaultValue={q}
           placeholder={t("searchGuests")}
-          className="min-w-0 flex-1 rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+          className="min-w-0 flex-1 rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
         <button type="submit" className="btn btn-ghost !px-4">
           {t("searchGuests")}
         </button>
       </form>
 
-      <section className="mt-6 rounded-2xl border border-paper-line bg-paper p-5 text-paper-text">
+      <section className="mt-6 rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-base font-semibold">{t("emailsTitle")}</h2>
           <CopyEmails emails={emails} />
@@ -123,9 +123,9 @@ export default async function TableReservationsPage({
               <h2 className="text-base font-semibold">{hour}</h2>
               <div className="mt-3 space-y-3">
                 {rows.map((item) => (
-                  <article key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-paper-line border-l-[3px] border-l-cal-table bg-paper p-4 text-paper-text">
+                  <article key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
                     <div>
-                      <p className="text-base font-semibold">
+                      <p className="text-xl font-semibold tracking-tight">
                         {item.mealType ? tb(`meals.${item.mealType}`) : t("tables")} · {item.guests}
                       </p>
                       <p className="text-sm">

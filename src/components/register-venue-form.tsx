@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useMemo, useState, useTransition } from "react";
 import { registerVenue } from "@/app/actions/venue";
+import { AuthNotice } from "@/components/auth-notice";
 import { VENUE_TYPES } from "@/lib/constants";
 import { slugify } from "@/lib/utils";
 
@@ -164,7 +165,7 @@ export function RegisterVenueForm({ signedIn }: { signedIn: boolean }) {
           className="w-full rounded-xl border border-paper-line bg-paper-2 px-4 py-3 outline-none focus:border-paper-text"
         />
       </label>
-      {error ? <p className="text-sm text-danger">{error}</p> : null}
+      {error ? <AuthNotice tone="danger">{error}</AuthNotice> : null}
       <button
         type="submit"
         disabled={pending}

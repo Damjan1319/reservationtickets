@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { RegisterForm } from "@/components/register-form";
+import { googleAuthEnabled } from "@/lib/auth-callback";
 
 export default async function RegisterPage() {
   const t = await getTranslations("auth");
@@ -10,7 +11,7 @@ export default async function RegisterPage() {
         <h1 className="text-2xl font-semibold tracking-tight">{t("registerTitle")}</h1>
         <p className="mt-2 text-sm text-paper-muted">{t("registerSubtitle")}</p>
         <div className="mt-8">
-          <RegisterForm />
+          <RegisterForm googleEnabled={googleAuthEnabled()} />
         </div>
       </div>
     </div>
