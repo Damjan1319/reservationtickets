@@ -26,7 +26,8 @@ export const MEAL_HOURS: Record<MealType, number> = {
   DRINKS: 21,
 };
 
-export const PAYMENT_METHODS = ["ONLINE", "ONSITE"] as const;
+export const PAYMENT_METHODS = ["ONSITE"] as const;
+export const ONLINE_PAYMENTS_ENABLED = false;
 export const PAYMENT_STATUSES = ["PAID", "UNPAID"] as const;
 export const STAFF_ROLES = ["OWNER", "STAFF"] as const;
 

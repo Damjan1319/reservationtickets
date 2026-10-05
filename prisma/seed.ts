@@ -4,22 +4,19 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.ticket.deleteMany();
-  await prisma.reservation.deleteMany();
-  await prisma.event.deleteMany();
-  await prisma.staffMembership.deleteMany();
-  await prisma.venue.deleteMany();
-  await prisma.user.deleteMany();
+  const email = (process.env.ADMIN_EMAIL ?? "damjan@ulaznice.rs").toLowerCase().trim();
+  const password = process.env.ADMIN_PASSWORD ?? "";
 
-  const passwordHash = await bcrypt.hash("Damjan 00", 10);
+  if (password.length < 6) {
+    throw new Error("Set ADMIN_PASSWORD in .env before seeding.");
+  }
 
-  await prisma.user.create({
-    data: {
-      email: "damjan@ulaznice.rs",
-      name: "Damjan",
-      passwordHash,
-      isAdmin: true,
-    },
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  await prisma.user.upsert({
+    where: { email },
+    update: { name: "Damjan", passwordHash, isAdmin: true },
+    create: { email, name: "Damjan", passwordHash, isAdmin: true },
   });
 }
 

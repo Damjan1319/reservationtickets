@@ -14,13 +14,13 @@ npm run dev
 
 Otvori [http://localhost:3000](http://localhost:3000).
 
-Seed pravi samo superadmin nalog: `damjan@ulaznice.rs`.
+Seed pravi samo superadmin nalog. Email i lozinka idu iz `ADMIN_EMAIL` i `ADMIN_PASSWORD` u lokalnom `.env` — ne commituj ih.
 
 Lokalna baza je Postgres (`docker compose`). Produkcija na Vercel koristi Neon.
 
 ## Plaćanje
 
-Online je simulacija: status odmah postaje plaćeno. Na ulazu ostaje neplaćeno dok osoblje ne označi.
+Online plaćanje je trenutno ugašeno. Rezervacija ostaje neplaćena dok osoblje na ulazu ne označi.
 
 ## Jezik
 

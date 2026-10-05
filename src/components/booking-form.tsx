@@ -18,7 +18,6 @@ export function BookingForm({ eventId, price, remaining, locale }: BookingFormPr
   const te = useTranslations("event");
   const tc = useTranslations("common");
   const [guests, setGuests] = useState(1);
-  const [method, setMethod] = useState<"ONLINE" | "ONSITE">("ONSITE");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -34,7 +33,7 @@ export function BookingForm({ eventId, price, remaining, locale }: BookingFormPr
         const data = new FormData();
         data.set("eventId", eventId);
         data.set("guests", String(guests));
-        data.set("paymentMethod", method);
+        data.set("paymentMethod", "ONSITE");
         startTransition(async () => {
           const result = await createReservation(data);
           if (result?.error) setError(result.error);
@@ -46,7 +45,10 @@ export function BookingForm({ eventId, price, remaining, locale }: BookingFormPr
         <GuestCount value={guests} onChange={setGuests} max={remaining} />
       </div>
 
-      <PaymentFields method={method} onChange={setMethod} />
+      <div className="rounded-2xl border border-paper-line p-4">
+        <p className="font-medium">{t("onsite")}</p>
+        <p className="mt-1 text-sm text-paper-muted">{t("onsiteHint")}</p>
+      </div>
 
       <div className="flex items-center justify-between border-t border-paper-line pt-4">
         <span className="text-paper-muted">{t("total")}</span>
@@ -67,55 +69,9 @@ export function BookingForm({ eventId, price, remaining, locale }: BookingFormPr
         </p>
       ) : null}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="btn btn-primary btn-full"
-      >
-        {method === "ONLINE" ? t("confirmOnline") : te("book")}
+      <button type="submit" disabled={pending} className="btn btn-primary btn-full">
+        {te("book")}
       </button>
     </form>
-  );
-}
-
-export function PaymentFields({
-  method,
-  onChange,
-}: {
-  method: "ONLINE" | "ONSITE";
-  onChange: (next: "ONLINE" | "ONSITE") => void;
-}) {
-  const t = useTranslations("booking");
-
-  return (
-    <div className="space-y-3">
-      <p className="text-sm text-paper-muted">{t("payment")}</p>
-      <label className="flex cursor-pointer gap-3 rounded-2xl border border-paper-line p-4 has-[:checked]:border-paper-text">
-        <input
-          type="radio"
-          name="payment"
-          checked={method === "ONLINE"}
-          onChange={() => onChange("ONLINE")}
-          className="mt-1 accent-current"
-        />
-        <span>
-          <span className="block">{t("online")}</span>
-          <span className="text-sm text-paper-muted">{t("onlineHint")}</span>
-        </span>
-      </label>
-      <label className="flex cursor-pointer gap-3 rounded-2xl border border-paper-line p-4 has-[:checked]:border-paper-text">
-        <input
-          type="radio"
-          name="payment"
-          checked={method === "ONSITE"}
-          onChange={() => onChange("ONSITE")}
-          className="mt-1 accent-current"
-        />
-        <span>
-          <span className="block">{t("onsite")}</span>
-          <span className="text-sm text-paper-muted">{t("onsiteHint")}</span>
-        </span>
-      </label>
-    </div>
   );
 }

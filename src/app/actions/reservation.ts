@@ -4,15 +4,16 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { auth } from "@/auth";
-import { MAX_GUESTS, MEAL_TYPES, type MealType } from "@/lib/constants";
+import { MAX_GUESTS, MEAL_TYPES, ONLINE_PAYMENTS_ENABLED, type MealType } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
 import { requireStaff } from "@/lib/staff";
 import { combineDateTime, createQrToken, parseQrPayload } from "@/lib/utils";
 
 function paymentFromForm(formData: FormData) {
-  const paymentMethod = String(formData.get("paymentMethod") ?? "");
-  if (paymentMethod !== "ONLINE" && paymentMethod !== "ONSITE") return null;
-  return paymentMethod;
+  const paymentMethod = String(formData.get("paymentMethod") ?? "ONSITE");
+  if (paymentMethod === "ONLINE" && !ONLINE_PAYMENTS_ENABLED) return null;
+  if (paymentMethod !== "ONSITE") return null;
+  return "ONSITE" as const;
 }
 
 function guestsFromForm(formData: FormData, max = MAX_GUESTS) {
@@ -87,8 +88,8 @@ export async function createReservation(formData: FormData) {
       userId: session.user.id,
       guests,
       visitAt: event.startsAt,
-      paymentMethod,
-      paymentStatus: paymentMethod === "ONLINE" ? "PAID" : "UNPAID",
+      paymentMethod: "ONSITE",
+      paymentStatus: "UNPAID",
     },
   });
   await createTickets(reservation.id, guests);
@@ -179,7 +180,6 @@ export async function staffCreateBooking(formData: FormData) {
   if (kind === "EVENT") {
     const eventId = String(formData.get("eventId") ?? "");
     const guests = guestsFromForm(formData);
-    const paymentMethod = paymentFromForm(formData) ?? "ONSITE";
     if (!eventId || !guests) return { error: "required" as const };
 
     const event = await prisma.event.findFirst({
@@ -198,8 +198,8 @@ export async function staffCreateBooking(formData: FormData) {
         userId: guest.id,
         guests,
         visitAt: event.startsAt,
-        paymentMethod,
-        paymentStatus: paymentMethod === "ONLINE" ? "PAID" : "UNPAID",
+        paymentMethod: "ONSITE",
+        paymentStatus: "UNPAID",
       },
     });
     await createTickets(reservation.id, guests);
