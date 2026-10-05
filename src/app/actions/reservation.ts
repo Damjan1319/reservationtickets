@@ -343,7 +343,7 @@ export async function checkInTicket(ticketId: string) {
   }
 }
 
-export async function markReservationPaid(reservationId: string) {
+export async function markReservationPaid(reservationId: string, ticketId?: string) {
   const context = await requireStaff();
   if (!context) return { error: "noAccess" as const };
 
@@ -361,7 +361,7 @@ export async function markReservationPaid(reservationId: string) {
   revalidatePath("/dashboard/tickets");
 
   const ticket = await prisma.ticket.findFirst({
-    where: { reservationId },
+    where: ticketId ? { id: ticketId, reservationId } : { reservationId },
     orderBy: { seat: "asc" },
   });
   if (ticket) return lookupTicket(ticket.qrToken);
