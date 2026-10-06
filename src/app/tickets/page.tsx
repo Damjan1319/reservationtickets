@@ -40,10 +40,14 @@ export default async function TicketsPage() {
                 <p className="text-xs font-medium text-paper-muted">{ticket.venue.name}</p>
                 <h2 className="mt-1 text-lg font-semibold">{title}</h2>
                 <p className="mt-2 text-sm text-paper-muted">{formatDateTime(when, locale)}</p>
-                <p className={`mt-3 text-sm ${ticket.kind === "TABLE" ? "text-paper-muted" : ticket.paymentStatus === "PAID" ? "text-success" : "text-danger"}`}>
-                  {ticket.kind === "TABLE"
-                    ? `${t("table")} · ${ticket.guests} ${t("guests").toLowerCase()}`
-                    : `${ticket.paymentStatus === "PAID" ? t("paid") : t("unpaid")} · ${ticket.guests} ${t("guests").toLowerCase()}`}
+                <p className="mt-3 text-sm text-paper-muted">
+                  {ticket.status === "PENDING"
+                    ? t("waitingConfirm")
+                    : ticket.status === "CANCELLED"
+                      ? t("cancelled")
+                      : ticket.kind === "TABLE"
+                        ? `${t("table")} · ${ticket.guests} ${t("guests").toLowerCase()}`
+                        : `${ticket.paymentStatus === "PAID" ? t("paid") : t("unpaid")} · ${ticket.guests} ${t("guests").toLowerCase()}`}
                 </p>
               </Link>
             );

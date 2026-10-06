@@ -18,9 +18,9 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
     where: { slug },
     include: {
       events: {
-        where: { startsAt: { gte: new Date(Date.now() - 60 * 60 * 1000) } },
+        where: { startsAt: { gte: new Date() } },
         orderBy: { startsAt: "asc" },
-        include: { reservations: { select: { guests: true } } },
+        include: { reservations: { where: { status: { not: "CANCELLED" } }, select: { guests: true } } },
       },
     },
   });

@@ -7,8 +7,11 @@ export type StatsReservation = {
   visitAt: Date;
   createdAt: Date;
   checkedInCount: number;
+  paymentStatus: string;
+  status: string;
   user: { email: string; name: string };
   tickets: { checkedInAt: Date | null }[];
+  event: { price: number } | null;
 };
 
 export function periodStart(period: Period) {
@@ -32,35 +35,47 @@ export function parsePeriod(value?: string): Period {
   return PERIODS.includes(value as Period) ? (value as Period) : "week";
 }
 
+function live(item: StatsReservation) {
+  return item.status !== "CANCELLED";
+}
+
 export function computeStats(reservations: StatsReservation[], period: Period) {
   const from = periodStart(period);
-  const inPeriod = from
-    ? reservations.filter((item) => item.visitAt >= from || item.createdAt >= from)
-    : reservations;
+  const inPeriod = reservations.filter((item) => {
+    if (!live(item)) return false;
+    if (!from) return true;
+    return item.visitAt >= from || item.createdAt >= from;
+  });
   const emails = [...new Set(inPeriod.map((item) => item.user.email))].sort((a, b) => a.localeCompare(b));
   const soldTickets = inPeriod
-    .filter((item) => item.kind === "EVENT")
+    .filter((item) => item.kind === "EVENT" && item.status === "CONFIRMED")
     .reduce((sum, item) => sum + item.guests, 0);
   const tableGuests = inPeriod
-    .filter((item) => item.kind === "TABLE")
+    .filter((item) => item.kind === "TABLE" && item.status === "CONFIRMED")
     .reduce((sum, item) => sum + item.guests, 0);
-  const arrived = inPeriod.reduce((sum, item) => {
+  const entries = inPeriod.reduce((sum, item) => {
     if (item.kind === "EVENT") {
       return sum + item.tickets.filter((ticket) => ticket.checkedInAt).length;
     }
     return sum + item.checkedInCount;
   }, 0);
+  const paidCount = inPeriod.filter((item) => item.paymentStatus === "PAID").length;
+  const earnings = inPeriod.reduce((sum, item) => {
+    if (item.kind !== "EVENT" || item.paymentStatus !== "PAID") return sum;
+    return sum + item.guests * (item.event?.price ?? 0);
+  }, 0);
 
-  return { inPeriod, emails, soldTickets, tableGuests, arrived };
+  return { inPeriod, emails, soldTickets, tableGuests, arrived: entries, entries, paidCount, earnings };
 }
 
 export function chartDays(reservations: StatsReservation[], dayKey: (date: Date) => string) {
+  const liveItems = reservations.filter(live);
   return Array.from({ length: 14 }, (_, index) => {
     const date = new Date();
     date.setHours(0, 0, 0, 0);
     date.setDate(date.getDate() - (13 - index));
     const key = dayKey(date);
-    const ofDay = reservations.filter((item) => dayKey(item.visitAt) === key);
+    const ofDay = liveItems.filter((item) => dayKey(item.visitAt) === key);
     return {
       label: `${date.getDate()}.`,
       reservations: ofDay.length,
@@ -68,7 +83,7 @@ export function chartDays(reservations: StatsReservation[], dayKey: (date: Date)
         if (item.kind === "EVENT") {
           return sum + item.tickets.filter((ticket) => ticket.checkedInAt).length;
         }
-        return sum + (item.checkedInCount >= item.guests ? item.guests : 0);
+        return sum + item.checkedInCount;
       }, 0),
     };
   });

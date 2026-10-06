@@ -136,7 +136,7 @@ export function StaffBookingForm({ events }: { events: EventOption[] }) {
       ) : null}
 
       {error ? (
-        <p className="text-sm text-danger">{error === "full" ? t("full") : tc("required")}</p>
+        <p className="text-sm text-danger">{error === "full" ? t("full") : error === "past" ? te("past") : tc("required")}</p>
       ) : null}
 
       <button

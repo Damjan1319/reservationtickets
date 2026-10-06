@@ -24,15 +24,15 @@ export default async function EventPage({
     where: { id },
     include: {
       venue: true,
-      reservations: { select: { guests: true } },
+      reservations: { where: { status: { not: "CANCELLED" } }, select: { guests: true } },
     },
   });
 
   if (!event || (slug && event.venue.slug !== slug)) notFound();
+  if (event.startsAt.getTime() < Date.now()) notFound();
 
   const reserved = event.reservations.reduce((sum, item) => sum + item.guests, 0);
   const left = remainingSpots(event.capacity, reserved);
-  const past = event.startsAt.getTime() < Date.now();
   const venueSlug = event.venue.slug;
 
   return (
@@ -51,7 +51,7 @@ export default async function EventPage({
           </div>
           <div className="rounded-2xl border border-paper-line bg-paper p-4 text-paper-text">
             <dt className="text-paper-muted">{t("spots")}</dt>
-            <dd className="mt-1 text-lg">{past ? t("past") : left === 0 ? t("soldOut") : left}</dd>
+            <dd className="mt-1 text-lg">{left === 0 ? t("soldOut") : left}</dd>
           </div>
         </dl>
       </div>
@@ -59,8 +59,6 @@ export default async function EventPage({
         <h2 className="text-lg font-semibold">{tb("title")}</h2>
         {event.venue.verificationStatus !== "VERIFIED" ? (
           <p className="mt-4 text-paper-muted">{tb("unverified")}</p>
-        ) : past ? (
-          <p className="mt-4 text-paper-muted">{t("past")}</p>
         ) : session?.user ? (
           <div className="mt-6">
             <BookingForm eventId={event.id} price={event.price} remaining={left} locale={locale} />

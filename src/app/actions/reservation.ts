@@ -5,9 +5,12 @@ import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { auth } from "@/auth";
 import { MAX_GUESTS, MEAL_TYPES, ONLINE_PAYMENTS_ENABLED, type MealType } from "@/lib/constants";
+import { sendReservationDecisionEmail } from "@/lib/mail";
 import { prisma } from "@/lib/prisma";
 import { requireStaff } from "@/lib/staff";
 import { combineDateTime, createQrToken, parseQrPayload } from "@/lib/utils";
+
+const activeReservation = { status: { not: "CANCELLED" } };
 
 function paymentFromForm(formData: FormData) {
   const paymentMethod = String(formData.get("paymentMethod") ?? "ONSITE");
@@ -68,7 +71,7 @@ export async function createReservation(formData: FormData) {
     where: { id: eventId },
     include: {
       venue: true,
-      reservations: { select: { guests: true } },
+      reservations: { where: activeReservation, select: { guests: true } },
     },
   });
   if (!event) return { error: "required" as const };
@@ -90,9 +93,9 @@ export async function createReservation(formData: FormData) {
       visitAt: event.startsAt,
       paymentMethod: "ONSITE",
       paymentStatus: "UNPAID",
+      status: "PENDING",
     },
   });
-  await createTickets(reservation.id, guests);
 
   revalidatePath(`/v/${event.venue.slug}`);
   revalidatePath(`/tickets`);
@@ -135,6 +138,7 @@ export async function createTableReservation(formData: FormData) {
       visitAt,
       paymentMethod: "ONSITE",
       paymentStatus: "UNPAID",
+      status: "PENDING",
     },
   });
 
@@ -161,7 +165,7 @@ export async function staffCreateBooking(formData: FormData) {
     if (!guests || !visitAt || !MEAL_TYPES.includes(mealType)) {
       return { error: "required" as const };
     }
-    await prisma.reservation.create({
+    const created = await prisma.reservation.create({
       data: {
         kind: "TABLE",
         venueId: context.venue.id,
@@ -171,8 +175,11 @@ export async function staffCreateBooking(formData: FormData) {
         visitAt,
         paymentMethod: "ONSITE",
         paymentStatus: "UNPAID",
+        status: "CONFIRMED",
       },
+      include: { user: true, venue: true, event: true },
     });
+    await sendReservationDecisionEmail(created, "CONFIRMED");
     revalidatePath("/dashboard/reservations");
     redirect("/dashboard/reservations");
   }
@@ -184,9 +191,10 @@ export async function staffCreateBooking(formData: FormData) {
 
     const event = await prisma.event.findFirst({
       where: { id: eventId, venueId: context.venue.id },
-      include: { reservations: { select: { guests: true } } },
+      include: { reservations: { where: activeReservation, select: { guests: true } } },
     });
     if (!event) return { error: "required" as const };
+    if (event.startsAt.getTime() < Date.now()) return { error: "past" as const };
     const reserved = event.reservations.reduce((sum, item) => sum + item.guests, 0);
     if (reserved + guests > event.capacity) return { error: "full" as const };
 
@@ -200,14 +208,67 @@ export async function staffCreateBooking(formData: FormData) {
         visitAt: event.startsAt,
         paymentMethod: "ONSITE",
         paymentStatus: "UNPAID",
+        status: "CONFIRMED",
       },
+      include: { user: true, venue: true, event: true },
     });
     await createTickets(reservation.id, guests);
+    await sendReservationDecisionEmail(reservation, "CONFIRMED");
     revalidatePath("/dashboard/tickets");
     redirect("/dashboard/tickets");
   }
 
   return { error: "required" as const };
+}
+
+const decisionInclude = { user: true, venue: true, event: true } as const;
+
+export async function confirmReservation(reservationId: string) {
+  const context = await requireStaff();
+  if (!context) return { error: "noAccess" as const };
+
+  const reservation = await prisma.reservation.findFirst({
+    where: { id: reservationId, venueId: context.venue.id, status: "PENDING" },
+    include: { tickets: true, ...decisionInclude },
+  });
+  if (!reservation) return { error: "notFound" as const };
+
+  await prisma.reservation.update({
+    where: { id: reservation.id },
+    data: { status: "CONFIRMED" },
+  });
+  if (reservation.kind === "EVENT" && reservation.tickets.length === 0) {
+    await createTickets(reservation.id, reservation.guests);
+  }
+  await sendReservationDecisionEmail(reservation, "CONFIRMED");
+  revalidatePath("/dashboard/reservations");
+  revalidatePath("/dashboard/tickets");
+  revalidatePath("/dashboard");
+  revalidatePath("/tickets");
+  return { ok: true as const };
+}
+
+export async function cancelReservation(reservationId: string) {
+  const context = await requireStaff();
+  if (!context) return { error: "noAccess" as const };
+
+  const reservation = await prisma.reservation.findFirst({
+    where: { id: reservationId, venueId: context.venue.id, status: { not: "CANCELLED" } },
+    include: decisionInclude,
+  });
+  if (!reservation) return { error: "notFound" as const };
+
+  await prisma.reservation.update({
+    where: { id: reservation.id },
+    data: { status: "CANCELLED" },
+  });
+  await sendReservationDecisionEmail(reservation, "CANCELLED");
+  revalidatePath("/dashboard/reservations");
+  revalidatePath("/dashboard/tickets");
+  revalidatePath("/dashboard");
+  revalidatePath("/tickets");
+  revalidatePath(`/v/${reservation.venue.slug}`);
+  return { ok: true as const };
 }
 
 export type ScannedTicket = {
@@ -294,6 +355,8 @@ export async function lookupTicket(rawCode: string) {
   if (!ticket || ticket.reservation.venueId !== context.venue.id) {
     return { error: ticket ? "wrongVenue" : "notFound" };
   }
+  if (ticket.reservation.status === "CANCELLED") return { error: "cancelled" as const };
+  if (ticket.reservation.status !== "CONFIRMED") return { error: "pending" as const };
 
   return {
     ok: true as const,
@@ -315,6 +378,7 @@ export async function checkInTicket(ticketId: string) {
       include: ticketInclude,
     });
     if (!ticket) return { error: "notFound" as const };
+    if (ticket.reservation.status !== "CONFIRMED") return { error: "pending" as const };
 
     if (ticket.checkedInAt) {
       return { ok: true as const, warning: "allIn" as const, reservation: toScanned(ticket.reservation, ticket) };

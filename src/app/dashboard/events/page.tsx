@@ -14,9 +14,9 @@ export default async function DashboardEventsPage() {
   const tc = await getTranslations("common");
   const locale = await getLocale();
   const events = await prisma.event.findMany({
-    where: { venueId: context.venue.id },
-    include: { reservations: { select: { guests: true } } },
-    orderBy: { startsAt: "desc" },
+    where: { venueId: context.venue.id, startsAt: { gte: new Date() } },
+    include: { reservations: { where: { status: { not: "CANCELLED" } }, select: { guests: true } } },
+    orderBy: { startsAt: "asc" },
   });
 
   return (

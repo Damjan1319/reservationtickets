@@ -95,7 +95,7 @@ export default async function AdminPage({
 
       {view === "stats" ? (
         <section className="mt-8">
-          <StatsDashboard reservations={reservations} period={period} basePath="/admin" />
+          <StatsDashboard reservations={reservations} period={period} basePath="/admin" locale={locale} />
         </section>
       ) : null}
 

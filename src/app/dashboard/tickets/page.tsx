@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { CopyEmails } from "@/components/copy-emails";
+import { DecideButtons } from "@/components/decide-buttons";
 import { PageHeader } from "@/components/page-header";
 import { prisma } from "@/lib/prisma";
 import { getStaffContext } from "@/lib/staff";
@@ -32,7 +33,7 @@ export default async function TicketEvidencePage({
       )
     : items;
 
-  const emails = [...new Set(filtered.map((item) => item.user.email))];
+  const emails = [...new Set(filtered.filter((item) => item.status !== "CANCELLED").map((item) => item.user.email))];
 
   return (
     <div>
@@ -93,6 +94,9 @@ export default async function TicketEvidencePage({
                 <p className="mt-3 text-sm text-paper-muted">
                   {tt("guests")}: {item.guests} · QR: {item.tickets.length} · {t("inside")}: {inside}/{item.guests}
                 </p>
+                <div className="mt-4">
+                  <DecideButtons id={item.id} status={item.status} />
+                </div>
               </article>
             );
           })

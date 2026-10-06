@@ -63,7 +63,17 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           </div>
         </div>
 
-        {isTable ? (
+        {reservation.status === "PENDING" ? (
+          <div className="space-y-3 px-6 py-8">
+            <p className="text-sm text-muted">{t("waitingConfirm")}</p>
+            <p className="text-lg font-semibold">{reservation.user.name}</p>
+            <p className="text-sm text-muted">{reservation.user.email}</p>
+          </div>
+        ) : reservation.status === "CANCELLED" ? (
+          <div className="space-y-3 px-6 py-8">
+            <p className="text-sm text-muted">{t("cancelled")}</p>
+          </div>
+        ) : isTable ? (
           <div className="space-y-3 px-6 py-8">
             <p className="text-sm text-muted">{t("tableNoQr")}</p>
             <p className="text-lg font-semibold">{reservation.user.name}</p>

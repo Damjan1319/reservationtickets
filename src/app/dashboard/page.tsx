@@ -32,8 +32,8 @@ export default async function DashboardPage({
 
   const [events, reservations] = await Promise.all([
     prisma.event.findMany({
-      where: { venueId: context.venue.id },
-      include: { reservations: { select: { guests: true } } },
+      where: { venueId: context.venue.id, startsAt: { gte: now } },
+      include: { reservations: { where: { status: { not: "CANCELLED" } }, select: { guests: true } } },
       orderBy: { startsAt: "asc" },
     }),
     prisma.reservation.findMany({
@@ -41,18 +41,20 @@ export default async function DashboardPage({
       include: {
         user: { select: { email: true, name: true } },
         tickets: { select: { checkedInAt: true } },
+        event: { select: { price: true } },
       },
     }),
   ]);
 
-  const tickets = reservations.filter((item) => item.kind === "EVENT");
-  const tables = reservations.filter((item) => item.kind === "TABLE");
+  const live = reservations.filter((item) => item.status !== "CANCELLED");
+  const tickets = live.filter((item) => item.kind === "EVENT");
+  const tables = live.filter((item) => item.kind === "TABLE");
   const inside =
     tickets.reduce((sum, item) => sum + item.tickets.filter((ticket) => ticket.checkedInAt).length, 0) +
     tables.reduce((sum, item) => sum + item.checkedInCount, 0);
-  const unpaid = reservations.filter((item) => item.paymentStatus === "UNPAID").length;
-  const upcoming = events.filter((event) => event.startsAt >= now).slice(0, 4);
-  const occupancy = occupancyByDay(reservations);
+  const unpaid = live.filter((item) => item.paymentStatus === "UNPAID").length;
+  const upcoming = events.slice(0, 4);
+  const occupancy = occupancyByDay(live);
 
   const actions = [
     { href: "/dashboard/create", title: t("quickCreate"), hint: t("quickCreateHint") },
@@ -122,13 +124,13 @@ export default async function DashboardPage({
         </section>
       </div>
 
-      <StatsDashboard reservations={reservations} period={period} basePath="/dashboard" />
+      <StatsDashboard reservations={reservations} period={period} basePath="/dashboard" locale={locale} />
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatCard label={t("statsParties")} value={events.length} hint={t("statsPartiesHint")} tone="event" />
-        <StatCard label={t("statsTables")} value={tables.length} hint={t("statsTablesHint")} tone="table" />
-        <StatCard label={t("statsInside")} value={inside} hint={t("statsInsideHint")} tone="both" />
-        <StatCard label={t("statsUnpaid")} value={unpaid} hint={t("statsUnpaidHint")} tone="warn" />
+        <StatCard label={t("statSold")} value={tickets.filter((item) => item.status !== "CANCELLED").reduce((sum, item) => sum + item.guests, 0)} hint={t("statSoldHint")} />
+        <StatCard label={t("statsTables")} value={tables.filter((item) => item.status !== "CANCELLED").length} hint={t("statsTablesHint")} />
+        <StatCard label={t("statsInside")} value={inside} hint={t("statsInsideHint")} />
+        <StatCard label={t("statsUnpaid")} value={unpaid} hint={t("statsUnpaidHint")} />
       </div>
     </div>
   );

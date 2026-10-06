@@ -2,6 +2,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { ArriveButton } from "@/components/arrive-button";
 import { CopyEmails } from "@/components/copy-emails";
+import { DecideButtons } from "@/components/decide-buttons";
 import { PageHeader } from "@/components/page-header";
 import { ReservationCalendar } from "@/components/reservation-calendar";
 import { monthKey, monthLabel, occupancyByDay, parseMonth, shiftMonth } from "@/lib/calendar";
@@ -45,8 +46,8 @@ export default async function TableReservationsPage({
     hours.set(key, [...(hours.get(key) ?? []), item]);
   }
 
-  const emails = [...new Set(filtered.map((item) => item.user.email))];
-  const occupancy = occupancyByDay(all);
+  const emails = [...new Set(filtered.filter((item) => item.status !== "CANCELLED").map((item) => item.user.email))];
+  const occupancy = occupancyByDay(all.filter((item) => item.status !== "CANCELLED"));
   const { year, month } = parseMonth(day.slice(0, 7));
   const prev = shiftMonth(year, month, -1);
   const next = shiftMonth(year, month, 1);
@@ -134,7 +135,12 @@ export default async function TableReservationsPage({
                       </p>
                       <p className="mt-1 text-xs text-paper-muted">{formatTime(item.visitAt, locale)}</p>
                     </div>
-                    <ArriveButton id={item.id} arrived={item.checkedInCount >= item.guests} />
+                    <div className="flex flex-col items-end gap-2">
+                      <DecideButtons id={item.id} status={item.status} />
+                      {item.status === "CONFIRMED" ? (
+                        <ArriveButton id={item.id} arrived={item.checkedInCount >= item.guests} />
+                      ) : null}
+                    </div>
                   </article>
                 ))}
               </div>

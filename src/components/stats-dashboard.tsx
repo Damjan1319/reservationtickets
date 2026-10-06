@@ -4,16 +4,18 @@ import { AdminChart } from "@/components/admin-chart";
 import { CopyEmails } from "@/components/copy-emails";
 import { StatCard } from "@/components/stat-card";
 import { chartDays, computeStats, PERIODS, type Period, type StatsReservation } from "@/lib/stats";
-import { cn, localDayKey } from "@/lib/utils";
+import { cn, formatMoney, localDayKey } from "@/lib/utils";
 
 export async function StatsDashboard({
   reservations,
   period,
   basePath,
+  locale,
 }: {
   reservations: StatsReservation[];
   period: Period;
   basePath: string;
+  locale: string;
 }) {
   const t = await getTranslations("dashboard");
   const stats = computeStats(reservations, period);
@@ -42,10 +44,10 @@ export async function StatsDashboard({
       </div>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatCard label={t("statEmails")} value={stats.emails.length} hint={t("statEmailsHint")} tone="both" />
         <StatCard label={t("statPeriod")} value={stats.inPeriod.length} hint={t("statPeriodHint")} />
-        <StatCard label={t("statSold")} value={stats.soldTickets} hint={t("statSoldHint")} tone="event" />
-        <StatCard label={t("statArrived")} value={stats.arrived} hint={t("statArrivedHint")} tone="table" />
+        <StatCard label={t("statEntries")} value={stats.entries} hint={t("statEntriesHint")} />
+        <StatCard label={t("statPaid")} value={stats.paidCount} hint={t("statPaidHint")} />
+        <StatCard label={t("statEarnings")} value={formatMoney(stats.earnings, locale)} hint={t("statEarningsHint")} />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1.4fr_0.8fr]">

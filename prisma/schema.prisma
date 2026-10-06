@@ -87,6 +87,7 @@ model Reservation {
   visitAt       DateTime
   paymentMethod String
   paymentStatus String
+  status          String    @default("CONFIRMED")
   qrToken         String?   @unique
   checkedInCount  Int       @default(0)
   checkedInAt     DateTime?
