@@ -98,7 +98,7 @@ export function StaffBookingForm({ events }: { events: EventOption[] }) {
                 type="date"
                 required
                 defaultValue={todayInputValue()}
-                className="w-full rounded-xl border border-paper-line bg-paper-2 px-4 py-3 outline-none focus:border-paper-text"
+                className="w-full rounded-xl border border-paper-line bg-paper-2 px-4 py-3 font-semibold text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
               />
             </label>
             <label className="block space-y-2">
@@ -108,7 +108,7 @@ export function StaffBookingForm({ events }: { events: EventOption[] }) {
                 type="time"
                 required
                 defaultValue="20:00"
-                className="w-full rounded-xl border border-paper-line bg-paper-2 px-4 py-3 outline-none focus:border-paper-text"
+                className="w-full rounded-xl border border-paper-line bg-paper-2 px-4 py-3 font-semibold text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
               />
             </label>
           </div>

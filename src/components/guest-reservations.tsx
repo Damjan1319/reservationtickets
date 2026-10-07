@@ -49,7 +49,7 @@ export function GuestReservations({ items }: { items: GuestReservationItem[] }) 
             type="date"
             value={date}
             onChange={(event) => setDate(event.target.value)}
-            className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+            className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 font-semibold text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
           />
         </label>
         {date ? (

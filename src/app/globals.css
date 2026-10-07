@@ -155,12 +155,9 @@ textarea {
   border-color: color-mix(in srgb, var(--paper-text) 28%, transparent);
 }
 
-.bg-paper input:not([type="hidden"]):not([type="checkbox"]):not([type="file"]),
-.bg-paper select,
-.bg-paper textarea,
-.text-paper-text input:not([type="hidden"]):not([type="checkbox"]):not([type="file"]),
-.text-paper-text select,
-.text-paper-text textarea {
+:is(.bg-paper, .bg-paper-2, .text-paper-text)
+  :is(input, select, textarea):not([type="hidden"]):not([type="checkbox"]):not([type="file"]),
+:is(input, select, textarea):is(.bg-paper, .bg-paper-2, .bg-white) {
   color-scheme: light;
   border: 1px solid var(--paper-line);
   background: #fff;
@@ -168,18 +165,102 @@ textarea {
   font-weight: 600;
 }
 
-.bg-paper input::placeholder,
-.bg-paper textarea::placeholder,
-.text-paper-text input::placeholder,
-.text-paper-text textarea::placeholder {
+:is(.bg-paper, .bg-paper-2, .text-paper-text) :is(input, textarea)::placeholder,
+:is(input, textarea):is(.bg-paper, .bg-paper-2, .bg-white)::placeholder {
   color: var(--paper-muted);
   font-weight: 500;
 }
 
-.bg-paper input[type="date"]::-webkit-calendar-picker-indicator,
-.bg-paper input[type="time"]::-webkit-calendar-picker-indicator {
-  opacity: 0.75;
+:is(.bg-paper, .bg-paper-2, .text-paper-text)
+  :is(input[type="date"], input[type="time"], input[type="datetime-local"]),
+:is(input[type="date"], input[type="time"], input[type="datetime-local"]):is(
+    .bg-paper,
+    .bg-paper-2,
+    .bg-white,
+    .text-paper-text
+  ) {
+  color-scheme: light;
+  color: var(--paper-text);
+}
+
+:is(.bg-paper, .bg-paper-2, .text-paper-text)
+  :is(input[type="date"], input[type="time"], input[type="datetime-local"])::-webkit-datetime-edit,
+:is(.bg-paper, .bg-paper-2, .text-paper-text)
+  :is(input[type="date"], input[type="time"], input[type="datetime-local"])::-webkit-datetime-edit-fields-wrapper,
+:is(.bg-paper, .bg-paper-2, .text-paper-text)
+  :is(input[type="date"], input[type="time"], input[type="datetime-local"])::-webkit-datetime-edit-text,
+:is(.bg-paper, .bg-paper-2, .text-paper-text)
+  :is(input[type="date"], input[type="time"], input[type="datetime-local"])::-webkit-datetime-edit-month-field,
+:is(.bg-paper, .bg-paper-2, .text-paper-text)
+  :is(input[type="date"], input[type="time"], input[type="datetime-local"])::-webkit-datetime-edit-day-field,
+:is(.bg-paper, .bg-paper-2, .text-paper-text)
+  :is(input[type="date"], input[type="time"], input[type="datetime-local"])::-webkit-datetime-edit-year-field,
+:is(.bg-paper, .bg-paper-2, .text-paper-text)
+  :is(input[type="date"], input[type="time"], input[type="datetime-local"])::-webkit-datetime-edit-hour-field,
+:is(.bg-paper, .bg-paper-2, .text-paper-text)
+  :is(input[type="date"], input[type="time"], input[type="datetime-local"])::-webkit-datetime-edit-minute-field,
+:is(input[type="date"], input[type="time"], input[type="datetime-local"]):is(
+    .bg-paper,
+    .bg-paper-2,
+    .bg-white,
+    .text-paper-text
+  )::-webkit-datetime-edit,
+:is(input[type="date"], input[type="time"], input[type="datetime-local"]):is(
+    .bg-paper,
+    .bg-paper-2,
+    .bg-white,
+    .text-paper-text
+  )::-webkit-datetime-edit-fields-wrapper,
+:is(input[type="date"], input[type="time"], input[type="datetime-local"]):is(
+    .bg-paper,
+    .bg-paper-2,
+    .bg-white,
+    .text-paper-text
+  )::-webkit-datetime-edit-text,
+:is(input[type="date"], input[type="time"], input[type="datetime-local"]):is(
+    .bg-paper,
+    .bg-paper-2,
+    .bg-white,
+    .text-paper-text
+  )::-webkit-datetime-edit-month-field,
+:is(input[type="date"], input[type="time"], input[type="datetime-local"]):is(
+    .bg-paper,
+    .bg-paper-2,
+    .bg-white,
+    .text-paper-text
+  )::-webkit-datetime-edit-day-field,
+:is(input[type="date"], input[type="time"], input[type="datetime-local"]):is(
+    .bg-paper,
+    .bg-paper-2,
+    .bg-white,
+    .text-paper-text
+  )::-webkit-datetime-edit-year-field,
+:is(input[type="date"], input[type="time"], input[type="datetime-local"]):is(
+    .bg-paper,
+    .bg-paper-2,
+    .bg-white,
+    .text-paper-text
+  )::-webkit-datetime-edit-hour-field,
+:is(input[type="date"], input[type="time"], input[type="datetime-local"]):is(
+    .bg-paper,
+    .bg-paper-2,
+    .bg-white,
+    .text-paper-text
+  )::-webkit-datetime-edit-minute-field {
+  color: var(--paper-text);
+}
+
+:is(.bg-paper, .bg-paper-2, .text-paper-text)
+  :is(input[type="date"], input[type="time"], input[type="datetime-local"])::-webkit-calendar-picker-indicator,
+:is(input[type="date"], input[type="time"], input[type="datetime-local"]):is(
+    .bg-paper,
+    .bg-paper-2,
+    .bg-white,
+    .text-paper-text
+  )::-webkit-calendar-picker-indicator {
   cursor: pointer;
+  opacity: 1;
+  filter: none;
 }
 
 .band-paper {

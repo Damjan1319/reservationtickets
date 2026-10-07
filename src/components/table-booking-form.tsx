@@ -67,7 +67,7 @@ export function TableBookingForm({ venueId }: { venueId: string }) {
             required
             min={todayInputValue()}
             defaultValue={todayInputValue()}
-            className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 font-semibold text-paper-text outline-none focus:border-paper-text"
+            className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 font-semibold text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
           />
         </label>
 
@@ -79,7 +79,7 @@ export function TableBookingForm({ venueId }: { venueId: string }) {
             type="time"
             required
             defaultValue={`${String(MEAL_HOURS[mealType]).padStart(2, "0")}:00`}
-            className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 font-semibold text-paper-text outline-none focus:border-paper-text"
+            className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 font-semibold text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
           />
         </label>
 
