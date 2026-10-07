@@ -273,6 +273,11 @@ html.light .band-paper {
   color: var(--paper-text);
 }
 
+#qr-reader__dashboard_section,
+#qr-reader__header_message {
+  display: none !important;
+}
+
 .site-header {
   position: sticky;
 }

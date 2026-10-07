@@ -175,6 +175,8 @@
     "bookedEvent": "Rezervacija je poslata. Kad lokal prihvati, dobijaš kartu.",
     "waitingConfirm": "Čeka potvrdu lokala. Kad vlasnik prihvati, stići će mejl i karta.",
     "waitingConfirmTable": "Čeka potvrdu lokala. Kad vlasnik prihvati, stići će mejl.",
+    "youBooked": "Ostavili ste rezervaciju za {date} u {time} za {count, plural, one {# osobu} few {# osobe} other {# osoba}} u lokalu {venue}.",
+    "theyBooked": "{name} je ostavio rezervaciju za {date} u {time} za {count, plural, one {# osobu} few {# osobe} other {# osoba}} u lokalu {venue}.",
     "guests": "Gostiju",
     "paid": "Plaćeno",
     "unpaid": "Nije plaćeno",
@@ -293,8 +295,9 @@
     "remove": "Ukloni"
   },
   "scan": {
-    "title": "Skener karata",
-    "subtitle": "Skeniraj QR ili unesi kod ručno. Vidiš samo karte svog lokala.",
+    "title": "Skener",
+    "subtitle": "Samo kamera. Usmeri je na QR kartu.",
+    "toList": "Spisak",
     "manual": "Ručni kod",
     "lookup": "Proveri",
     "cameraError": "Kamera nije dostupna. Koristi ručni unos.",
@@ -306,6 +309,7 @@
     "doCheckIn": "Došao",
     "alreadyIn": "Ova karta je već iskorišćena.",
     "used": "Iskorišćena",
+    "people": "{count, plural, one {# gost} few {# gosta} other {# gostiju}}",
     "close": "Zatvori",
     "entered": "Karta {seat}/{total} · ušlo {current} od {total}",
     "allIn": "{count} osobe su već ušle. Ova karta je ispunjena.",

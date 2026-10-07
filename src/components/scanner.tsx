@@ -4,7 +4,7 @@ import { Html5Qrcode, Html5QrcodeScannerState } from "html5-qrcode";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { checkInTicket, lookupTicket, markReservationPaid, type ScannedTicket } from "@/app/actions/reservation";
-import { formatDateTime } from "@/lib/utils";
+import { formatDate, formatTime } from "@/lib/utils";
 
 async function stopScanner(scanner: Html5Qrcode) {
   try {
@@ -25,6 +25,7 @@ async function stopScanner(scanner: Html5Qrcode) {
 export function Scanner({ locale }: { locale: string }) {
   const t = useTranslations("scan");
   const tt = useTranslations("ticket");
+  const tb = useTranslations("booking");
   const [cameraError, setCameraError] = useState(false);
   const [cameraOn, setCameraOn] = useState(false);
   const [starting, setStarting] = useState(false);
@@ -97,12 +98,47 @@ export function Scanner({ locale }: { locale: string }) {
   }
 
   useEffect(() => {
+    let cancelled = false;
+    async function start() {
+      setCameraError(false);
+      setStarting(true);
+      try {
+        if (scannerRef.current) {
+          await stopScanner(scannerRef.current);
+          scannerRef.current = null;
+        }
+        const scanner = new Html5Qrcode("qr-reader");
+        scannerRef.current = scanner;
+        await scanner.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: { width: 260, height: 260 } },
+          (decoded) => lookup(decoded),
+          () => undefined,
+        );
+        if (cancelled) {
+          await stopScanner(scanner);
+          return;
+        }
+        setCameraOn(true);
+      } catch {
+        if (!cancelled) {
+          setCameraError(true);
+          setCameraOn(false);
+        }
+      } finally {
+        if (!cancelled) setStarting(false);
+      }
+    }
+    void start();
     return () => {
+      cancelled = true;
       if (scannerRef.current) {
         void stopScanner(scannerRef.current);
         scannerRef.current = null;
       }
     };
+    // Start once when the door scanner mounts.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -126,7 +162,7 @@ export function Scanner({ locale }: { locale: string }) {
       scannerRef.current = scanner;
       await scanner.start(
         { facingMode: "environment" },
-        { fps: 8, qrbox: { width: 220, height: 220 } },
+        { fps: 10, qrbox: { width: 260, height: 260 } },
         (decoded) => lookup(decoded),
         () => undefined,
       );
@@ -141,87 +177,93 @@ export function Scanner({ locale }: { locale: string }) {
 
   const unpaid = ticket?.paymentStatus !== "PAID";
   const used = Boolean(ticket?.allIn);
+  const when = ticket ? new Date(ticket.startsAt) : null;
+  const kindLabel = ticket?.kind === "TABLE"
+    ? ticket.mealType
+      ? `${tt("table")} · ${tb(`meals.${ticket.mealType}`)}`
+      : tt("kindTable")
+    : ticket?.eventTitle;
 
   return (
-    <div className="mx-auto grid max-w-xl gap-5">
-      <div className="space-y-3">
-        <div
-          id="qr-reader"
-          className="min-h-40 overflow-hidden rounded-2xl border border-paper-line bg-paper-2 [&_video]:w-full"
-        />
-        {!cameraOn ? (
-          <button
-            type="button"
-            onClick={() => void startCamera()}
-            disabled={starting}
-            className="btn btn-primary btn-full"
-          >
-            {starting ? t("starting") : t("startCamera")}
-          </button>
-        ) : (
-          <p className="text-center text-sm text-paper-muted">{t("ready")}</p>
-        )}
-        {cameraError ? <p className="text-sm text-danger">{t("cameraError")}</p> : null}
-        <form
-          className="flex gap-2"
-          onSubmit={(event) => {
-            event.preventDefault();
-            const data = new FormData(event.currentTarget);
-            lastCode.current = "";
-            lookup(String(data.get("code") ?? ""));
-          }}
+    <div className="flex h-full min-h-0 flex-1 flex-col gap-3">
+      <div
+        id="qr-reader"
+        className="relative min-h-[min(72dvh,640px)] flex-1 overflow-hidden rounded-3xl bg-black [&_img]:hidden [&_video]:absolute [&_video]:inset-0 [&_video]:h-full [&_video]:w-full [&_video]:object-cover"
+      />
+      {!cameraOn ? (
+        <button
+          type="button"
+          onClick={() => void startCamera()}
+          disabled={starting}
+          className="btn btn-primary btn-full"
         >
-          <input
-            name="code"
-            placeholder={t("manual")}
-            className="min-w-0 flex-1 rounded-xl border border-paper-line bg-paper-2 px-4 py-3 outline-none focus:border-paper-text"
-          />
-          <button type="submit" disabled={pending} className="btn btn-ghost !px-4 shrink-0">
-            {t("lookup")}
-          </button>
-        </form>
-      </div>
+          {starting ? t("starting") : t("startCamera")}
+        </button>
+      ) : (
+        <p className="text-center text-sm font-medium text-cream">{t("ready")}</p>
+      )}
+      {cameraError ? <p className="text-center text-sm text-danger">{t("cameraError")}</p> : null}
+      <form
+        className="flex gap-2"
+        onSubmit={(event) => {
+          event.preventDefault();
+          const data = new FormData(event.currentTarget);
+          lastCode.current = "";
+          lookup(String(data.get("code") ?? ""));
+        }}
+      >
+        <input
+          name="code"
+          placeholder={t("manual")}
+          className="min-w-0 flex-1 rounded-xl border border-line bg-surface px-4 py-3 text-cream outline-none focus:border-cream"
+        />
+        <button type="submit" disabled={pending} className="btn btn-ghost !px-4 shrink-0">
+          {t("lookup")}
+        </button>
+      </form>
 
       {open ? (
         <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-bg/70 p-4 sm:items-center"
+          className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-4 sm:items-center"
           onClick={closePopup}
         >
           <div
             role="dialog"
             aria-modal="true"
-            className="w-full max-w-md rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6"
+            className="w-full max-w-md rounded-3xl bg-paper p-6 text-paper-text shadow-2xl sm:p-8"
             onClick={(event) => event.stopPropagation()}
           >
             {error ? (
-              <p className="text-sm text-danger">{t(error)}</p>
-            ) : ticket ? (
-              <div className="space-y-4">
-                {used ? (
-                  <p className="rounded-xl bg-paper-2 px-4 py-3 text-sm font-semibold">{t("used")}</p>
-                ) : null}
+              <p className="text-xl font-semibold leading-snug">{t(error)}</p>
+            ) : ticket && when ? (
+              <div className="space-y-5">
+                <p
+                  className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
+                    used
+                      ? "bg-paper-2 text-paper-muted"
+                      : unpaid
+                        ? "bg-paper-text text-paper"
+                        : "bg-paper-2 text-paper-text"
+                  }`}
+                >
+                  {used ? t("used") : unpaid ? tt("unpaid") : tt("paid")}
+                </p>
 
                 <div>
-                  <p className="text-sm text-paper-muted">{ticket.venueName}</p>
-                  <h2 className="mt-2 text-xl font-semibold tracking-tight">{ticket.eventTitle}</h2>
-                  <p className="mt-1 text-sm text-paper-muted">
-                    {tt("person", { seat: ticket.seat, total: ticket.guests })} ·{" "}
-                    {formatDateTime(new Date(ticket.startsAt), locale)}
+                  <h2 className="text-3xl font-bold tracking-tight">{ticket.guestName}</h2>
+                  <p className="mt-2 text-lg font-semibold leading-snug">
+                    {t("people", { count: ticket.guests })}
+                    <span className="text-paper-muted"> · </span>
+                    {formatDate(when, locale)}
+                    <span className="text-paper-muted"> · </span>
+                    {formatTime(when, locale)}
                   </p>
+                  <p className="mt-2 text-base font-semibold text-paper-muted">{kindLabel}</p>
+                  <p className="mt-1 text-sm text-paper-muted">{ticket.guestEmail}</p>
                 </div>
 
-                <p className="text-sm">
-                  {ticket.guestName}
-                  <span className="mt-0.5 block text-paper-muted">{ticket.guestEmail}</span>
-                </p>
-
-                <p className="text-sm text-paper-muted">
-                  {ticket.paymentStatus === "PAID" ? tt("paid") : tt("unpaid")}
-                  {used ? ` · ${t("used")}` : null}
-                </p>
-
                 {!used ? (
-                  <div className="flex flex-col gap-2 sm:flex-row">
+                  <div className="flex flex-col gap-2">
                     {unpaid ? (
                       <button
                         type="button"
@@ -251,7 +293,7 @@ export function Scanner({ locale }: { locale: string }) {
               </div>
             ) : null}
 
-            <button type="button" onClick={closePopup} className="btn btn-ghost btn-full mt-5">
+            <button type="button" onClick={closePopup} className="btn btn-ghost btn-full mt-6">
               {t("close")}
             </button>
           </div>

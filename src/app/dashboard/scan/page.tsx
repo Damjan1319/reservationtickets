@@ -1,47 +1,23 @@
 import { getLocale, getTranslations } from "next-intl/server";
-import { PageHeader } from "@/components/page-header";
+import Link from "next/link";
 import { Scanner } from "@/components/scanner";
-import { StatCard } from "@/components/stat-card";
-import { prisma } from "@/lib/prisma";
 import { getStaffContext } from "@/lib/staff";
 
 export default async function ScanPage() {
   const t = await getTranslations("scan");
-  const td = await getTranslations("dashboard");
   const locale = await getLocale();
   const context = await getStaffContext();
-
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-
-  const today = context
-    ? await prisma.reservation.findMany({
-        where: { venueId: context.venue.id, visitAt: { gte: start } },
-        include: { tickets: { select: { checkedInAt: true } } },
-      })
-    : [];
-
-  const guests = today.reduce((sum, item) => sum + item.guests, 0);
-  const inside = today.reduce((sum, item) => {
-    if (item.kind === "EVENT") {
-      return sum + item.tickets.filter((ticket) => ticket.checkedInAt).length;
-    }
-    return sum + item.checkedInCount;
-  }, 0);
-  const unpaid = today.filter((item) => item.paymentStatus === "UNPAID").length;
+  if (!context) return null;
 
   return (
-    <div className="space-y-6">
-      <PageHeader eyebrow={td("scan")} title={t("title")} description={t("subtitle")} />
-
-      <div className="grid grid-cols-3 gap-3">
-        <StatCard label={t("todayGuests")} value={guests} hint={t("todayGuestsHint")} />
-        <StatCard label={td("statsInside")} value={inside} hint={t("todayInsideHint")} />
-        <StatCard label={td("statsUnpaid")} value={unpaid} hint={t("todayUnpaidHint")} />
+    <div className="flex min-h-[calc(100dvh-4.5rem)] flex-col bg-bg">
+      <div className="flex items-center justify-between gap-3 px-4 py-3">
+        <p className="truncate text-sm font-semibold text-cream">{context.venue.name}</p>
+        <Link href="/dashboard/reservations" className="shrink-0 text-sm font-medium text-muted hover:text-cream">
+          {t("toList")}
+        </Link>
       </div>
-
-      <div className="overflow-hidden rounded-2xl border border-paper-line bg-paper p-4 text-paper-text sm:p-6">
-        <p className="mb-4 text-sm text-paper-muted">{t("phoneHint")}</p>
+      <div className="flex min-h-0 flex-1 flex-col px-3 pb-4 sm:px-4">
         <Scanner locale={locale} />
       </div>
     </div>

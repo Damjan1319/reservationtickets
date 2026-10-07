@@ -189,6 +189,8 @@
     "payAtVenue": "Pay at the venue",
     "waitingConfirm": "Waiting for the venue to confirm. You will get an email and a ticket when it is accepted.",
     "waitingConfirmTable": "Waiting for the venue to confirm. You will get an email when it is accepted.",
+    "youBooked": "You left a reservation for {date} at {time} for {count, plural, one {# person} other {# people}} at {venue}.",
+    "theyBooked": "{name} left a reservation for {date} at {time} for {count, plural, one {# person} other {# people}} at {venue}.",
     "cancelled": "This reservation was cancelled."
   },
   "dashboard": {
@@ -293,8 +295,9 @@
     "remove": "Remove"
   },
   "scan": {
-    "title": "Ticket scanner",
-    "subtitle": "Scan a QR or enter the code. You only see tickets for your venue.",
+    "title": "Scanner",
+    "subtitle": "Camera only. Point it at the QR ticket.",
+    "toList": "Guest list",
     "manual": "Manual code",
     "lookup": "Look up",
     "cameraError": "Camera unavailable. Use manual entry.",
@@ -306,6 +309,7 @@
     "doCheckIn": "Arrived",
     "alreadyIn": "This ticket has already been used.",
     "used": "Used",
+    "people": "{count, plural, one {# guest} other {# guests}}",
     "close": "Close",
     "entered": "Ticket {seat}/{total} · {current} of {total} inside",
     "allIn": "{count} people already entered. This ticket is used up.",

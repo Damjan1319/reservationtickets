@@ -64,6 +64,15 @@ export function formatDate(date: Date, locale: string) {
   }).format(date);
 }
 
+export function formatDateLong(date: Date, locale: string) {
+  return new Intl.DateTimeFormat(locale === "sr" ? "sr-RS" : "en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+}
+
 export function toLocalInputValue(date: Date) {
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;

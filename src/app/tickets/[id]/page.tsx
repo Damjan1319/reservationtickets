@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { reservationQrDataUrl } from "@/lib/qr";
 import { getStaffContext } from "@/lib/staff";
-import { formatDateTime, venueCover } from "@/lib/utils";
+import { formatDateLong, formatTime, venueCover } from "@/lib/utils";
 import { DownloadOne, DownloadTickets } from "@/components/download-tickets";
 import { PageBack } from "@/components/page-back";
 
@@ -38,6 +38,14 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
       : (reservation.event?.title ?? reservation.venue.name);
   const when = reservation.event?.startsAt ?? reservation.visitAt;
   const isTable = reservation.kind === "TABLE";
+  const isOwn = session?.user?.id === reservation.userId;
+  const booked = t(isOwn ? "youBooked" : "theyBooked", {
+    name: reservation.user.name,
+    date: formatDateLong(when, locale),
+    time: formatTime(when, locale),
+    count: reservation.guests,
+    venue: reservation.venue.name,
+  });
   const codes = await Promise.all(
     reservation.tickets.map(async (ticket) => ({
       ...ticket,
@@ -59,31 +67,32 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           />
           <div className="absolute inset-0 bg-gradient-to-t from-surface via-bg/70 to-bg/30" />
           <div className="relative">
-            <p className="text-xs font-medium text-muted">{reservation.venue.name}</p>
-            <h1 className="mt-1 text-2xl font-semibold tracking-tight">{title}</h1>
-            <p className="mt-2 text-sm text-cream/80">{formatDateTime(when, locale)}</p>
+            <p className="text-xs font-medium text-cream/80">{reservation.venue.name}</p>
+            <h1 className="mt-1 text-2xl font-bold tracking-tight text-cream">{title}</h1>
           </div>
         </div>
 
         {reservation.status === "PENDING" ? (
-          <div className="space-y-3 px-6 py-8">
-            <p className="text-sm text-muted">{isTable ? t("waitingConfirmTable") : t("waitingConfirm")}</p>
-            <p className="text-lg font-semibold">{reservation.user.name}</p>
-            <p className="text-sm text-muted">{reservation.user.email}</p>
+          <div className="space-y-4 px-6 py-8">
+            <p className="text-lg font-semibold leading-snug text-cream">{booked}</p>
+            <p className="text-sm leading-relaxed text-cream/75">
+              {isTable ? t("waitingConfirmTable") : t("waitingConfirm")}
+            </p>
           </div>
         ) : reservation.status === "CANCELLED" ? (
-          <div className="space-y-3 px-6 py-8">
-            <p className="text-sm text-muted">{t("cancelled")}</p>
+          <div className="space-y-4 px-6 py-8">
+            <p className="text-lg font-semibold leading-snug text-cream">{booked}</p>
+            <p className="text-sm text-cream/75">{t("cancelled")}</p>
           </div>
         ) : isTable ? (
-          <div className="space-y-3 px-6 py-8">
-            <p className="text-sm text-muted">{t("tableNoQr")}</p>
-            <p className="text-lg font-semibold">{reservation.user.name}</p>
-            <p className="text-sm text-muted">{reservation.user.email}</p>
+          <div className="space-y-4 px-6 py-8">
+            <p className="text-lg font-semibold leading-snug text-cream">{booked}</p>
+            <p className="text-sm leading-relaxed text-cream/75">{t("tableNoQr")}</p>
           </div>
         ) : (
           <div className="space-y-8 px-6 py-8">
-            <p className="text-sm text-muted">{t("showAtDoor")}</p>
+            <p className="text-lg font-semibold leading-snug text-cream">{booked}</p>
+            <p className="text-sm text-cream/75">{t("showAtDoor")}</p>
             <DownloadTickets items={codes} />
             {codes.map((ticket) => (
               <div key={ticket.id} className="flex flex-col items-center border-t border-line pt-6 first:border-0 first:pt-0">
@@ -100,24 +109,16 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           </div>
         )}
 
-        <dl className="grid grid-cols-2 gap-px border-t border-line bg-line text-sm">
-          <div className="bg-surface p-4">
-            <dt className="text-muted">{t("guests")}</dt>
-            <dd className="mt-1 text-lg">{reservation.guests}</dd>
-          </div>
-          <div className="bg-surface p-4">
-            <dt className="text-muted">{isTable ? t("table") : reservation.paymentMethod === "ONLINE" ? t("online") : t("onsite")}</dt>
-            <dd className={`mt-1 text-lg ${!isTable && reservation.paymentStatus !== "PAID" ? "text-muted" : "text-cream"}`}>
-              {isTable
-                ? reservation.status === "CANCELLED"
-                  ? t("cancelled")
-                  : t("kindTable")
-                : reservation.paymentStatus === "PAID"
-                  ? t("paid")
-                  : t("unpaid")}
-            </dd>
-          </div>
-        </dl>
+        {!isTable ? (
+          <dl className="border-t border-line text-sm">
+            <div className="bg-surface px-6 py-4">
+              <dt className="text-cream/70">{reservation.paymentMethod === "ONLINE" ? t("online") : t("onsite")}</dt>
+              <dd className="mt-1 text-lg font-semibold text-cream">
+                {reservation.paymentStatus === "PAID" ? t("paid") : t("unpaid")}
+              </dd>
+            </div>
+          </dl>
+        ) : null}
       </article>
     </div>
   );
