@@ -5,10 +5,10 @@ import { cn, todayInputValue } from "@/lib/utils";
 const DEFAULT_WEEKDAYS = ["P", "U", "S", "Č", "P", "S", "N"];
 
 const TONE_CLASS = {
-  free: "text-paper-muted hover:bg-paper-2",
-  table: "bg-paper-2 text-paper-text",
-  event: "bg-paper-text/12 text-paper-text",
-  both: "bg-paper-text text-paper",
+  free: "text-cream/50 hover:bg-surface-2",
+  table: "bg-surface-2 text-cream",
+  event: "bg-cream/12 text-cream",
+  both: "bg-paper text-paper-text",
 };
 
 export function ReservationCalendar({
@@ -45,18 +45,18 @@ export function ReservationCalendar({
   const days = Array.isArray(weekdays) && weekdays.length === 7 ? weekdays : DEFAULT_WEEKDAYS;
 
   return (
-    <section className="rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
+    <section className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
       <div className="flex items-center justify-between gap-3">
-        <Link href={prevHref} className="rounded-lg px-2 py-1 text-sm text-paper-muted hover:text-paper-text">
+        <Link href={prevHref} className="rounded-lg px-2 py-1 text-sm text-cream/55 hover:text-cream">
           ←
         </Link>
-        <h2 className="text-xl font-semibold tracking-tight capitalize">{monthTitle}</h2>
-        <Link href={nextHref} className="rounded-lg px-2 py-1 text-sm text-paper-muted hover:text-paper-text">
+        <h2 className="text-xl font-bold tracking-tight text-cream capitalize">{monthTitle}</h2>
+        <Link href={nextHref} className="rounded-lg px-2 py-1 text-sm text-cream/55 hover:text-cream">
           →
         </Link>
       </div>
 
-      <div className="mt-5 grid grid-cols-7 gap-1 text-center text-[11px] font-medium text-paper-muted">
+      <div className="mt-5 grid grid-cols-7 gap-1 text-center text-[11px] font-medium text-cream/45">
         {days.map((day, index) => (
           <div key={`${day}-${index}`}>{day}</div>
         ))}
@@ -76,34 +76,34 @@ export function ReservationCalendar({
               className={cn(
                 "flex min-h-11 flex-col items-center justify-center rounded-lg text-sm transition",
                 TONE_CLASS[tone],
-                isToday && "ring-1 ring-paper-text/35",
-                isSelected && "ring-2 ring-paper-text",
+                isToday && "ring-1 ring-cream/35",
+                isSelected && "ring-2 ring-paper",
               )}
             >
               <span className="tabular-nums">{cell.date}</span>
               {info && info.guests > 0 ? (
-                <span className="text-[10px] text-paper-muted">{info.guests}</span>
+                <span className="text-[10px] text-cream/55">{info.guests}</span>
               ) : null}
             </Link>
           );
         })}
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-3 text-[11px] text-paper-muted">
+      <div className="mt-5 flex flex-wrap gap-3 text-[11px] text-cream/55">
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm bg-paper-2" />
+          <span className="h-2.5 w-2.5 rounded-sm bg-surface-2" />
           {legendTables}
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm bg-paper-text/20" />
+          <span className="h-2.5 w-2.5 rounded-sm bg-cream/20" />
           {legendEvents}
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm bg-paper-text" />
+          <span className="h-2.5 w-2.5 rounded-sm bg-paper" />
           {legendBoth}
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm border border-paper-line" />
+          <span className="h-2.5 w-2.5 rounded-sm border border-line" />
           {legendFree}
         </span>
       </div>

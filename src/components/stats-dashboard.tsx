@@ -51,9 +51,9 @@ export async function StatsDashboard({
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1.4fr_0.8fr]">
-        <div className="rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
-          <h2 className="text-lg font-bold tracking-tight">{t("chartTitle")}</h2>
-          <p className="mt-1 text-sm text-paper-muted">{t("chartHint")}</p>
+        <div className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
+          <h2 className="text-lg font-bold tracking-tight text-cream">{t("chartTitle")}</h2>
+          <p className="mt-1 text-sm text-cream/65">{t("chartHint")}</p>
           <div className="mt-5">
             <AdminChart
               days={days}
@@ -63,18 +63,18 @@ export async function StatsDashboard({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
+        <div className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-lg font-bold tracking-tight">{t("emailsTitle")}</h2>
-            <CopyEmails emails={stats.emails} className="text-paper-muted hover:text-paper-text" />
+            <h2 className="text-lg font-bold tracking-tight text-cream">{t("emailsTitle")}</h2>
+            <CopyEmails emails={stats.emails} />
           </div>
-          <p className="mt-1 text-sm text-paper-muted">{t("emailsHint")}</p>
+          <p className="mt-1 text-sm text-cream/65">{t("emailsHint")}</p>
           {stats.emails.length === 0 ? (
-            <p className="mt-6 text-sm text-paper-muted">{t("emptyReservations")}</p>
+            <p className="mt-6 text-sm text-cream/65">{t("emptyReservations")}</p>
           ) : (
             <ul className="mt-5 max-h-72 space-y-2 overflow-auto text-sm">
               {stats.emails.map((email) => (
-                <li key={email} className="truncate rounded-xl bg-paper-2 px-3 py-2 text-paper-muted">
+                <li key={email} className="truncate rounded-xl bg-surface-2 px-3 py-2 text-cream/75">
                   {email}
                 </li>
               ))}

@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { DashboardNav } from "@/components/dashboard-nav";
+import { DashboardNav, type DashboardLink } from "@/components/dashboard-nav";
 
 export function DashboardChrome({
   roleLabel,
@@ -16,7 +16,7 @@ export function DashboardChrome({
   venueName: string;
   venueSlug: string;
   pendingBanner?: string;
-  links: { href: string; label: string }[];
+  links: DashboardLink[];
   children: ReactNode;
 }) {
   const pathname = usePathname();
@@ -26,15 +26,15 @@ export function DashboardChrome({
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-6 lg:flex-row lg:py-8">
-      <aside className="w-full shrink-0 lg:sticky lg:top-20 lg:w-52">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-cream/50">{roleLabel}</p>
-        <p className="mt-1 text-base font-bold tracking-tight text-cream">{venueName}</p>
-        <p className="mt-0.5 text-xs text-cream/50">{venueSlug}.ulaznice.rs</p>
+      <aside className="w-full shrink-0 lg:sticky lg:top-20 lg:w-56">
+        <p className="text-xs font-medium text-cream/55">{roleLabel}</p>
+        <p className="mt-1 text-lg font-bold tracking-tight text-cream">{venueName}</p>
+        <p className="mt-0.5 text-xs text-cream/45">{venueSlug}.ulaznice.rs</p>
         <DashboardNav links={links} />
       </aside>
       <div className="min-w-0 flex-1">
         {pendingBanner ? (
-          <p className="mb-6 rounded-2xl border border-line bg-surface px-4 py-3 text-sm leading-relaxed text-cream/80">
+          <p className="mb-6 rounded-2xl border border-line bg-surface px-4 py-3 text-sm leading-relaxed text-cream/70">
             {pendingBanner}
           </p>
         ) : null}

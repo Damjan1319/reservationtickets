@@ -95,13 +95,13 @@ export default async function DashboardPage({
               upcoming.map((event) => {
                 const reserved = liveGuestCount(event.reservations);
                 return (
-                  <div key={event.id} className="rounded-xl border border-line/80 px-4 py-3">
-                    <p className="text-base font-bold text-cream">{event.title}</p>
-                    <p className="mt-1 text-sm text-cream/75">
+                  <div key={event.id} className="rounded-xl border border-line px-4 py-3">
+                    <p className="text-base font-bold tracking-tight text-cream">{event.title}</p>
+                    <p className="mt-1 text-xs font-semibold text-cream/70">
                       {event.artist.trim() || context.venue.name}
                     </p>
                     <p className="mt-1 text-sm text-cream/65">{formatDateTime(event.startsAt, locale)}</p>
-                    <p className="mt-1 text-sm text-cream/65">
+                    <p className="mt-1 text-sm text-cream/55">
                       {t("sold")}: {reserved}/{event.capacity}
                     </p>
                   </div>

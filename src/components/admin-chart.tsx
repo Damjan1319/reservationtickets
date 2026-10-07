@@ -11,13 +11,13 @@ export function AdminChart({
 
   return (
     <div>
-      <div className="flex flex-wrap gap-4 text-xs text-paper-muted">
+      <div className="flex flex-wrap gap-4 text-xs text-cream/55">
         <span className="inline-flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-paper-text" />
+          <span className="h-2 w-2 rounded-full bg-paper" />
           {reservationsLabel}
         </span>
         <span className="inline-flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-paper-text/30" />
+          <span className="h-2 w-2 rounded-full bg-cream/30" />
           {arrivedLabel}
         </span>
       </div>
@@ -29,17 +29,17 @@ export function AdminChart({
           <div key={day.label} className="flex h-full flex-col items-center justify-end gap-1">
             <div className="flex w-full flex-1 items-end justify-center gap-0.5">
               <div
-                className="w-1/2 min-h-0.5 rounded-sm bg-paper-text"
+                className="w-1/2 min-h-0.5 rounded-sm bg-paper"
                 style={{ height: `${(day.reservations / max) * 100}%` }}
                 title={`${reservationsLabel}: ${day.reservations}`}
               />
               <div
-                className="w-1/2 min-h-0.5 rounded-sm bg-paper-text/30"
+                className="w-1/2 min-h-0.5 rounded-sm bg-cream/30"
                 style={{ height: `${(day.arrived / max) * 100}%` }}
                 title={`${arrivedLabel}: ${day.arrived}`}
               />
             </div>
-            <span className="text-[10px] text-paper-muted">{day.label}</span>
+            <span className="text-[10px] text-cream/45">{day.label}</span>
           </div>
         ))}
       </div>

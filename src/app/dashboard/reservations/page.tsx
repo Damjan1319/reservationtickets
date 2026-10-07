@@ -89,7 +89,7 @@ export default async function TableReservationsPage({
           name="q"
           defaultValue={q}
           placeholder={t("searchGuests")}
-          className="min-w-0 flex-1 rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+          className="min-w-0 flex-1 rounded-xl border border-line bg-surface-2 px-4 py-3 text-cream outline-none focus:border-cream"
         />
         <button type="submit" className="btn btn-ghost !px-4">
           {t("searchGuests")}
@@ -109,16 +109,23 @@ export default async function TableReservationsPage({
               <h2 className="text-base font-bold text-cream">{hour}</h2>
               <div className="mt-3 space-y-3">
                 {rows.map((item) => (
-                  <article key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
+                  <article
+                    key={item.id}
+                    className={
+                      item.status === "PENDING"
+                        ? "flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-cream/35 bg-surface p-5 sm:p-6"
+                        : "flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-surface p-5 sm:p-6"
+                    }
+                  >
                     <div>
-                      <p className="text-xl font-semibold tracking-tight">
+                      <p className="text-xl font-bold tracking-tight text-cream">
                         {item.mealType ? tb(`meals.${item.mealType}`) : t("tables")} · {item.guests}
                       </p>
-                      <p className="text-sm">
+                      <p className="mt-1 text-sm text-cream/85">
                         {item.user.name}
-                        <span className="mt-0.5 block text-paper-muted">{item.user.email}</span>
+                        <span className="mt-0.5 block text-cream/55">{item.user.email}</span>
                       </p>
-                      <p className="mt-1 text-xs text-paper-muted">{formatTime(item.visitAt, locale)}</p>
+                      <p className="mt-1 text-xs text-cream/55">{formatTime(item.visitAt, locale)}</p>
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <DecideButtons id={item.id} status={item.status} />

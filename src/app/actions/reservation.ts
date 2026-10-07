@@ -97,6 +97,7 @@ export async function createReservation(formData: FormData) {
 
   revalidatePath(`/v/${event.venue.slug}`);
   revalidatePath(`/tickets`);
+  revalidatePath("/dashboard", "layout");
   return { ok: true as const, id: reservation.id };
 }
 
@@ -142,6 +143,7 @@ export async function createTableReservation(formData: FormData) {
 
   revalidatePath(`/v/${venue.slug}`);
   revalidatePath(`/tickets`);
+  revalidatePath("/dashboard", "layout");
   return { ok: true as const, id: reservation.id };
 }
 
@@ -241,6 +243,7 @@ export async function confirmReservation(reservationId: string) {
   await sendReservationDecisionEmail(reservation, "CONFIRMED");
   revalidatePath("/dashboard/reservations");
   revalidatePath("/dashboard/tickets");
+  revalidatePath("/dashboard", "layout");
   revalidatePath("/dashboard");
   revalidatePath("/tickets");
   return { ok: true as const };
@@ -263,6 +266,7 @@ export async function cancelReservation(reservationId: string) {
   await sendReservationDecisionEmail(reservation, "CANCELLED");
   revalidatePath("/dashboard/reservations");
   revalidatePath("/dashboard/tickets");
+  revalidatePath("/dashboard", "layout");
   revalidatePath("/dashboard");
   revalidatePath("/tickets");
   revalidatePath(`/v/${reservation.venue.slug}`);

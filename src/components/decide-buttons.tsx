@@ -12,13 +12,13 @@ export function DecideButtons({ id, status }: { id: string; status: string }) {
   const [ask, setAsk] = useState<"confirm" | "cancel" | null>(null);
 
   if (status === "CANCELLED") {
-    return <p className="text-sm text-paper-muted">{t("statusCancelled")}</p>;
+    return <p className="text-sm text-cream/55">{t("statusCancelled")}</p>;
   }
 
   return (
     <div className="flex flex-col items-end gap-2">
       {status === "CONFIRMED" ? (
-        <p className="text-sm text-paper-muted">{t("statusConfirmed")}</p>
+        <p className="text-sm text-cream/55">{t("statusConfirmed")}</p>
       ) : (
         <button
           type="button"
