@@ -54,7 +54,7 @@ export default async function EventPage({
           </div>
         </dl>
       </div>
-      <aside className="rounded-2xl border border-paper-line bg-paper p-6 text-paper-text">
+      <aside className="rounded-2xl border border-paper-line bg-paper p-6 text-paper-text lg:sticky lg:top-24">
         <h2 className="text-lg font-bold">{tb("title")}</h2>
         {event.venue.verificationStatus !== "VERIFIED" ? (
           <p className="mt-4 text-paper-muted">{tb("unverified")}</p>

@@ -43,58 +43,35 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
 
   return (
     <div>
-      <section className="relative overflow-hidden border-b border-line">
+      <section className="relative overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={venueCover(venue.type, venue.coverUrl)}
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-bg via-bg/85 to-bg/45" />
-        <div className="relative mx-auto flex max-w-6xl flex-col gap-10 px-4 py-14 sm:py-20">
+        <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/80 to-black/35" />
+        <div className="relative mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 sm:py-16">
           <PageBack href="/" label={tn("venues")} onImage />
-
           <div>
-            <p className="text-sm font-medium text-cream">
+            <p className="text-sm font-medium text-cream/80">
               {t(`types.${venue.type}`)} · {venue.city}
-              {isPublic ? ` · ${t("verified")}` : ` · ${t("pending")}`}
             </p>
             <h1 className="mt-3 text-4xl font-bold tracking-tight text-cream sm:text-5xl">{venue.name}</h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-cream">{venue.description}</p>
-          </div>
-
-          <div>
-            <p className="text-sm font-medium text-cream">
-              {venue.address} · {venue.phone}
-            </p>
-            <a
-              href={venue.proofUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-2 block text-sm font-medium text-cream hover:underline"
-            >
-              {t("maps")}
-            </a>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3 text-sm font-medium text-cream">
-            <span>{t("publicLink")}:</span>
-            <code className="rounded-full border border-line bg-surface/80 px-3 py-1 text-cream">
-              {venue.slug}.ulaznice.rs
-            </code>
-            <CopyLink value={publicLink} />
-            <span>/v/{venue.slug}</span>
+            {venue.description ? (
+              <p className="mt-4 max-w-2xl text-base leading-7 text-cream/85">{venue.description}</p>
+            ) : null}
           </div>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-6xl gap-10 px-4 py-14 lg:grid-cols-[1.1fr_0.9fr]">
+      <section className="mx-auto grid max-w-6xl items-start gap-10 px-4 py-10 lg:grid-cols-[1.15fr_0.85fr] lg:py-12">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-cream sm:text-3xl">{t("upcoming")}</h2>
           {venue.events.length === 0 ? (
-            <p className="mt-6 text-muted">{t("noEvents")}</p>
+            <p className="mt-5 text-cream/70">{t("noEvents")}</p>
           ) : (
-            <div className="mt-8 grid gap-5">
+            <div className="mt-6 grid gap-4">
               {venue.events.map((event) => (
                 <EventCard
                   key={event.id}
@@ -111,7 +88,7 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
           )}
         </div>
 
-        <aside className="rounded-2xl border border-paper-line bg-paper p-6 text-paper-text">
+        <aside className="rounded-2xl border border-paper-line bg-paper p-6 text-paper-text lg:sticky lg:top-24">
           <h2 className="text-lg font-bold">{t("tableTitle")}</h2>
           <p className="mt-2 text-sm font-medium text-paper-muted">{t("tableSubtitle")}</p>
           {isPublic && session?.user ? (
@@ -121,10 +98,7 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
           ) : isPublic ? (
             <div className="mt-6 space-y-4">
               <p className="text-paper-muted">{tb("needLogin")}</p>
-              <Link
-                href={`/login?callbackUrl=/v/${slug}`}
-                className="btn btn-primary"
-              >
+              <Link href={`/login?callbackUrl=/v/${slug}`} className="btn btn-primary">
                 {tn("login")}
               </Link>
             </div>
@@ -132,6 +106,28 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
             <p className="mt-6 text-paper-muted">{t("pendingPublic")}</p>
           )}
         </aside>
+      </section>
+
+      <section className="border-t border-line/70">
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-7 text-sm text-cream/75 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-1">
+            <p className="font-medium text-cream">
+              {venue.address}
+              {venue.phone ? ` · ${venue.phone}` : ""}
+            </p>
+            {venue.proofUrl ? (
+              <a href={venue.proofUrl} target="_blank" rel="noreferrer" className="hover:text-cream hover:underline">
+                {t("maps")}
+              </a>
+            ) : null}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <code className="rounded-full border border-line bg-surface px-3 py-1 text-cream">
+              {venue.slug}.ulaznice.rs
+            </code>
+            <CopyLink value={publicLink} />
+          </div>
+        </div>
       </section>
     </div>
   );

@@ -31,8 +31,8 @@ export async function Header() {
       ]
     : [
         { href: "/#venues", label: t("venues") },
-        { href: "/login", label: t("login"), kind: "ghost" as const },
-        { href: "/register-venue", label: t("registerVenue"), kind: "primary" as const },
+        { href: "/register-venue", label: t("registerVenue") },
+        { href: "/login", label: t("login") },
       ];
 
   return (

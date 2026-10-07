@@ -44,7 +44,7 @@ export function VenueBrowser({
 
   return (
     <>
-      <div className="mt-5 flex flex-wrap gap-2">
+      <div className="mt-5 flex flex-wrap gap-1.5">
         <FilterChip active={!city} onClick={() => apply("", type)}>
           {t("allCities")}
         </FilterChip>
@@ -53,8 +53,6 @@ export function VenueBrowser({
             {item}
           </FilterChip>
         ))}
-      </div>
-      <div className="mt-3 flex flex-wrap gap-2">
         <FilterChip active={!type} onClick={() => apply(city, "")}>
           {t("allTypes")}
         </FilterChip>
@@ -65,9 +63,11 @@ export function VenueBrowser({
         ))}
       </div>
       {visible.length === 0 ? (
-        <p className="mt-10 font-medium text-cream">{venues.length === 0 ? th("venuesEmpty") : th("venuesEmptyFilter")}</p>
+        <p className="mt-8 font-medium text-cream">
+          {venues.length === 0 ? th("venuesEmpty") : th("venuesEmptyFilter")}
+        </p>
       ) : (
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((venue) => (
             <VenueCard key={venue.id} {...venue} />
           ))}
@@ -91,8 +91,8 @@ function FilterChip({
       type="button"
       onClick={onClick}
       className={cn(
-        "rounded-full px-3.5 py-1.5 text-sm font-semibold transition",
-        active ? "bg-paper text-paper-text" : "border border-line text-cream hover:bg-surface",
+        "rounded-full px-3 py-1 text-[13px] font-semibold transition",
+        active ? "bg-paper text-paper-text" : "border border-line text-cream/85 hover:bg-surface",
       )}
     >
       {children}

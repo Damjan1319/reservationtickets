@@ -28,18 +28,18 @@ export async function EventCard({
   return (
     <Link
       href={`/v/${venueSlug}/events/${id}`}
-      className="flex flex-col justify-between rounded-2xl border border-paper-line bg-paper p-5 text-paper-text transition hover:border-paper-text/25"
+      className="flex flex-col justify-between rounded-2xl border border-line bg-surface p-5 text-cream transition hover:border-cream/35"
     >
       <div>
-        <p className="text-xs font-semibold text-paper-muted">{formatDateTime(startsAt, locale)}</p>
+        <p className="text-xs font-semibold text-cream/70">{formatDateTime(startsAt, locale)}</p>
         <h3 className="mt-2 text-xl font-bold tracking-tight">{title}</h3>
       </div>
       <div className="mt-6 flex items-end justify-between text-sm">
         <p className="font-semibold">
           {formatMoney(price, locale)}
-          <span className="font-medium text-paper-muted"> / {t("perPerson")}</span>
+          <span className="font-medium text-cream/60"> / {t("perPerson")}</span>
         </p>
-        <p className={left === 0 ? "font-semibold text-danger" : "font-medium text-paper-muted"}>
+        <p className={left === 0 ? "font-semibold text-danger" : "font-medium text-cream/70"}>
           {left === 0 ? t("soldOut") : `${left} · ${t("spots")}`}
         </p>
       </div>
