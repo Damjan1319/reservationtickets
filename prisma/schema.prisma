@@ -37,6 +37,11 @@ model Venue {
   verificationStatus   String   @default("PENDING")
   coverHue             Int      @default(32)
   coverUrl             String   @default("")
+  tableCapacity        Int      @default(0)
+  opensAt              String   @default("10:00")
+  closesAt             String   @default("23:30")
+  closed               Boolean  @default(false)
+  noShowMinutes        Int      @default(45)
   ownerId              String
   owner       User     @relation(fields: [ownerId], references: [id])
   createdAt   DateTime @default(now())
@@ -95,6 +100,9 @@ model Reservation {
   checkedInAt     DateTime?
   createdAt       DateTime  @default(now())
   tickets         Ticket[]
+
+  @@index([venueId, visitAt])
+  @@index([venueId, status])
 }
 
 model Ticket {

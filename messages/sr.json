@@ -150,6 +150,10 @@
     "needLogin": "Za rezervaciju moraš da se prijaviš emailom.",
     "success": "Rezervacija je kreirana.",
     "full": "Nema dovoljno mesta.",
+    "closed": "Lokal danas ne prima rezervacije.",
+    "closedHours": "Izabrani sat je van radnog vremena.",
+    "spotsLeft": "Još {count, plural, one {# mesto} few {# mesta} other {# mesta}}.",
+    "hours": "Radno vreme",
     "invalidGuests": "Možeš rezervisati od 1 do 20 osoba.",
     "unverified": "Lokal još nije proveren.",
     "email": "Email",
@@ -194,7 +198,12 @@
     "downloadAll": "Preuzmi sve QR kodove",
     "downloadOne": "Sačuvaj na telefon",
     "payAtVenue": "Plaća se u lokalu",
-    "cancelled": "Ova rezervacija je otkazana."
+    "cancelled": "Ova rezervacija je otkazana.",
+    "statusPending": "Čeka prihvatanje",
+    "statusConfirmed": "Potvrđeno",
+    "statusCancelled": "Otkazano",
+    "statusInside": "Unutra",
+    "onListSayName": "Na spisku si. Na vratima reci ime."
   },
   "dashboard": {
     "overview": "Pregled",
@@ -208,6 +217,7 @@
     "settings": "Podešavanja",
     "tonight": "Naredne žurke",
     "statsIntro": "Kalendar, žurke i zarada na jednom mestu.",
+    "pendingInbox": "Čeka prihvatanje",
     "quickCreate": "Nova rezervacija",
     "quickCreateHint": "Sto ili karta za gosta",
     "quickScan": "Skener",
@@ -225,7 +235,7 @@
     "statPeriod": "Rezervacije",
     "statPeriodHint": "U izabranom periodu",
     "statSold": "Prodate karte",
-    "statSoldHint": "Ulaznice za žurke",
+    "statSoldHint": "Karte za žurke",
     "statArrived": "Došli",
     "statArrivedHint": "Check-in i stolovi",
     "statEntries": "Ulazi",
@@ -324,7 +334,10 @@
     "todayGuestsHint": "Gosti na spisku",
     "todayInsideHint": "Već unutra",
     "todayUnpaidHint": "Čeka uplatu",
-    "noAccess": "Nemaš pristup skeneru."
+    "noAccess": "Nemaš pristup skeneru.",
+    "torchOn": "Lampa",
+    "torchOff": "Ugasi lampu",
+    "listEmpty": "Nema gostiju za večeras. Ako nema mreže, vidi se poslednji sačuvan spisak."
   },
   "settings": {
     "title": "Podešavanja lokala",
@@ -333,7 +346,14 @@
     "coverHint": "Prikazuje se na početnoj i na stranici lokala. JPG, PNG ili WebP, do 1.5 MB.",
     "coverType": "Dozvoljeni formati su JPG, PNG i WebP.",
     "coverSize": "Slika mora biti manja od 1.5 MB.",
-    "coverSave": "Slika nije sačuvana. Pokušaj ponovo."
+    "coverSave": "Slika nije sačuvana. Pokušaj ponovo.",
+    "tableCapacity": "Mesta za stolovima",
+    "tableCapacityHint": "Maksimum gostiju po terminu (doručak, ručak, večera, piće). 0 = bez limita.",
+    "opensAt": "Otvara se",
+    "closesAt": "Zatvara se",
+    "closed": "Danas zatvoreno za rezervacije",
+    "noShowMinutes": "No-show (minuti)",
+    "noShowHint": "Ako gost ne dođe toliko posle termina, sto se oslobađa."
   },
   "admin": {
     "title": "Admin",
@@ -369,6 +389,20 @@
       "month": "30 dana",
       "all": "Sve"
     }
+  },
+  "legal": {
+    "termsLink": "Uslovi",
+    "privacyLink": "Privatnost",
+    "termsTitle": "Uslovi korišćenja",
+    "privacyTitle": "Privatnost",
+    "terms1": "Ovaj sistem služi lokalima da vode rezervacije stolova i karte za ulaz. Nalog je ličan. Lažni podaci, zloupotreba skenera ili tuđih rezervacija nisu dozvoljeni.",
+    "terms2": "Lokal odlučuje da li prihvata rezervaciju. Potvrda nije garancija mesta ako gost ne dođe na vreme. Cenu i pravila ulaza određuje lokal.",
+    "terms3": "Plaćanje je u lokalu, osim ako lokal drugačije ne kaže. Mi ne čuvamo kartice i ne naplaćujemo goste u ime lokala.",
+    "terms4": "Možemo da uklonimo nalog ili lokal koji krši pravila, šalje spam ili lažira identitet. Za reklamacije prvo se javi lokalu, pa nama.",
+    "privacy1": "Čuvamo ime, email, podatke o rezervaciji i, za vlasnike, PIB i kontakt lokala. To treba da rezervacija i ulaz rade.",
+    "privacy2": "Podatke vide lokal kome je rezervacija namenjena i ti. Ne prodajemo ih trećim licima. Pristup ima i hosting (baza, mejl) koliko je tehnički neophodno.",
+    "privacy3": "Možeš da zatražiš brisanje naloga. Rezervacije koje su već ostvarene lokal može da zadrži u evidenciji zbog svog poslovanja.",
+    "privacy4": "Prijava se štiti lozinkom ili Google nalogom. Skener i spisak na vratima vidi samo osoblje tog lokala."
   },
   "validation": {
     "minPassword": "Lozinka mora imati najmanje 6 karaktera.",

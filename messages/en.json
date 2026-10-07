@@ -34,7 +34,7 @@
   },
   "home": {
     "eyebrow": "Reservations and tickets",
-    "title": "Your venue. Your link. Your reservations.",
+    "title": "Your spot. Your venue. Your reservations.",
     "subtitle": "Book a table or a party, then show the QR at the door.",
     "ctaGuest": "Find a venue",
     "ctaVenue": "Open your venue",
@@ -150,6 +150,10 @@
     "needLogin": "You must sign in with email to make a reservation.",
     "success": "Reservation created.",
     "full": "Not enough spots left.",
+    "closed": "This venue is not taking reservations today.",
+    "closedHours": "That time is outside opening hours.",
+    "spotsLeft": "{count, plural, one {# seat left} other {# seats left}}.",
+    "hours": "Hours",
     "invalidGuests": "You can reserve from 1 to 20 guests.",
     "unverified": "This venue is not verified yet.",
     "email": "Email",
@@ -194,7 +198,12 @@
     "waitingConfirmTable": "Waiting for the venue to confirm. You will get an email when it is accepted.",
     "youBooked": "You left a reservation for {date} at {time} for {count, plural, one {# person} other {# people}} at {venue}.",
     "theyBooked": "{name} left a reservation for {date} at {time} for {count, plural, one {# person} other {# people}} at {venue}.",
-    "cancelled": "This reservation was cancelled."
+    "cancelled": "This reservation was cancelled.",
+    "statusPending": "Waiting",
+    "statusConfirmed": "Confirmed",
+    "statusCancelled": "Cancelled",
+    "statusInside": "Inside",
+    "onListSayName": "You are on the list. Say this name at the door."
   },
   "dashboard": {
     "overview": "Overview",
@@ -208,6 +217,7 @@
     "settings": "Settings",
     "tonight": "Upcoming parties",
     "statsIntro": "Calendar, parties and earnings in one place.",
+    "pendingInbox": "Waiting for acceptance",
     "quickCreate": "New booking",
     "quickCreateHint": "Table or ticket for a guest",
     "quickScan": "Scanner",
@@ -324,7 +334,10 @@
     "todayGuestsHint": "Guests on the list",
     "todayInsideHint": "Already inside",
     "todayUnpaidHint": "Waiting for payment",
-    "noAccess": "You do not have scanner access."
+    "noAccess": "You do not have scanner access.",
+    "torchOn": "Light",
+    "torchOff": "Light off",
+    "listEmpty": "No guests for tonight. Offline, the last saved list stays on the phone."
   },
   "settings": {
     "title": "Venue settings",
@@ -333,7 +346,14 @@
     "coverHint": "Shown on the homepage and venue page. JPG, PNG or WebP, up to 1.5 MB.",
     "coverType": "Allowed formats are JPG, PNG and WebP.",
     "coverSize": "The image must be smaller than 1.5 MB.",
-    "coverSave": "The image could not be saved. Try again."
+    "coverSave": "The image could not be saved. Try again.",
+    "tableCapacity": "Table seats",
+    "tableCapacityHint": "Max guests per sitting (breakfast, lunch, dinner, drinks). 0 = no limit.",
+    "opensAt": "Opens",
+    "closesAt": "Closes",
+    "closed": "Closed for reservations today",
+    "noShowMinutes": "No-show (minutes)",
+    "noShowHint": "If the guest does not arrive this long after the time, the table is released."
   },
   "admin": {
     "title": "Admin",
@@ -369,6 +389,20 @@
       "month": "30 days",
       "all": "All"
     }
+  },
+  "legal": {
+    "termsLink": "Terms",
+    "privacyLink": "Privacy",
+    "termsTitle": "Terms of use",
+    "privacyTitle": "Privacy",
+    "terms1": "This system lets venues take table reservations and door tickets. Accounts are personal. Fake data, scanner abuse or using someone else’s booking is not allowed.",
+    "terms2": "The venue decides whether to accept a reservation. Confirmation is not a guaranteed seat if the guest is late. Prices and door rules are set by the venue.",
+    "terms3": "Payment is at the venue unless the venue says otherwise. We do not store cards and we do not charge guests on the venue’s behalf.",
+    "terms4": "We may remove an account or venue that breaks the rules, sends spam or fakes identity. For complaints, contact the venue first, then us.",
+    "privacy1": "We store name, email, reservation data and, for owners, tax ID and venue contact. That is required for booking and door check-in.",
+    "privacy2": "Data is visible to the venue of that reservation and to you. We do not sell it. Hosting (database, email) sees it only as needed to run the service.",
+    "privacy3": "You can ask for your account to be deleted. The venue may keep completed visits in its own records.",
+    "privacy4": "Sign-in is protected by password or Google. The door scanner and tonight’s list are visible only to that venue’s staff."
   },
   "validation": {
     "minPassword": "Password must be at least 6 characters.",

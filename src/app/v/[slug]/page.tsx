@@ -6,6 +6,9 @@ import { EventCard } from "@/components/event-card";
 import { PageBack } from "@/components/page-back";
 import { TableBookingForm } from "@/components/table-booking-form";
 import { prisma } from "@/lib/prisma";
+import { MEAL_TYPES } from "@/lib/constants";
+import { tableGuestsForSlot } from "@/lib/door";
+import { todayKey } from "@/lib/time";
 import { liveGuestCount, venueCover } from "@/lib/utils";
 
 export default async function VenuePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -37,6 +40,13 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
       </div>
     );
   }
+
+  const day = todayKey();
+  const reservedByMeal = Object.fromEntries(
+    await Promise.all(
+      MEAL_TYPES.map(async (meal) => [meal, await tableGuestsForSlot(venue.id, day, meal)] as const),
+    ),
+  );
 
   const addressLine = [venue.address && venue.address !== venue.city ? venue.address : null, venue.phone]
     .filter(Boolean)
@@ -107,7 +117,14 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
           <p className="mt-2 text-sm font-medium text-paper-muted">{t("tableSubtitle")}</p>
           {isPublic && session?.user ? (
             <div className="mt-6">
-              <TableBookingForm venueId={venue.id} />
+              <TableBookingForm
+                venueId={venue.id}
+                tableCapacity={venue.tableCapacity}
+                reservedByMeal={reservedByMeal}
+                closed={venue.closed}
+                opensAt={venue.opensAt}
+                closesAt={venue.closesAt}
+              />
             </div>
           ) : isPublic ? (
             <div className="mt-6 space-y-4">

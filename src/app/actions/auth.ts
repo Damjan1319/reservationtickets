@@ -1,7 +1,9 @@
 "use server";
 
 import bcrypt from "bcryptjs";
+import { headers } from "next/headers";
 import { signIn } from "@/auth";
+import { clientKey, rateLimit } from "@/lib/rate-limit";
 import { prisma } from "@/lib/prisma";
 
 export async function inspectLogin(emailValue: string) {
@@ -25,6 +27,10 @@ export async function loginUser(formData: FormData) {
     .toLowerCase()
     .trim();
   const password = String(formData.get("password") ?? "");
+  const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
+  if (!rateLimit(clientKey("login", `${ip}:${email}`), 8, 15 * 60_000)) {
+    return { error: "wrongPassword" as const };
+  }
   if (!email.includes("@")) {
     return { error: "invalidEmail" as const };
   }
@@ -51,6 +57,10 @@ export async function registerUser(formData: FormData) {
       .trim();
     const password = String(formData.get("password") ?? "");
 
+    const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
+    if (!rateLimit(clientKey("register", ip), 6, 60 * 60_000)) {
+      return { error: "failed" as const };
+    }
     if (!name || !email || !password) {
       return { error: "required" as const };
     }

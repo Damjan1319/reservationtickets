@@ -1,0 +1,9 @@
+{
+  "name": "Ulaznice ulaz",
+  "short_name": "Ulaz",
+  "start_url": "/dashboard/scan",
+  "display": "standalone",
+  "background_color": "#353532",
+  "theme_color": "#353532",
+  "lang": "sr"
+}

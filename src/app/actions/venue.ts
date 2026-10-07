@@ -33,8 +33,28 @@ async function readVenueFields(formData: FormData) {
   const phone = String(formData.get("phone") ?? "").trim();
   const pib = normalizePib(String(formData.get("pib") ?? ""));
   const proofUrl = String(formData.get("proofUrl") ?? "").trim();
+  const tableCapacity = Math.max(0, Math.floor(Number(formData.get("tableCapacity") ?? 0) || 0));
+  const opensAt = String(formData.get("opensAt") ?? "10:00").trim();
+  const closesAt = String(formData.get("closesAt") ?? "23:30").trim();
+  const closed = String(formData.get("closed") ?? "") === "on";
+  const noShowMinutes = Math.min(240, Math.max(15, Math.floor(Number(formData.get("noShowMinutes") ?? 45) || 45)));
 
-  return { name, slug, type, city, address, description, phone, pib, proofUrl };
+  return {
+    name,
+    slug,
+    type,
+    city,
+    address,
+    description,
+    phone,
+    pib,
+    proofUrl,
+    tableCapacity,
+    opensAt,
+    closesAt,
+    closed,
+    noShowMinutes,
+  };
 }
 
 export async function registerVenue(formData: FormData) {
@@ -155,6 +175,11 @@ export async function updateVenue(formData: FormData) {
         description: fields.description,
         phone: fields.phone,
         proofUrl: fields.proofUrl,
+        tableCapacity: fields.tableCapacity,
+        opensAt: fields.opensAt,
+        closesAt: fields.closesAt,
+        closed: fields.closed,
+        noShowMinutes: fields.noShowMinutes,
         ...(cover.url ? { coverUrl: cover.url } : {}),
         verificationStatus: proofChanged ? "PENDING" : context.venue.verificationStatus,
       },

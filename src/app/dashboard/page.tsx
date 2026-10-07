@@ -8,6 +8,7 @@ import { monthKey, monthLabel, occupancyByDay, parseMonth, shiftMonth } from "@/
 import { prisma } from "@/lib/prisma";
 import { getStaffContext } from "@/lib/staff";
 import { parsePeriod } from "@/lib/stats";
+import { DecideButtons } from "@/components/decide-buttons";
 import { formatDateTime, liveGuestCount } from "@/lib/utils";
 
 export default async function DashboardPage({
@@ -48,10 +49,31 @@ export default async function DashboardPage({
   const live = reservations.filter((item) => item.status !== "CANCELLED");
   const upcoming = events.slice(0, 4);
   const occupancy = occupancyByDay(live);
+  const pendingInbox = reservations
+    .filter((item) => item.status === "PENDING")
+    .sort((a, b) => a.visitAt.getTime() - b.visitAt.getTime())
+    .slice(0, 8);
 
   return (
     <div className="space-y-8">
       <PageHeader title={context.venue.name} description={t("statsIntro")} />
+
+      {pendingInbox.length > 0 ? (
+        <section className="space-y-3 rounded-2xl border border-cream/35 bg-surface p-4 sm:p-5">
+          <h2 className="text-lg font-bold tracking-tight text-cream">{t("pendingInbox")}</h2>
+          {pendingInbox.map((item) => (
+            <div key={item.id} className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3 first:border-0 first:pt-0">
+              <div>
+                <p className="font-semibold text-cream">{item.user.name}</p>
+                <p className="text-sm text-cream/65">
+                  {item.kind === "TABLE" ? t("tables") : t("tickets")} · {item.guests} · {formatDateTime(item.visitAt, locale)}
+                </p>
+              </div>
+              <DecideButtons id={item.id} status={item.status} />
+            </div>
+          ))}
+        </section>
+      ) : null}
 
       <div className="flex flex-wrap gap-2">
         <Link href="/dashboard/create" className="btn btn-primary !px-4 !py-2">

@@ -29,7 +29,10 @@ function shouldSkipRewrite(pathname: string) {
     pathname.startsWith("/tickets") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/after-login") ||
-    pathname.startsWith("/register-venue")
+    pathname.startsWith("/register-venue") ||
+    pathname.startsWith("/legal") ||
+    pathname.startsWith("/sw.js") ||
+    pathname.startsWith("/manifest")
   );
 }
 

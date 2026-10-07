@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     template: "%s · Ulaznice",
   },
   description: "Rezervacije i QR karte za klubove, kafiće i restorane.",
+  manifest: "/manifest.webmanifest",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

@@ -22,13 +22,31 @@ async function stopScanner(scanner: Html5Qrcode) {
   }
 }
 
-export function Scanner({ locale }: { locale: string }) {
+function beep(ok: boolean) {
+  try {
+    const ctx = new AudioContext();
+    const tone = ctx.createOscillator();
+    const gain = ctx.createGain();
+    tone.type = "sine";
+    tone.frequency.value = ok ? 880 : 220;
+    gain.gain.value = 0.06;
+    tone.connect(gain);
+    gain.connect(ctx.destination);
+    tone.start();
+    tone.stop(ctx.currentTime + 0.14);
+  } catch {
+    /* ignore */
+  }
+}
+
+export function Scanner({ locale, onNeedList }: { locale: string; onNeedList?: () => void }) {
   const t = useTranslations("scan");
   const tt = useTranslations("ticket");
   const tb = useTranslations("booking");
   const [cameraError, setCameraError] = useState(false);
   const [cameraOn, setCameraOn] = useState(false);
   const [starting, setStarting] = useState(false);
+  const [torch, setTorch] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ticket, setTicket] = useState<ScannedTicket | null>(null);
   const [open, setOpen] = useState(false);
@@ -72,17 +90,20 @@ export function Scanner({ locale }: { locale: string }) {
       setError(null);
       setTicket(result.reservation);
       setOpen(true);
+      beep(true);
       return;
     }
     if (result.ok) {
       setTicket((current) => (current ? { ...current, paymentStatus: "PAID" } : current));
       setOpen(true);
+      beep(true);
       return;
     }
     pauseCamera();
     setTicket(null);
     setError(result.error ?? "notFound");
     setOpen(true);
+    beep(false);
   }
 
   function lookup(code: string) {
@@ -202,7 +223,35 @@ export function Scanner({ locale }: { locale: string }) {
       ) : (
         <p className="text-center text-sm font-medium text-cream">{t("ready")}</p>
       )}
-      {cameraError ? <p className="text-center text-sm text-danger">{t("cameraError")}</p> : null}
+      {cameraOn ? (
+        <button
+          type="button"
+          onClick={() => {
+            const next = !torch;
+            setTorch(next);
+            try {
+              void scannerRef.current?.applyVideoConstraints({
+                advanced: [{ torch: next }],
+              } as never);
+            } catch {
+              /* ignore */
+            }
+          }}
+          className="btn btn-ghost btn-full"
+        >
+          {torch ? t("torchOff") : t("torchOn")}
+        </button>
+      ) : null}
+      {cameraError ? (
+        <div className="space-y-2 text-center">
+          <p className="text-sm text-danger">{t("cameraError")}</p>
+          {onNeedList ? (
+            <button type="button" onClick={onNeedList} className="btn btn-primary btn-full">
+              {t("toList")}
+            </button>
+          ) : null}
+        </div>
+      ) : null}
       <form
         className="flex gap-2"
         onSubmit={(event) => {
@@ -234,7 +283,7 @@ export function Scanner({ locale }: { locale: string }) {
             onClick={(event) => event.stopPropagation()}
           >
             {error ? (
-              <p className="text-xl font-semibold leading-snug">{t(error)}</p>
+              <p className="text-3xl font-bold leading-snug">{t(error)}</p>
             ) : ticket && when ? (
               <div className="space-y-5">
                 <p
@@ -284,7 +333,7 @@ export function Scanner({ locale }: { locale: string }) {
                       onClick={() =>
                         startTransition(async () => applyResult(await checkInTicket(ticket.ticketId)))
                       }
-                      className="btn btn-primary"
+                      className="btn btn-primary min-h-14 text-xl"
                     >
                       {t("doCheckIn")}
                     </button>

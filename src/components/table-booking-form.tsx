@@ -6,10 +6,24 @@ import { useTranslations } from "next-intl";
 import { createTableReservation } from "@/app/actions/reservation";
 import { AppDialog } from "@/components/app-dialog";
 import { GuestCount } from "@/components/guest-count";
-import { MEAL_TYPES, MEAL_HOURS } from "@/lib/constants";
+import { MAX_GUESTS, MEAL_TYPES, MEAL_HOURS } from "@/lib/constants";
 import { cn, todayInputValue } from "@/lib/utils";
 
-export function TableBookingForm({ venueId }: { venueId: string }) {
+export function TableBookingForm({
+  venueId,
+  tableCapacity = 0,
+  reservedByMeal,
+  closed,
+  opensAt,
+  closesAt,
+}: {
+  venueId: string;
+  tableCapacity?: number;
+  reservedByMeal: Record<string, number>;
+  closed?: boolean;
+  opensAt?: string;
+  closesAt?: string;
+}) {
   const t = useTranslations("booking");
   const te = useTranslations("event");
   const tc = useTranslations("common");
@@ -20,6 +34,15 @@ export function TableBookingForm({ venueId }: { venueId: string }) {
   const [error, setError] = useState<string | null>(null);
   const [doneId, setDoneId] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const taken = reservedByMeal[mealType] ?? 0;
+  const remaining = tableCapacity > 0 ? Math.max(0, tableCapacity - taken) : MAX_GUESTS;
+
+  if (closed) {
+    return <p className="text-sm font-semibold text-paper-text">{t("closed")}</p>;
+  }
+  if (tableCapacity > 0 && remaining <= 0) {
+    return <p className="text-sm font-semibold text-danger">{t("full")}</p>;
+  }
 
   return (
     <>
@@ -85,7 +108,15 @@ export function TableBookingForm({ venueId }: { venueId: string }) {
 
         <div>
           <p className="mb-3 text-sm font-semibold text-paper-text">{t("guests")}</p>
-          <GuestCount value={guests} onChange={setGuests} />
+          <GuestCount value={guests} onChange={setGuests} max={remaining} />
+          {tableCapacity > 0 ? (
+            <p className="mt-2 text-sm text-paper-muted">{t("spotsLeft", { count: remaining })}</p>
+          ) : null}
+          {opensAt && closesAt ? (
+            <p className="mt-1 text-xs text-paper-muted">
+              {t("hours")}: {opensAt}–{closesAt}
+            </p>
+          ) : null}
         </div>
 
         {error ? (
@@ -94,6 +125,14 @@ export function TableBookingForm({ venueId }: { venueId: string }) {
               ? t("needLogin")
               : error === "unverified"
                 ? t("unverified")
+                : error === "full"
+                  ? t("full")
+                  : error === "closed"
+                    ? t("closed")
+                    : error === "closedHours"
+                      ? t("closedHours")
+                      : error === "past"
+                        ? te("past")
                 : error === "required"
                   ? tc("required")
                   : t(error)}

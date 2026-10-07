@@ -34,6 +34,11 @@ type VenueSettingsFormProps = {
     proofUrl: string;
     coverUrl: string;
     verificationStatus: string;
+    tableCapacity: number;
+    opensAt: string;
+    closesAt: string;
+    closed: boolean;
+    noShowMinutes: number;
   };
 };
 
@@ -178,6 +183,53 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
           required
           className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
+      </label>
+      <label className="block space-y-2">
+        <span className="text-sm font-semibold text-paper-text">{ts("tableCapacity")}</span>
+        <input
+          name="tableCapacity"
+          type="number"
+          min={0}
+          defaultValue={venue.tableCapacity}
+          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+        />
+        <span className="block text-xs text-paper-muted">{ts("tableCapacityHint")}</span>
+      </label>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <label className="block space-y-2">
+          <span className="text-sm font-semibold text-paper-text">{ts("opensAt")}</span>
+          <input
+            name="opensAt"
+            type="time"
+            defaultValue={venue.opensAt}
+            className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
+          />
+        </label>
+        <label className="block space-y-2">
+          <span className="text-sm font-semibold text-paper-text">{ts("closesAt")}</span>
+          <input
+            name="closesAt"
+            type="time"
+            defaultValue={venue.closesAt}
+            className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
+          />
+        </label>
+      </div>
+      <label className="flex items-center gap-3 rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text">
+        <input name="closed" type="checkbox" defaultChecked={venue.closed} className="h-4 w-4" />
+        <span className="text-sm font-semibold">{ts("closed")}</span>
+      </label>
+      <label className="block space-y-2">
+        <span className="text-sm font-semibold text-paper-text">{ts("noShowMinutes")}</span>
+        <input
+          name="noShowMinutes"
+          type="number"
+          min={15}
+          max={240}
+          defaultValue={venue.noShowMinutes}
+          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+        />
+        <span className="block text-xs text-paper-muted">{ts("noShowHint")}</span>
       </label>
       {error ? <p className="text-sm text-danger">{error}</p> : null}
       {message ? <p className="text-sm text-success">{message}</p> : null}

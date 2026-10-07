@@ -8,6 +8,9 @@ import { MAX_GUESTS, MEAL_TYPES, ONLINE_PAYMENTS_ENABLED, type MealType } from "
 import { sendReservationDecisionEmail } from "@/lib/mail";
 import { prisma } from "@/lib/prisma";
 import { requireStaff } from "@/lib/staff";
+import { loadDoorList, releaseNoShows, tableGuestsForSlot } from "@/lib/door";
+import { clientKey, rateLimit } from "@/lib/rate-limit";
+import { belgradeToDate, dayKeyInTz, timeIsWithinHours, todayKey } from "@/lib/time";
 import { combineDateTime, createQrToken, liveGuestCount, parseQrPayload } from "@/lib/utils";
 
 function paymentFromForm(formData: FormData) {
@@ -52,6 +55,10 @@ export async function createReservation(formData: FormData) {
   const session = await auth();
   if (!session?.user?.id) {
     return { error: "auth" as const };
+  }
+
+  if (!rateLimit(clientKey("book", session.user.id), 12, 60_000)) {
+    return { error: "required" as const };
   }
 
   const eventId = String(formData.get("eventId") ?? "");
@@ -107,6 +114,10 @@ export async function createTableReservation(formData: FormData) {
     return { error: "auth" as const };
   }
 
+  if (!rateLimit(clientKey("book", session.user.id), 12, 60_000)) {
+    return { error: "required" as const };
+  }
+
   const venueId = String(formData.get("venueId") ?? "");
   const mealType = String(formData.get("mealType") ?? "") as MealType;
   const dateValue = String(formData.get("date") ?? "");
@@ -120,12 +131,21 @@ export async function createTableReservation(formData: FormData) {
     return { error: "required" as const };
   }
 
-  const visitAt = combineDateTime(dateValue, timeValue);
+  const visitAt = belgradeToDate(dateValue, timeValue) ?? combineDateTime(dateValue, timeValue);
   if (!visitAt) return { error: "required" as const };
+  if (visitAt.getTime() < Date.now() - 2 * 60_000) return { error: "past" as const };
 
   const venue = await prisma.venue.findUnique({ where: { id: venueId } });
   if (!venue) return { error: "required" as const };
   if (venue.verificationStatus !== "VERIFIED") return { error: "unverified" as const };
+  if (venue.closed && dateValue === todayKey()) return { error: "closed" as const };
+  if (!timeIsWithinHours(venue.opensAt, venue.closesAt, timeValue)) return { error: "closedHours" as const };
+
+  await releaseNoShows(venue.id, venue.noShowMinutes);
+  if (venue.tableCapacity > 0) {
+    const taken = await tableGuestsForSlot(venue.id, dayKeyInTz(visitAt), mealType);
+    if (taken + guests > venue.tableCapacity) return { error: "full" as const };
+  }
 
   const reservation = await prisma.reservation.create({
     data: {
@@ -164,6 +184,12 @@ export async function staffCreateBooking(formData: FormData) {
     const visitAt = combineDateTime(String(formData.get("date") ?? ""), String(formData.get("time") ?? ""));
     if (!guests || !visitAt || !MEAL_TYPES.includes(mealType)) {
       return { error: "required" as const };
+    }
+    if (context.venue.closed) return { error: "required" as const };
+    await releaseNoShows(context.venue.id, context.venue.noShowMinutes);
+    if (context.venue.tableCapacity > 0) {
+      const taken = await tableGuestsForSlot(context.venue.id, dayKeyInTz(visitAt), mealType);
+      if (taken + guests > context.venue.tableCapacity) return { error: "full" as const };
     }
     const created = await prisma.reservation.create({
       data: {
@@ -342,9 +368,19 @@ const ticketInclude = {
   },
 } as const;
 
+export async function getDoorList() {
+  const context = await requireStaff();
+  if (!context) return { error: "noAccess" as const };
+  await releaseNoShows(context.venue.id, context.venue.noShowMinutes);
+  return { ok: true as const, items: await loadDoorList(context.venue.id) };
+}
+
 export async function lookupTicket(rawCode: string) {
   const context = await requireStaff();
   if (!context) return { error: "noAccess" as const };
+  if (!rateLimit(clientKey("scan", context.userId), 80, 60_000)) {
+    return { error: "notFound" as const };
+  }
 
   const token = parseQrPayload(rawCode);
   if (!token) return { error: "notFound" as const };
@@ -402,6 +438,7 @@ export async function checkInTicket(ticketId: string) {
 
     revalidatePath("/dashboard/reservations");
     revalidatePath("/dashboard/tickets");
+    revalidatePath("/dashboard/scan");
     return lookupTicket(ticket.qrToken);
   } catch (error) {
     console.error(error);
@@ -425,6 +462,7 @@ export async function markReservationPaid(reservationId: string, ticketId?: stri
 
   revalidatePath("/dashboard/reservations");
   revalidatePath("/dashboard/tickets");
+  revalidatePath("/dashboard/scan");
 
   const ticket = await prisma.ticket.findFirst({
     where: ticketId ? { id: ticketId, reservationId } : { reservationId },
@@ -452,5 +490,6 @@ export async function markTableArrived(reservationId: string) {
   });
 
   revalidatePath("/dashboard/reservations");
+  revalidatePath("/dashboard/scan");
   return { ok: true as const };
 }

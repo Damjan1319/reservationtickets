@@ -39,6 +39,18 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
   const when = reservation.event?.startsAt ?? reservation.visitAt;
   const isTable = reservation.kind === "TABLE";
   const isOwn = session?.user?.id === reservation.userId;
+  const inside =
+    isTable
+      ? reservation.checkedInCount >= reservation.guests
+      : reservation.tickets.some((ticket) => ticket.checkedInAt);
+  const statusLabel =
+    reservation.status === "PENDING"
+      ? t("statusPending")
+      : reservation.status === "CANCELLED"
+        ? t("statusCancelled")
+        : inside
+          ? t("statusInside")
+          : t("statusConfirmed");
   const booked = t(isOwn ? "youBooked" : "theyBooked", {
     name: reservation.user.name,
     date: formatDateLong(when, locale),
@@ -69,6 +81,9 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           <div className="relative">
             <p className="text-xs font-medium text-cream/80">{reservation.venue.name}</p>
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-cream">{title}</h1>
+            <p className="mt-3 inline-flex rounded-full bg-cream/15 px-3 py-1 text-xs font-semibold text-cream">
+              {statusLabel}
+            </p>
           </div>
         </div>
 
@@ -86,7 +101,9 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           </div>
         ) : isTable ? (
           <div className="space-y-4 px-6 py-8">
+            <p className="text-3xl font-bold tracking-tight text-cream">{reservation.user.name}</p>
             <p className="text-lg font-semibold leading-snug text-cream">{booked}</p>
+            <p className="text-base font-semibold text-cream">{t("onListSayName")}</p>
             <p className="text-sm leading-relaxed text-cream/75">{t("tableNoQr")}</p>
           </div>
         ) : (
