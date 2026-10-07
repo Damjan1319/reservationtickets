@@ -85,8 +85,8 @@ body {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--gold) 28%, transparent);
-  color: var(--cream);
+  background: #c4c2bb;
+  color: #161615;
 }
 
 input,
@@ -169,6 +169,19 @@ textarea {
 :is(input, textarea):is(.bg-paper, .bg-paper-2, .bg-white)::placeholder {
   color: var(--paper-muted);
   font-weight: 500;
+}
+
+:is(.bg-paper, .bg-paper-2, .text-paper-text)
+  :is(input, select, textarea):-webkit-autofill,
+:is(.bg-paper, .bg-paper-2, .text-paper-text)
+  :is(input, select, textarea):-webkit-autofill:hover,
+:is(.bg-paper, .bg-paper-2, .text-paper-text)
+  :is(input, select, textarea):-webkit-autofill:focus,
+:is(input, select, textarea):is(.bg-paper, .bg-paper-2, .bg-white):-webkit-autofill {
+  -webkit-text-fill-color: var(--paper-text);
+  caret-color: var(--paper-text);
+  box-shadow: 0 0 0 1000px #fff inset;
+  border: 1px solid var(--paper-line);
 }
 
 :is(.bg-paper, .bg-paper-2, .text-paper-text)

@@ -332,7 +332,8 @@
     "cover": "Slika lokala",
     "coverHint": "Prikazuje se na početnoj i na stranici lokala. JPG, PNG ili WebP, do 1.5 MB.",
     "coverType": "Dozvoljeni formati su JPG, PNG i WebP.",
-    "coverSize": "Slika mora biti manja od 1.5 MB."
+    "coverSize": "Slika mora biti manja od 1.5 MB.",
+    "coverSave": "Slika nije sačuvana. Pokušaj ponovo."
   },
   "admin": {
     "title": "Admin",

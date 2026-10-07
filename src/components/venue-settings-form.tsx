@@ -4,6 +4,23 @@ import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { updateVenue } from "@/app/actions/venue";
 import { VENUE_TYPES } from "@/lib/constants";
+import { venueCover } from "@/lib/utils";
+
+async function compressCover(file: File) {
+  const bitmap = await createImageBitmap(file);
+  const max = 1600;
+  const scale = Math.min(1, max / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return file;
+  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close();
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.82));
+  if (!blob || blob.size > 1_500_000) return file;
+  return new File([blob], "cover.jpg", { type: "image/jpeg" });
+}
 
 type VenueSettingsFormProps = {
   venue: {
@@ -26,7 +43,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
   const tc = useTranslations("common");
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [preview, setPreview] = useState(venue.coverUrl);
+  const [preview, setPreview] = useState(venueCover(venue.type, venue.coverUrl));
   const [pending, startTransition] = useTransition();
 
   return (
@@ -36,6 +53,14 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         startTransition(async () => {
+          const file = data.get("cover");
+          if (file instanceof File && file.size > 0) {
+            try {
+              data.set("cover", await compressCover(file));
+            } catch {
+              /* keep the original file */
+            }
+          }
           const result = await updateVenue(data);
           if (result?.ok) {
             setError(null);
@@ -46,6 +71,9 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
           } else if (result?.error === "coverSize") {
             setMessage(null);
             setError(ts("coverSize"));
+          } else if (result?.error === "coverSave") {
+            setMessage(null);
+            setError(ts("coverSave"));
           } else {
             setMessage(null);
             setError(tc("required"));
@@ -66,7 +94,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
           accept="image/jpeg,image/png,image/webp"
           onChange={(event) => {
             const file = event.target.files?.[0];
-            setPreview(file ? URL.createObjectURL(file) : venue.coverUrl);
+            setPreview(file ? URL.createObjectURL(file) : venueCover(venue.type, venue.coverUrl));
           }}
           className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 text-sm outline-none file:mr-3 file:rounded-lg file:border-0 file:bg-paper-2 file:px-3 file:py-1.5"
         />

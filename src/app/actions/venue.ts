@@ -1,7 +1,5 @@
 "use server";
 
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
@@ -11,22 +9,18 @@ import { VENUE_TYPES } from "@/lib/constants";
 import { isValidPhone, isValidPib, isValidProofUrl, isValidSlug, normalizePib, slugify } from "@/lib/utils";
 import { requireAdmin, requireOwner } from "@/lib/staff";
 
-const COVER_TYPES: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/png": "png",
-  "image/webp": "webp",
-};
+const COVER_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
-async function saveCoverFile(venueId: string, file: File | null) {
+async function saveCoverFile(file: File | null) {
   if (!file || file.size === 0) return { url: null as string | null };
-  const ext = COVER_TYPES[file.type];
-  if (!ext) return { error: "coverType" as const };
+  if (!COVER_TYPES.has(file.type)) return { error: "coverType" as const };
   if (file.size > 1_500_000) return { error: "coverSize" as const };
-  const dir = path.join(process.cwd(), "public", "uploads", "venues");
-  await mkdir(dir, { recursive: true });
-  const filename = `${venueId}.${ext}`;
-  await writeFile(path.join(dir, filename), Buffer.from(await file.arrayBuffer()));
-  return { url: `/uploads/venues/${filename}` };
+  try {
+    const buffer = Buffer.from(await file.arrayBuffer());
+    return { url: `data:${file.type};base64,${buffer.toString("base64")}` };
+  } catch {
+    return { error: "coverSave" as const };
+  }
 }
 
 async function readVenueFields(formData: FormData) {
@@ -146,25 +140,28 @@ export async function updateVenue(formData: FormData) {
     fields.phone !== context.venue.phone || fields.proofUrl !== context.venue.proofUrl;
 
   const cover = await saveCoverFile(
-    context.venue.id,
     formData.get("cover") instanceof File ? (formData.get("cover") as File) : null,
   );
   if ("error" in cover) return { error: cover.error };
 
-  await prisma.venue.update({
-    where: { id: context.venue.id },
-    data: {
-      name: fields.name,
-      type: fields.type,
-      city: fields.city,
-      address: fields.address,
-      description: fields.description,
-      phone: fields.phone,
-      proofUrl: fields.proofUrl,
-      ...(cover.url ? { coverUrl: cover.url } : {}),
-      verificationStatus: proofChanged ? "PENDING" : context.venue.verificationStatus,
-    },
-  });
+  try {
+    await prisma.venue.update({
+      where: { id: context.venue.id },
+      data: {
+        name: fields.name,
+        type: fields.type,
+        city: fields.city,
+        address: fields.address,
+        description: fields.description,
+        phone: fields.phone,
+        proofUrl: fields.proofUrl,
+        ...(cover.url ? { coverUrl: cover.url } : {}),
+        verificationStatus: proofChanged ? "PENDING" : context.venue.verificationStatus,
+      },
+    });
+  } catch {
+    return { error: "coverSave" as const };
+  }
 
   revalidatePath("/dashboard/settings");
   revalidatePath(`/v/${context.venue.slug}`);

@@ -90,7 +90,7 @@ const VENUE_COVERS: Record<string, string> = {
 };
 
 export function venueCover(type: string, coverUrl?: string | null) {
-  if (coverUrl) return coverUrl;
+  if (coverUrl && !coverUrl.startsWith("/uploads/")) return coverUrl;
   return VENUE_COVERS[type] ?? VENUE_COVERS.CLUB;
 }
 

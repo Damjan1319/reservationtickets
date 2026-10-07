@@ -5,6 +5,9 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["192.168.88.197", "*.trycloudflare.com", "*.loca.lt"],
+  serverActions: {
+    bodySizeLimit: "2mb",
+  },
 };
 
 export default withNextIntl(nextConfig);

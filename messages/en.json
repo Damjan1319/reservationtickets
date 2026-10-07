@@ -332,7 +332,8 @@
     "cover": "Venue image",
     "coverHint": "Shown on the homepage and venue page. JPG, PNG or WebP, up to 1.5 MB.",
     "coverType": "Allowed formats are JPG, PNG and WebP.",
-    "coverSize": "The image must be smaller than 1.5 MB."
+    "coverSize": "The image must be smaller than 1.5 MB.",
+    "coverSave": "The image could not be saved. Try again."
   },
   "admin": {
     "title": "Admin",
