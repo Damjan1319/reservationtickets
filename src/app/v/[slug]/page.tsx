@@ -2,12 +2,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
-import { CopyLink } from "@/components/copy-link";
 import { EventCard } from "@/components/event-card";
 import { PageBack } from "@/components/page-back";
 import { TableBookingForm } from "@/components/table-booking-form";
 import { prisma } from "@/lib/prisma";
-import { liveGuestCount, venueCover, venuePublicHost } from "@/lib/utils";
+import { liveGuestCount, venueCover } from "@/lib/utils";
 
 export default async function VenuePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -39,7 +38,9 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
     );
   }
 
-  const publicLink = `https://${venuePublicHost(venue.slug)}`;
+  const addressLine = [venue.address && venue.address !== venue.city ? venue.address : null, venue.phone]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <div>
@@ -60,6 +61,17 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
             <h1 className="mt-3 text-4xl font-bold tracking-tight text-cream sm:text-5xl">{venue.name}</h1>
             {venue.description ? (
               <p className="mt-4 max-w-2xl text-base leading-7 text-cream/85">{venue.description}</p>
+            ) : null}
+            {addressLine || venue.proofUrl ? (
+              <p className="mt-5 text-sm font-medium text-cream/70">
+                {addressLine}
+                {addressLine && venue.proofUrl ? " · " : null}
+                {venue.proofUrl ? (
+                  <a href={venue.proofUrl} target="_blank" rel="noreferrer" className="hover:text-cream hover:underline">
+                    {t("maps")}
+                  </a>
+                ) : null}
+              </p>
             ) : null}
           </div>
         </div>
@@ -108,28 +120,6 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
             <p className="mt-6 text-paper-muted">{t("pendingPublic")}</p>
           )}
         </aside>
-      </section>
-
-      <section className="border-t border-line/70">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-7 text-sm text-cream/75 sm:flex-row sm:items-center sm:justify-between">
-          <div className="space-y-1">
-            <p className="font-medium text-cream">
-              {venue.address}
-              {venue.phone ? ` · ${venue.phone}` : ""}
-            </p>
-            {venue.proofUrl ? (
-              <a href={venue.proofUrl} target="_blank" rel="noreferrer" className="hover:text-cream hover:underline">
-                {t("maps")}
-              </a>
-            ) : null}
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <code className="rounded-full border border-line bg-surface px-3 py-1 text-cream">
-              {venue.slug}.ulaznice.rs
-            </code>
-            <CopyLink value={publicLink} />
-          </div>
-        </div>
       </section>
     </div>
   );
