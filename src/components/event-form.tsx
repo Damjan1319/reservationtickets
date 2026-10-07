@@ -8,6 +8,7 @@ type EventFormProps = {
   event?: {
     id: string;
     title: string;
+    artist: string;
     description: string;
     startsAt: string;
     capacity: number;
@@ -39,6 +40,15 @@ export function EventForm({ event }: EventFormProps) {
           name="title"
           defaultValue={event?.title}
           required
+          className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+        />
+      </label>
+      <label className="block space-y-2">
+        <span className="text-sm text-muted">{t("artist")}</span>
+        <input
+          name="artist"
+          defaultValue={event?.artist}
+          placeholder={t("artistHint")}
           className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
         />
       </label>

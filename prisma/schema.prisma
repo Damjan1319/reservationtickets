@@ -64,6 +64,7 @@ model Event {
   venueId     String
   venue       Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
   title       String
+  artist      String   @default("")
   description String
   startsAt    DateTime
   capacity    Int

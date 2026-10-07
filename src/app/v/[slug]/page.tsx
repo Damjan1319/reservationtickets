@@ -77,7 +77,9 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
                   key={event.id}
                   id={event.id}
                   venueSlug={venue.slug}
+                  venueName={venue.name}
                   title={event.title}
+                  artist={event.artist}
                   startsAt={event.startsAt}
                   price={event.price}
                   capacity={event.capacity}

@@ -5,7 +5,9 @@ import { formatDateTime, formatMoney, remainingSpots } from "@/lib/utils";
 type EventCardProps = {
   id: string;
   venueSlug: string;
+  venueName: string;
   title: string;
+  artist?: string | null;
   startsAt: Date;
   price: number;
   capacity: number;
@@ -15,7 +17,9 @@ type EventCardProps = {
 export async function EventCard({
   id,
   venueSlug,
+  venueName,
   title,
+  artist,
   startsAt,
   price,
   capacity,
@@ -24,6 +28,7 @@ export async function EventCard({
   const t = await getTranslations("event");
   const locale = await getLocale();
   const left = remainingSpots(capacity, reservedGuests);
+  const act = artist?.trim() || venueName;
 
   return (
     <Link
@@ -33,6 +38,9 @@ export async function EventCard({
       <div>
         <p className="text-xs font-semibold text-cream/70">{formatDateTime(startsAt, locale)}</p>
         <h3 className="mt-2 text-xl font-bold tracking-tight">{title}</h3>
+        <p className="mt-1.5 text-sm font-medium text-cream/80">
+          {t("act")} · {act}
+        </p>
       </div>
       <div className="mt-6 flex items-end justify-between text-sm">
         <p className="font-semibold">

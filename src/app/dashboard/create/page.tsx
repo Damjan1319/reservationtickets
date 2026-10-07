@@ -11,7 +11,7 @@ export default async function CreateBookingPage() {
   const events = await prisma.event.findMany({
     where: { venueId: context.venue.id, startsAt: { gte: new Date() } },
     orderBy: { startsAt: "asc" },
-    select: { id: true, title: true },
+    select: { id: true, title: true, artist: true },
   });
 
   return (

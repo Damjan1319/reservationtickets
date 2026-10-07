@@ -7,13 +7,14 @@ import { requireOwner } from "@/lib/staff";
 
 function readEventFields(formData: FormData) {
   const title = String(formData.get("title") ?? "").trim();
+  const artist = String(formData.get("artist") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
   const startsAtRaw = String(formData.get("startsAt") ?? "");
   const capacity = Number(formData.get("capacity"));
   const price = Number(formData.get("price"));
   const startsAt = startsAtRaw ? new Date(startsAtRaw) : null;
 
-  return { title, description, startsAt, capacity, price };
+  return { title, artist, description, startsAt, capacity, price };
 }
 
 export async function createEvent(formData: FormData) {
@@ -32,6 +33,7 @@ export async function createEvent(formData: FormData) {
     data: {
       venueId: context.venue.id,
       title: fields.title,
+      artist: fields.artist,
       description: fields.description,
       startsAt: fields.startsAt,
       capacity: Math.floor(fields.capacity),
@@ -65,6 +67,7 @@ export async function updateEvent(eventId: string, formData: FormData) {
     where: { id: eventId },
     data: {
       title: fields.title,
+      artist: fields.artist,
       description: fields.description,
       startsAt: fields.startsAt,
       capacity: Math.floor(fields.capacity),

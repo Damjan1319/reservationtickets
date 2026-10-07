@@ -43,6 +43,9 @@ export default async function DashboardEventsPage() {
               >
                 <div>
                   <p className="text-xl font-bold tracking-tight text-cream">{event.title}</p>
+                  <p className="mt-1 text-sm font-medium text-cream/80">
+                    {te("act")} · {event.artist.trim() || context.venue.name}
+                  </p>
                   <p className="mt-1 text-sm text-cream/65">{formatDateTime(event.startsAt, locale)}</p>
                   <p className="mt-1 text-sm text-cream/55">
                     {reserved}/{event.capacity}

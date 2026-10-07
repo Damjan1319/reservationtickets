@@ -7,7 +7,7 @@ import { GuestCount } from "@/components/guest-count";
 import { MEAL_TYPES } from "@/lib/constants";
 import { cn, todayInputValue } from "@/lib/utils";
 
-type EventOption = { id: string; title: string };
+type EventOption = { id: string; title: string; artist?: string };
 
 export function StaffBookingForm({ events }: { events: EventOption[] }) {
   const t = useTranslations("booking");
@@ -123,7 +123,7 @@ export function StaffBookingForm({ events }: { events: EventOption[] }) {
           >
             {events.map((event) => (
               <option key={event.id} value={event.id}>
-                {event.title}
+                {event.artist?.trim() ? `${event.title} · ${event.artist.trim()}` : event.title}
               </option>
             ))}
           </select>

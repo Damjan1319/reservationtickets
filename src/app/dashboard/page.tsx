@@ -97,6 +97,9 @@ export default async function DashboardPage({
                 return (
                   <div key={event.id} className="rounded-xl border border-line/80 px-4 py-3">
                     <p className="text-base font-bold text-cream">{event.title}</p>
+                    <p className="mt-1 text-sm text-cream/75">
+                      {event.artist.trim() || context.venue.name}
+                    </p>
                     <p className="mt-1 text-sm text-cream/65">{formatDateTime(event.startsAt, locale)}</p>
                     <p className="mt-1 text-sm text-cream/65">
                       {t("sold")}: {reserved}/{event.capacity}

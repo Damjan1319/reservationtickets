@@ -41,6 +41,9 @@ export default async function EventPage({
       <div>
         <PageBack href={`/v/${venueSlug}`} label={event.venue.name} />
         <h1 className="text-3xl font-bold tracking-tight text-cream">{event.title}</h1>
+        <p className="mt-3 text-base font-semibold text-cream/85">
+          {t("act")} · {event.artist.trim() || event.venue.name}
+        </p>
         <p className="mt-4 font-medium text-cream">{formatDateTime(event.startsAt, locale)}</p>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-cream">{event.description}</p>
         <dl className="mt-10 grid max-w-md grid-cols-2 gap-4 text-sm">

@@ -24,6 +24,7 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
           event={{
             id: event.id,
             title: event.title,
+            artist: event.artist,
             description: event.description,
             startsAt: toLocalInputValue(event.startsAt),
             capacity: event.capacity,
