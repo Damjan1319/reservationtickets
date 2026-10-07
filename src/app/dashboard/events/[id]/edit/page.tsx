@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { EventForm } from "@/components/event-form";
+import { PageHeader } from "@/components/page-header";
 import { prisma } from "@/lib/prisma";
 import { requireOwner } from "@/lib/staff";
 import { toLocalInputValue } from "@/lib/utils";
@@ -17,8 +18,8 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight">{t("editTitle")}</h1>
-      <div className="mt-8 max-w-xl rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
+      <PageHeader title={t("editTitle")} />
+      <div className="mt-6 max-w-xl rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
         <EventForm
           event={{
             id: event.id,

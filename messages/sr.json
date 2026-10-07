@@ -204,7 +204,7 @@
     "scan": "Skener",
     "settings": "Podešavanja",
     "tonight": "Naredne žurke",
-    "statsIntro": "Rezervacije po danima, ulazi, plaćeno i zarada za tvoj lokal.",
+    "statsIntro": "Kalendar, žurke i zarada na jednom mestu.",
     "quickCreate": "Nova rezervacija",
     "quickCreateHint": "Sto ili karta za gosta",
     "quickScan": "Skener",
@@ -333,7 +333,8 @@
   },
   "admin": {
     "title": "Admin",
-    "subtitle": "Provera lokala, statistika i rezervacije — ceo sistem na jednom mestu.",
+    "subtitle": "Provera lokala, statistika i rezervacije.",
+    "pendingCue": "{count, plural, one {# lokal čeka proveru.} few {# lokala čekaju proveru.} other {# lokala čeka proveru.}}",
     "statPendingHint": "Čeka tvoju odluku",
     "statVenuesHint": "Registrovani lokali",
     "statBookingsHint": "Sve rezervacije",

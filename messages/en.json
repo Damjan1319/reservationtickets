@@ -204,7 +204,7 @@
     "scan": "Scanner",
     "settings": "Settings",
     "tonight": "Upcoming parties",
-    "statsIntro": "Reservations by day, entries, payments and earnings for your venue.",
+    "statsIntro": "Calendar, parties and earnings in one place.",
     "quickCreate": "New booking",
     "quickCreateHint": "Table or ticket for a guest",
     "quickScan": "Scanner",
@@ -333,7 +333,8 @@
   },
   "admin": {
     "title": "Admin",
-    "subtitle": "Venue review, stats and reservations — the whole system in one place.",
+    "subtitle": "Venue review, stats and reservations.",
+    "pendingCue": "{count, plural, one {# venue is waiting for review.} other {# venues are waiting for review.}}",
     "statPendingHint": "Waiting for your decision",
     "statVenuesHint": "Registered venues",
     "statBookingsHint": "All reservations",

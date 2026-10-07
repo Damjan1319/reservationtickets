@@ -1,8 +1,8 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { ArriveButton } from "@/components/arrive-button";
-import { CopyEmails } from "@/components/copy-emails";
 import { DecideButtons } from "@/components/decide-buttons";
+import { EmailStrip } from "@/components/email-strip";
 import { PageHeader } from "@/components/page-header";
 import { ReservationCalendar } from "@/components/reservation-calendar";
 import { monthKey, monthLabel, occupancyByDay, parseMonth, shiftMonth } from "@/lib/calendar";
@@ -56,7 +56,6 @@ export default async function TableReservationsPage({
   return (
     <div>
       <PageHeader
-        eyebrow={context.venue.name}
         title={t("tables")}
         description={t("tablesHint")}
         action={
@@ -97,31 +96,17 @@ export default async function TableReservationsPage({
         </button>
       </form>
 
-      <section className="mt-6 rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
-        <div className="flex items-center justify-between gap-3">
-          <h2 className="text-base font-semibold">{t("emailsTitle")}</h2>
-          <CopyEmails emails={emails} />
-        </div>
-        {emails.length === 0 ? (
-          <p className="mt-3 text-sm text-paper-muted">{t("emptyReservations")}</p>
-        ) : (
-          <ul className="mt-3 space-y-1 text-sm">
-            {emails.map((email) => (
-              <li key={email} className="text-paper-muted">
-                {email}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+      <div className="mt-4">
+        <EmailStrip label={t("emailsTitle")} empty={t("emptyReservations")} emails={emails} />
+      </div>
 
       <div className="mt-8 space-y-8">
         {hours.size === 0 ? (
-          <p className="text-muted">{t("emptyReservations")}</p>
+          <p className="text-cream/70">{t("emptyReservations")}</p>
         ) : (
           [...hours.entries()].map(([hour, rows]) => (
             <section key={hour}>
-              <h2 className="text-base font-semibold">{hour}</h2>
+              <h2 className="text-base font-bold text-cream">{hour}</h2>
               <div className="mt-3 space-y-3">
                 {rows.map((item) => (
                   <article key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">

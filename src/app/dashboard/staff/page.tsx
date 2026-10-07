@@ -19,18 +19,18 @@ export default async function StaffPage() {
   return (
     <div>
       <PageHeader title={t("title")} />
-      <div className="mt-8 space-y-4">
+      <div className="mt-6 space-y-3">
         {members.map((member) => (
           <div
             key={member.id}
-            className="flex items-center justify-between rounded-2xl border border-paper-line bg-paper px-5 py-5 text-paper-text sm:px-6"
+            className="flex items-center justify-between gap-3 rounded-2xl border border-line bg-surface px-5 py-4"
           >
             <div>
-              <p className="text-paper-text">{member.user.name}</p>
-              <p className="text-sm text-paper-muted">{member.user.email}</p>
+              <p className="font-semibold text-cream">{member.user.name}</p>
+              <p className="text-sm text-cream/65">{member.user.email}</p>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-xs font-medium text-paper-muted">
+              <span className="text-xs font-semibold text-cream/55">
                 {member.role === "OWNER" ? t("roleOwner") : t("roleStaff")}
               </span>
               {member.role === "STAFF" ? (
@@ -40,7 +40,7 @@ export default async function StaffPage() {
                     await removeStaffMember(member.id);
                   }}
                 >
-                  <button type="submit" className="text-sm text-danger">
+                  <button type="submit" className="text-sm font-semibold text-danger">
                     {t("remove")}
                   </button>
                 </form>
@@ -49,7 +49,7 @@ export default async function StaffPage() {
           </div>
         ))}
       </div>
-      <div className="mt-10 rounded-2xl border border-paper-line bg-paper p-6 text-paper-text">
+      <div className="mt-8 max-w-xl rounded-2xl border border-paper-line bg-paper p-6 text-paper-text">
         <AddStaffForm />
       </div>
     </div>

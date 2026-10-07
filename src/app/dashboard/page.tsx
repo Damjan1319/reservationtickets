@@ -3,7 +3,6 @@ import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { PageHeader } from "@/components/page-header";
 import { ReservationCalendar } from "@/components/reservation-calendar";
-import { StatCard } from "@/components/stat-card";
 import { StatsDashboard } from "@/components/stats-dashboard";
 import { monthKey, monthLabel, occupancyByDay, parseMonth, shiftMonth } from "@/lib/calendar";
 import { prisma } from "@/lib/prisma";
@@ -47,37 +46,23 @@ export default async function DashboardPage({
   ]);
 
   const live = reservations.filter((item) => item.status !== "CANCELLED");
-  const tickets = live.filter((item) => item.kind === "EVENT");
-  const tables = live.filter((item) => item.kind === "TABLE");
-  const inside =
-    tickets.reduce((sum, item) => sum + item.tickets.filter((ticket) => ticket.checkedInAt).length, 0) +
-    tables.reduce((sum, item) => sum + item.checkedInCount, 0);
-  const unpaid = live.filter((item) => item.paymentStatus === "UNPAID").length;
   const upcoming = events.slice(0, 4);
   const occupancy = occupancyByDay(live);
 
-  const actions = [
-    { href: "/dashboard/create", title: t("quickCreate"), hint: t("quickCreateHint") },
-    { href: "/dashboard/scan", title: t("quickScan"), hint: t("quickScanHint") },
-    { href: "/dashboard/reservations", title: t("quickList"), hint: t("quickListHint") },
-  ];
-
   return (
     <div className="space-y-8">
-      <PageHeader eyebrow={t("overview")} title={context.venue.name} description={t("statsIntro")} />
+      <PageHeader title={context.venue.name} description={t("statsIntro")} />
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        {actions.map((action, index) => (
-          <Link
-            key={action.href}
-            href={action.href}
-            className="rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6"
-          >
-            <p className="text-sm text-paper-muted">{String(index + 1).padStart(2, "0")}</p>
-            <h2 className="mt-2 text-xl font-semibold tracking-tight">{action.title}</h2>
-            <p className="mt-3 text-sm leading-relaxed text-paper-muted">{action.hint}</p>
-          </Link>
-        ))}
+      <div className="flex flex-wrap gap-2">
+        <Link href="/dashboard/create" className="btn btn-primary !px-4 !py-2">
+          {t("quickCreate")}
+        </Link>
+        <Link href="/dashboard/scan" className="btn btn-ghost !px-4 !py-2">
+          {t("quickScan")}
+        </Link>
+        <Link href="/dashboard/reservations" className="btn btn-ghost !px-4 !py-2">
+          {t("quickList")}
+        </Link>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
@@ -96,24 +81,24 @@ export default async function DashboardPage({
           legendFree={t("calFree")}
         />
 
-        <section className="rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
+        <section className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-xl font-semibold tracking-tight">{t("tonight")}</h2>
-            <Link href="/dashboard/events" className="text-sm text-paper-muted hover:text-paper-text">
+            <h2 className="text-lg font-bold tracking-tight text-cream">{t("tonight")}</h2>
+            <Link href="/dashboard/events" className="text-sm font-medium text-cream/60 hover:text-cream">
               {t("parties")}
             </Link>
           </div>
           <div className="mt-5 space-y-3">
             {upcoming.length === 0 ? (
-              <p className="text-sm text-paper-muted">{t("emptyEvents")}</p>
+              <p className="text-sm text-cream/65">{t("emptyEvents")}</p>
             ) : (
               upcoming.map((event) => {
                 const reserved = liveGuestCount(event.reservations);
                 return (
-                  <div key={event.id} className="rounded-xl bg-paper-2 px-4 py-3">
-                    <p className="text-base font-semibold">{event.title}</p>
-                    <p className="text-sm text-paper-muted">{formatDateTime(event.startsAt, locale)}</p>
-                    <p className="mt-1 text-sm text-paper-muted">
+                  <div key={event.id} className="rounded-xl border border-line/80 px-4 py-3">
+                    <p className="text-base font-bold text-cream">{event.title}</p>
+                    <p className="mt-1 text-sm text-cream/65">{formatDateTime(event.startsAt, locale)}</p>
+                    <p className="mt-1 text-sm text-cream/65">
                       {t("sold")}: {reserved}/{event.capacity}
                     </p>
                   </div>
@@ -125,13 +110,6 @@ export default async function DashboardPage({
       </div>
 
       <StatsDashboard reservations={reservations} period={period} basePath="/dashboard" locale={locale} />
-
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatCard label={t("statSold")} value={tickets.filter((item) => item.status !== "CANCELLED").reduce((sum, item) => sum + item.guests, 0)} hint={t("statSoldHint")} />
-        <StatCard label={t("statsTables")} value={tables.filter((item) => item.status !== "CANCELLED").length} hint={t("statsTablesHint")} />
-        <StatCard label={t("statsInside")} value={inside} hint={t("statsInsideHint")} />
-        <StatCard label={t("statsUnpaid")} value={unpaid} hint={t("statsUnpaidHint")} />
-      </div>
     </div>
   );
 }

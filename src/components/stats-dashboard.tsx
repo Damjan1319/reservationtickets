@@ -34,8 +34,8 @@ export async function StatsDashboard({
             key={value}
             href={href(value)}
             className={cn(
-              "rounded-full px-3.5 py-1.5 text-sm font-medium transition",
-              period === value ? "bg-paper text-paper-text" : "border border-line text-muted hover:text-cream",
+              "rounded-full px-3 py-1 text-[13px] font-semibold transition",
+              period === value ? "bg-paper text-paper-text" : "border border-line text-cream/80 hover:bg-surface",
             )}
           >
             {t(`period.${value}`)}
@@ -52,7 +52,7 @@ export async function StatsDashboard({
 
       <div className="grid gap-4 lg:grid-cols-[1.4fr_0.8fr]">
         <div className="rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
-          <h2 className="text-xl font-semibold tracking-tight">{t("chartTitle")}</h2>
+          <h2 className="text-lg font-bold tracking-tight">{t("chartTitle")}</h2>
           <p className="mt-1 text-sm text-paper-muted">{t("chartHint")}</p>
           <div className="mt-5">
             <AdminChart
@@ -65,8 +65,8 @@ export async function StatsDashboard({
 
         <div className="rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-xl font-semibold tracking-tight">{t("emailsTitle")}</h2>
-            <CopyEmails emails={stats.emails} />
+            <h2 className="text-lg font-bold tracking-tight">{t("emailsTitle")}</h2>
+            <CopyEmails emails={stats.emails} className="text-paper-muted hover:text-paper-text" />
           </div>
           <p className="mt-1 text-sm text-paper-muted">{t("emailsHint")}</p>
           {stats.emails.length === 0 ? (
