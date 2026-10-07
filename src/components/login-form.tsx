@@ -1,11 +1,10 @@
 "use client";
 
-import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
-import { inspectLogin } from "@/app/actions/auth";
+import { loginUser } from "@/app/actions/auth";
 import { AuthNotice } from "@/components/auth-notice";
 import { GoogleButton } from "@/components/google-button";
 import { safeCallbackUrl } from "@/lib/auth-callback";
@@ -41,29 +40,21 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
         onSubmit={(event) => {
           event.preventDefault();
           const data = new FormData(event.currentTarget);
-          const email = String(data.get("email") ?? "");
-          const password = String(data.get("password") ?? "");
           startTransition(async () => {
-            const inspect = await inspectLogin(email);
-            if (inspect.error === "invalidEmail") {
+            const result = await loginUser(data);
+            if (result.error === "invalidEmail") {
               setNotice({ tone: "danger", text: tv("invalidEmail") });
               return;
             }
-            if (inspect.error === "noAccount") {
+            if (result.error === "noAccount") {
               setNotice({ tone: "danger", text: t("noAccountExists") });
               return;
             }
-            if (inspect.error === "useGoogle") {
+            if (result.error === "useGoogle") {
               setNotice({ tone: "info", text: t("useGoogle") });
               return;
             }
-
-            const result = await signIn("credentials", {
-              email,
-              password,
-              redirect: false,
-            });
-            if (!result?.ok) {
+            if (result.error) {
               setNotice({ tone: "danger", text: t("wrongPassword") });
               return;
             }

@@ -1,6 +1,7 @@
 "use server";
 
 import bcrypt from "bcryptjs";
+import { signIn } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function inspectLogin(emailValue: string) {
@@ -17,6 +18,29 @@ export async function inspectLogin(emailValue: string) {
   if (!user) return { error: "noAccount" as const };
   if (!user.passwordHash) return { error: "useGoogle" as const };
   return { ok: true as const };
+}
+
+export async function loginUser(formData: FormData) {
+  const email = String(formData.get("email") ?? "")
+    .toLowerCase()
+    .trim();
+  const password = String(formData.get("password") ?? "");
+  if (!email.includes("@")) {
+    return { error: "invalidEmail" as const };
+  }
+  if (!password) {
+    return { error: "required" as const };
+  }
+
+  const inspect = await inspectLogin(email);
+  if (inspect.error) return inspect;
+
+  try {
+    await signIn("credentials", { email, password, redirect: false });
+    return { ok: true as const };
+  } catch {
+    return { error: "wrongPassword" as const };
+  }
 }
 
 export async function registerUser(formData: FormData) {

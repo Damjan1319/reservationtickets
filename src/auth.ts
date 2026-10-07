@@ -61,14 +61,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true;
     },
     async jwt({ token, user }) {
+      if (user?.id) {
+        token.sub = user.id;
+        return token;
+      }
       if (user?.email) {
         const dbUser = await prisma.user.findUnique({
           where: { email: user.email.toLowerCase() },
           select: { id: true },
         });
         if (dbUser) token.sub = dbUser.id;
-      } else if (user?.id) {
-        token.sub = user.id;
       }
       return token;
     },
