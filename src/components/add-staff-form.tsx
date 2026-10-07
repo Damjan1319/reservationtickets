@@ -37,21 +37,21 @@ export function AddStaffForm() {
         name="name"
         placeholder={ta("name")}
         required
-        className="rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+        className="rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
       />
       <input
         name="email"
         type="email"
         placeholder={ta("email")}
         required
-        className="rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+        className="rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
       />
       <input
         name="password"
         type="password"
         minLength={6}
         placeholder={ta("password")}
-        className="rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold sm:col-span-2"
+        className="rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text sm:col-span-2"
       />
       {error ? <p className="text-sm text-danger sm:col-span-2">{error}</p> : null}
       {message ? <p className="text-sm text-success sm:col-span-2">{message}</p> : null}

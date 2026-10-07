@@ -84,9 +84,13 @@ body {
   min-height: 100%;
 }
 
-::selection {
+::selection,
+input::selection,
+textarea::selection,
+select::selection {
   background: #c4c2bb;
   color: #161615;
+  -webkit-text-fill-color: #161615;
 }
 
 input,
@@ -155,14 +159,42 @@ textarea {
   border-color: color-mix(in srgb, var(--paper-text) 28%, transparent);
 }
 
+.bg-paper,
+.bg-paper-2 {
+  color-scheme: light;
+}
+
+:is(.bg-paper, .bg-paper-2, .text-paper-text) .text-muted {
+  color: var(--paper-muted);
+}
+
 :is(.bg-paper, .bg-paper-2, .text-paper-text)
-  :is(input, select, textarea):not([type="hidden"]):not([type="checkbox"]):not([type="file"]),
+  :is(input, select, textarea):not([type="hidden"]):not([type="checkbox"]),
 :is(input, select, textarea):is(.bg-paper, .bg-paper-2, .bg-white) {
   color-scheme: light;
   border: 1px solid var(--paper-line);
   background: #fff;
   color: var(--paper-text);
+  -webkit-text-fill-color: var(--paper-text);
+  caret-color: var(--paper-text);
   font-weight: 600;
+}
+
+:is(.bg-paper, .bg-paper-2, .text-paper-text) option {
+  background: #fff;
+  color: #161615;
+}
+
+:is(.bg-paper, .bg-paper-2, .text-paper-text) input[type="file"]::file-selector-button {
+  margin-right: 0.75rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: var(--paper-text);
+  color: var(--paper);
+  padding: 0.35rem 0.8rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 :is(.bg-paper, .bg-paper-2, .text-paper-text) :is(input, textarea)::placeholder,

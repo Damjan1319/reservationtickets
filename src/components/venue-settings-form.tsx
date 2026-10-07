@@ -83,7 +83,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
     >
       <input type="hidden" name="slug" value="kept" />
       <label className="block space-y-2">
-        <span className="text-sm text-muted">{ts("cover")}</span>
+        <span className="text-sm font-semibold text-paper-text">{ts("cover")}</span>
         {preview ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={preview} alt="" className="h-36 w-full rounded-xl object-cover" />
@@ -96,25 +96,25 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
             const file = event.target.files?.[0];
             setPreview(file ? URL.createObjectURL(file) : venueCover(venue.type, venue.coverUrl));
           }}
-          className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 text-sm outline-none file:mr-3 file:rounded-lg file:border-0 file:bg-paper-2 file:px-3 file:py-1.5"
+          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-sm text-paper-text outline-none file:mr-3 file:rounded-lg file:border-0 file:bg-paper-text file:px-3 file:py-1.5 file:font-semibold file:text-paper focus:border-paper-text"
         />
-        <span className="block text-xs text-muted">{ts("coverHint")}</span>
+        <span className="block text-xs text-paper-muted">{ts("coverHint")}</span>
       </label>
       <label className="block space-y-2">
-        <span className="text-sm text-muted">{t("name")}</span>
+        <span className="text-sm font-semibold text-paper-text">{t("name")}</span>
         <input
           name="name"
           defaultValue={venue.name}
           required
-          className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
-        <span className="text-sm text-muted">{t("type")}</span>
+        <span className="text-sm font-semibold text-paper-text">{t("type")}</span>
         <select
           name="type"
           defaultValue={venue.type}
-          className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         >
           {VENUE_TYPES.map((type) => (
             <option key={type} value={type}>
@@ -124,59 +124,59 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
         </select>
       </label>
       <label className="block space-y-2">
-        <span className="text-sm text-muted">{t("city")}</span>
+        <span className="text-sm font-semibold text-paper-text">{t("city")}</span>
         <input
           name="city"
           defaultValue={venue.city}
           required
-          className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
-        <span className="text-sm text-muted">{t("address")}</span>
+        <span className="text-sm font-semibold text-paper-text">{t("address")}</span>
         <input
           name="address"
           defaultValue={venue.address}
           required
-          className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
-        <span className="text-sm text-muted">{t("description")}</span>
+        <span className="text-sm font-semibold text-paper-text">{t("description")}</span>
         <textarea
           name="description"
           defaultValue={venue.description}
           required
           rows={4}
-          className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
-        <span className="text-sm text-muted">{t("pib")}</span>
+        <span className="text-sm font-semibold text-paper-text">{t("pib")}</span>
         <input
           value={venue.pib}
           readOnly
-          className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 text-muted"
+          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-muted"
         />
       </label>
       <label className="block space-y-2">
-        <span className="text-sm text-muted">{t("phone")}</span>
+        <span className="text-sm font-semibold text-paper-text">{t("phone")}</span>
         <input
           name="phone"
           type="tel"
           defaultValue={venue.phone}
           required
-          className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
-        <span className="text-sm text-muted">{t("proofUrl")}</span>
+        <span className="text-sm font-semibold text-paper-text">{t("proofUrl")}</span>
         <input
           name="proofUrl"
           type="url"
           defaultValue={venue.proofUrl}
           required
-          className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
       </label>
       {error ? <p className="text-sm text-danger">{error}</p> : null}

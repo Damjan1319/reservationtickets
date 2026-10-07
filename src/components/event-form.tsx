@@ -35,64 +35,64 @@ export function EventForm({ event }: EventFormProps) {
       }}
     >
       <label className="block space-y-2">
-        <span className="text-sm text-muted">{t("title")}</span>
+        <span className="text-sm font-semibold text-paper-text">{t("title")}</span>
         <input
           name="title"
           defaultValue={event?.title}
           required
-          className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
-        <span className="text-sm text-muted">{t("artist")}</span>
+        <span className="text-sm font-semibold text-paper-text">{t("artist")}</span>
         <input
           name="artist"
           defaultValue={event?.artist}
           placeholder={t("artistHint")}
-          className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
-        <span className="text-sm text-muted">{t("description")}</span>
+        <span className="text-sm font-semibold text-paper-text">{t("description")}</span>
         <textarea
           name="description"
           defaultValue={event?.description}
           required
           rows={4}
-          className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
-        <span className="text-sm text-muted">{t("startsAt")}</span>
+        <span className="text-sm font-semibold text-paper-text">{t("startsAt")}</span>
         <input
           name="startsAt"
           type="datetime-local"
           defaultValue={event?.startsAt}
           required
-          className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
         />
       </label>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block space-y-2">
-          <span className="text-sm text-muted">{t("capacity")}</span>
+          <span className="text-sm font-semibold text-paper-text">{t("capacity")}</span>
           <input
             name="capacity"
             type="number"
             min={1}
             defaultValue={event?.capacity ?? 40}
             required
-            className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+            className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
           />
         </label>
         <label className="block space-y-2">
-          <span className="text-sm text-muted">{t("price")}</span>
+          <span className="text-sm font-semibold text-paper-text">{t("price")}</span>
           <input
             name="price"
             type="number"
             min={0}
             defaultValue={event?.price ?? 0}
             required
-            className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
+            className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
           />
         </label>
       </div>
