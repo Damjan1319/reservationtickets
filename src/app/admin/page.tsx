@@ -170,6 +170,7 @@ function VenueAdminCard({
     phone: string;
     pib: string;
     proofUrl: string;
+    coverUrl?: string;
     verificationStatus: string;
     owner: { email: string; name: string };
     _count: { reservations: number; events: number };
@@ -182,7 +183,7 @@ function VenueAdminCard({
     <article className="overflow-hidden rounded-2xl border border-paper-line bg-paper text-paper-text">
       <div className="grid sm:grid-cols-[160px_1fr]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={venueCover(venue.type)} alt="" className="h-36 w-full object-cover sm:h-full" />
+        <img src={venueCover(venue.type, venue.coverUrl)} alt="" className="h-36 w-full object-cover sm:h-full" />
         <div className="p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>

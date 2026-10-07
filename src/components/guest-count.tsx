@@ -19,7 +19,7 @@ export function GuestCount({
       <button
         type="button"
         onClick={() => onChange(Math.max(1, value - 1))}
-        className="h-11 w-11 rounded-full border border-line text-xl hover:border-gold"
+        className="h-11 w-11 rounded-full border border-paper-line bg-white text-xl font-semibold text-paper-text hover:border-paper-text"
         aria-label="-"
       >
         −
@@ -34,12 +34,12 @@ export function GuestCount({
           if (!Number.isFinite(next)) return;
           onChange(Math.min(limit, Math.max(1, Math.floor(next))));
         }}
-        className="h-11 w-20 rounded-xl border border-line bg-surface-2 text-center text-lg outline-none focus:border-gold"
+        className="h-11 w-20 rounded-xl border border-paper-line bg-white text-center text-lg font-semibold text-paper-text outline-none focus:border-paper-text"
       />
       <button
         type="button"
         onClick={() => onChange(Math.min(limit, value + 1))}
-        className="h-11 w-11 rounded-full border border-line text-xl hover:border-gold"
+        className="h-11 w-11 rounded-full border border-paper-line bg-white text-xl font-semibold text-paper-text hover:border-paper-text"
         aria-label="+"
       >
         +
@@ -51,8 +51,10 @@ export function GuestCount({
             type="button"
             onClick={() => onChange(count)}
             className={cn(
-              "rounded-full border px-2.5 py-1 text-xs",
-              value === count ? "border-gold bg-gold text-on-gold" : "border-line text-muted hover:border-cream",
+              "rounded-full border px-2.5 py-1 text-xs font-semibold",
+              value === count
+                ? "border-paper-text bg-paper-text text-paper"
+                : "border-paper-line text-paper-text hover:border-paper-text",
             )}
           >
             {count}

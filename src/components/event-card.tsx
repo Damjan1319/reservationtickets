@@ -31,15 +31,15 @@ export async function EventCard({
       className="flex flex-col justify-between rounded-2xl border border-paper-line bg-paper p-5 text-paper-text transition hover:border-paper-text/25"
     >
       <div>
-        <p className="text-xs font-medium text-paper-muted">{formatDateTime(startsAt, locale)}</p>
-        <h3 className="mt-2 text-lg font-semibold">{title}</h3>
+        <p className="text-xs font-semibold text-paper-muted">{formatDateTime(startsAt, locale)}</p>
+        <h3 className="mt-2 text-xl font-bold tracking-tight">{title}</h3>
       </div>
       <div className="mt-6 flex items-end justify-between text-sm">
-        <p>
+        <p className="font-semibold">
           {formatMoney(price, locale)}
-          <span className="text-paper-muted"> / {t("perPerson")}</span>
+          <span className="font-medium text-paper-muted"> / {t("perPerson")}</span>
         </p>
-        <p className={left === 0 ? "text-danger" : "text-paper-muted"}>
+        <p className={left === 0 ? "font-semibold text-danger" : "font-medium text-paper-muted"}>
           {left === 0 ? t("soldOut") : `${left} · ${t("spots")}`}
         </p>
       </div>

@@ -36,6 +36,7 @@ model Venue {
   proofUrl             String   @default("")
   verificationStatus   String   @default("PENDING")
   coverHue             Int      @default(32)
+  coverUrl             String   @default("")
   ownerId              String
   owner       User     @relation(fields: [ownerId], references: [id])
   createdAt   DateTime @default(now())

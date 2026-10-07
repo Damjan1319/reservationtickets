@@ -80,12 +80,19 @@ const VENUE_COVERS: Record<string, string> = {
   BAR: "/venues/bar.jpg",
 };
 
-export function venueCover(type: string) {
+export function venueCover(type: string, coverUrl?: string | null) {
+  if (coverUrl) return coverUrl;
   return VENUE_COVERS[type] ?? VENUE_COVERS.CLUB;
 }
 
 export function remainingSpots(capacity: number, reservedGuests: number) {
   return Math.max(0, capacity - reservedGuests);
+}
+
+export function liveGuestCount(reservations: Array<{ guests: number; status?: string | null }>) {
+  return reservations
+    .filter((item) => item.status !== "CANCELLED")
+    .reduce((sum, item) => sum + item.guests, 0);
 }
 
 export function parseQrPayload(raw: string) {

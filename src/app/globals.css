@@ -6,22 +6,22 @@ html.dark {
   --surface: #3f3f3c;
   --surface-2: #4a4a46;
   --line: #5c5c57;
-  --cream: #ecebe6;
-  --muted: #b4b3ac;
-  --gold: #ecebe6;
-  --gold-soft: #f6f5f1;
-  --on-gold: #2f2f2c;
+  --cream: #f7f6f2;
+  --muted: #d2d1cb;
+  --gold: #f7f6f2;
+  --gold-soft: #ffffff;
+  --on-gold: #1c1c1a;
   --danger: #c47a76;
   --success: #7a9484;
   --cal-table: #3f6e66;
   --cal-event: #8a5a42;
   --cal-both: #4a5d78;
   --cal-ink: #f3f1ec;
-  --paper: #d9d7d1;
-  --paper-2: #cccac3;
-  --paper-text: #242422;
-  --paper-muted: #5c5c57;
-  --paper-line: #c4c2bb;
+  --paper: #f4f3ef;
+  --paper-2: #ffffff;
+  --paper-text: #161615;
+  --paper-muted: #4a4a46;
+  --paper-line: #d5d3cd;
   color-scheme: dark;
 }
 
@@ -41,11 +41,11 @@ html.light {
   --cal-event: #f1d9c8;
   --cal-both: #d5deec;
   --cal-ink: #1c1c1c;
-  --paper: #f7f6f3;
-  --paper-2: #ecebe6;
-  --paper-text: #1f1f1d;
-  --paper-muted: #6a6a65;
-  --paper-line: #d8d6d0;
+  --paper: #ffffff;
+  --paper-2: #f4f3ef;
+  --paper-text: #161615;
+  --paper-muted: #3f3f3c;
+  --paper-line: #d5d3cd;
   color-scheme: light;
 }
 
@@ -92,7 +92,9 @@ body {
 input,
 select,
 textarea {
-  color-scheme: normal;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
 }
 
 .btn {
@@ -153,15 +155,31 @@ textarea {
   border-color: color-mix(in srgb, var(--paper-text) 28%, transparent);
 }
 
-.bg-paper input,
+.bg-paper input:not([type="hidden"]):not([type="checkbox"]):not([type="file"]),
 .bg-paper select,
 .bg-paper textarea,
-.text-paper-text input,
+.text-paper-text input:not([type="hidden"]):not([type="checkbox"]):not([type="file"]),
 .text-paper-text select,
 .text-paper-text textarea {
-  border-color: var(--paper-line);
-  background: var(--paper-2);
+  color-scheme: light;
+  border: 1px solid var(--paper-line);
+  background: #fff;
   color: var(--paper-text);
+  font-weight: 600;
+}
+
+.bg-paper input::placeholder,
+.bg-paper textarea::placeholder,
+.text-paper-text input::placeholder,
+.text-paper-text textarea::placeholder {
+  color: var(--paper-muted);
+  font-weight: 500;
+}
+
+.bg-paper input[type="date"]::-webkit-calendar-picker-indicator,
+.bg-paper input[type="time"]::-webkit-calendar-picker-indicator {
+  opacity: 0.75;
+  cursor: pointer;
 }
 
 .band-paper {

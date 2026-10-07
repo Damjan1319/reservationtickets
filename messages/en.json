@@ -5,6 +5,7 @@
     "search": "Search",
     "city": "City",
     "allCities": "All cities",
+    "allTypes": "All types",
     "learnMore": "Learn more",
     "back": "Back",
     "save": "Save",
@@ -17,7 +18,8 @@
     "copied": "Copied",
     "rsd": "RSD",
     "or": "or",
-    "required": "Required field"
+    "required": "Required field",
+    "close": "Close"
   },
   "nav": {
     "venues": "Venues",
@@ -26,7 +28,7 @@
     "registerVenue": "Register a venue",
     "admin": "Admin",
     "dashboard": "Dashboard",
-    "tickets": "My tickets",
+    "tickets": "Reservations",
     "logout": "Log out",
     "scan": "Scanner"
   },
@@ -44,7 +46,8 @@
     "step3Title": "The door scans the ticket",
     "step3Body": "Staff confirm the reservation, check-in and payment status.",
     "venuesTitle": "Venues",
-    "venuesEmpty": "No venues registered yet."
+    "venuesEmpty": "No venues registered yet.",
+    "venuesEmptyFilter": "No venues match this filter."
   },
   "auth": {
     "loginTitle": "Log in",
@@ -91,8 +94,8 @@
     },
     "publicLink": "Public link",
     "tableTitle": "Reserve a table",
-    "tableSubtitle": "Choose the occasion, date and party size. Pay at the venue.",
-    "upcoming": "Upcoming events",
+    "tableSubtitle": "Choose the occasion, date and party size.",
+    "upcoming": "Tickets",
     "noEvents": "No events scheduled right now.",
     "notFound": "Venue not found.",
     "ownerExists": "You already have a registered venue.",
@@ -159,8 +162,17 @@
   },
   "ticket": {
     "title": "QR ticket",
-    "myTickets": "My tickets",
+    "myTickets": "Reservations",
+    "myHint": "Tables and tickets in one place. Filter by date.",
     "empty": "You have no reservations yet.",
+    "emptyDate": "No reservations on that date.",
+    "filterDate": "Date",
+    "clearDate": "All dates",
+    "kindTable": "Table",
+    "kindEvent": "Ticket",
+    "viewReservation": "View",
+    "bookedTable": "Your table reservation was sent to the venue.",
+    "bookedEvent": "Your booking was sent. You get a ticket when the venue accepts it.",
     "guests": "Guests",
     "paid": "Paid",
     "unpaid": "Unpaid",
@@ -176,6 +188,7 @@
     "downloadOne": "Save to phone",
     "payAtVenue": "Pay at the venue",
     "waitingConfirm": "Waiting for the venue to confirm. You will get an email and a ticket when it is accepted.",
+    "waitingConfirmTable": "Waiting for the venue to confirm. You will get an email when it is accepted.",
     "cancelled": "This reservation was cancelled."
   },
   "dashboard": {
@@ -218,6 +231,8 @@
     "statEarningsHint": "Paid tickets × price",
     "confirmBooking": "Confirm",
     "cancelBooking": "Cancel",
+    "confirmBookingAsk": "Accept this reservation?",
+    "cancelBookingAsk": "Cancel this reservation? The guest will get an email.",
     "statusConfirmed": "Accepted",
     "statusCancelled": "Cancelled",
     "statusPending": "Waiting for confirmation",
@@ -306,7 +321,11 @@
   },
   "settings": {
     "title": "Venue settings",
-    "saved": "Changes saved."
+    "saved": "Changes saved.",
+    "cover": "Venue image",
+    "coverHint": "Shown on the homepage and venue page. JPG, PNG or WebP, up to 1.5 MB.",
+    "coverType": "Allowed formats are JPG, PNG and WebP.",
+    "coverSize": "The image must be smaller than 1.5 MB."
   },
   "admin": {
     "title": "Admin",

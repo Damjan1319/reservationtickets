@@ -15,6 +15,7 @@ type VenueSettingsFormProps = {
     phone: string;
     pib: string;
     proofUrl: string;
+    coverUrl: string;
     verificationStatus: string;
   };
 };
@@ -24,6 +25,8 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
   const ts = useTranslations("settings");
   const tc = useTranslations("common");
   const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [preview, setPreview] = useState(venue.coverUrl);
   const [pending, startTransition] = useTransition();
 
   return (
@@ -34,11 +37,41 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
         const data = new FormData(event.currentTarget);
         startTransition(async () => {
           const result = await updateVenue(data);
-          setMessage(result?.ok ? ts("saved") : tc("required"));
+          if (result?.ok) {
+            setError(null);
+            setMessage(ts("saved"));
+          } else if (result?.error === "coverType") {
+            setMessage(null);
+            setError(ts("coverType"));
+          } else if (result?.error === "coverSize") {
+            setMessage(null);
+            setError(ts("coverSize"));
+          } else {
+            setMessage(null);
+            setError(tc("required"));
+          }
         });
       }}
     >
       <input type="hidden" name="slug" value="kept" />
+      <label className="block space-y-2">
+        <span className="text-sm text-muted">{ts("cover")}</span>
+        {preview ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={preview} alt="" className="h-36 w-full rounded-xl object-cover" />
+        ) : null}
+        <input
+          name="cover"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            setPreview(file ? URL.createObjectURL(file) : venue.coverUrl);
+          }}
+          className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 text-sm outline-none file:mr-3 file:rounded-lg file:border-0 file:bg-paper-2 file:px-3 file:py-1.5"
+        />
+        <span className="block text-xs text-muted">{ts("coverHint")}</span>
+      </label>
       <label className="block space-y-2">
         <span className="text-sm text-muted">{t("name")}</span>
         <input
@@ -118,6 +151,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
           className="w-full rounded-xl border border-line bg-surface-2 px-4 py-3 outline-none focus:border-gold"
         />
       </label>
+      {error ? <p className="text-sm text-danger">{error}</p> : null}
       {message ? <p className="text-sm text-success">{message}</p> : null}
       <button
         type="submit"

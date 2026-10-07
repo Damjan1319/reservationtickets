@@ -37,10 +37,12 @@ export async function Header() {
 
   return (
     <header className="site-header sticky top-0 z-40 bg-bg/80 backdrop-blur-md">
-      <div className="relative mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-        <Link href="/" className="text-[1.15rem] font-semibold tracking-tight text-cream">
-          Ulaznice
-        </Link>
+      <div className="relative mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3">
+        <div className="flex min-w-0 items-center">
+          <Link href="/" className="text-[1.15rem] font-semibold tracking-tight text-cream">
+            Ulaznice
+          </Link>
+        </div>
         <SiteNav
           links={links}
           theme={theme}

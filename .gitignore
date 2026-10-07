@@ -43,6 +43,11 @@ yarn-error.log*
 # local
 .cursor
 
+/public/uploads/venues/*
+!/public/uploads/venues/.gitkeep
+
+# vercel
+
 
 # vercel
 .vercel

@@ -17,7 +17,7 @@ export function CopyLink({ value }: { value: string }) {
     <button
       type="button"
       onClick={copy}
-      className="rounded-full border border-line px-3 py-1 text-xs text-muted hover:border-gold hover:text-cream"
+      className="rounded-full border border-cream px-3 py-1 text-xs font-semibold text-cream hover:bg-cream hover:text-bg"
     >
       {copied ? t("copied") : t("copy")}
     </button>

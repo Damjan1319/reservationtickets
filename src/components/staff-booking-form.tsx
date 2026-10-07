@@ -42,8 +42,10 @@ export function StaffBookingForm({ events }: { events: EventOption[] }) {
             type="button"
             onClick={() => setKind(next)}
             className={cn(
-              "rounded-2xl border px-3 py-3 text-sm",
-              kind === next ? "border-paper-text bg-paper-text text-paper" : "border-paper-line hover:border-paper-text/40",
+              "rounded-2xl border px-3 py-3 text-sm font-semibold",
+              kind === next
+                ? "border-paper-text bg-paper-text text-paper"
+                : "border-paper-line bg-white text-paper-text hover:border-paper-text/50",
             )}
           >
             {next === "TABLE" ? td("tables") : td("tickets")}
@@ -52,7 +54,7 @@ export function StaffBookingForm({ events }: { events: EventOption[] }) {
       </div>
 
       <label className="block space-y-2">
-        <span className="text-sm text-paper-muted">{td("guest")}</span>
+        <span className="text-sm font-semibold text-paper-text">{td("guest")}</span>
         <input
           name="guestName"
           required
@@ -60,7 +62,7 @@ export function StaffBookingForm({ events }: { events: EventOption[] }) {
         />
       </label>
       <label className="block space-y-2">
-        <span className="text-sm text-paper-muted">{t("email")}</span>
+        <span className="text-sm font-semibold text-paper-text">{t("email")}</span>
         <input
           name="guestEmail"
           type="email"
@@ -78,8 +80,10 @@ export function StaffBookingForm({ events }: { events: EventOption[] }) {
                 type="button"
                 onClick={() => setMealType(meal)}
                 className={cn(
-                  "rounded-2xl border px-3 py-3 text-sm",
-                  mealType === meal ? "border-paper-text bg-paper-text text-paper" : "border-paper-line hover:border-paper-text/40",
+              "rounded-2xl border px-3 py-3 text-sm font-semibold",
+              mealType === meal
+                ? "border-paper-text bg-paper-text text-paper"
+                : "border-paper-line bg-white text-paper-text hover:border-paper-text/50",
                 )}
               >
                 {t(`meals.${meal}`)}
@@ -88,7 +92,7 @@ export function StaffBookingForm({ events }: { events: EventOption[] }) {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block space-y-2">
-              <span className="text-sm text-paper-muted">{t("date")}</span>
+              <span className="text-sm font-semibold text-paper-text">{t("date")}</span>
               <input
                 name="date"
                 type="date"
@@ -98,7 +102,7 @@ export function StaffBookingForm({ events }: { events: EventOption[] }) {
               />
             </label>
             <label className="block space-y-2">
-              <span className="text-sm text-paper-muted">{t("time")}</span>
+              <span className="text-sm font-semibold text-paper-text">{t("time")}</span>
               <input
                 name="time"
                 type="time"
@@ -111,7 +115,7 @@ export function StaffBookingForm({ events }: { events: EventOption[] }) {
         </>
       ) : (
         <label className="block space-y-2">
-          <span className="text-sm text-paper-muted">{td("parties")}</span>
+          <span className="text-sm font-semibold text-paper-text">{td("parties")}</span>
           <select
             name="eventId"
             required
@@ -127,7 +131,7 @@ export function StaffBookingForm({ events }: { events: EventOption[] }) {
       )}
 
       <div>
-        <p className="mb-3 text-sm text-paper-muted">{t("guests")}</p>
+        <p className="mb-3 text-sm font-semibold text-paper-text">{t("guests")}</p>
         <GuestCount value={guests} onChange={setGuests} />
       </div>
 

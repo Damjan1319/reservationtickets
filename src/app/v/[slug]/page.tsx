@@ -4,9 +4,10 @@ import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { CopyLink } from "@/components/copy-link";
 import { EventCard } from "@/components/event-card";
+import { PageBack } from "@/components/page-back";
 import { TableBookingForm } from "@/components/table-booking-form";
 import { prisma } from "@/lib/prisma";
-import { venueCover, venuePublicHost } from "@/lib/utils";
+import { liveGuestCount, venueCover, venuePublicHost } from "@/lib/utils";
 
 export default async function VenuePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -20,7 +21,7 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
       events: {
         where: { startsAt: { gte: new Date() } },
         orderBy: { startsAt: "asc" },
-        include: { reservations: { where: { status: { not: "CANCELLED" } }, select: { guests: true } } },
+        include: { reservations: true },
       },
     },
   });
@@ -45,38 +46,51 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
       <section className="relative overflow-hidden border-b border-line">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={venueCover(venue.type)}
+          src={venueCover(venue.type, venue.coverUrl)}
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-bg via-bg/85 to-bg/45" />
-        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:py-20">
-          <p className="text-sm font-medium text-muted">
-            {t(`types.${venue.type}`)} · {venue.city}
-            {isPublic ? ` · ${t("verified")}` : ` · ${t("pending")}`}
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{venue.name}</h1>
-          <p className="mt-3 max-w-2xl text-base text-cream/85">{venue.description}</p>
-          <p className="mt-4 text-sm text-muted">
-            {venue.address} · {venue.phone}
-          </p>
-          <a href={venue.proofUrl} target="_blank" rel="noreferrer" className="mt-2 inline-block text-sm text-muted hover:text-cream">
-            {t("maps")}
-          </a>
-          <div className="mt-6 flex flex-wrap items-center gap-3 text-sm">
-            <span className="text-muted">{t("publicLink")}:</span>
+        <div className="relative mx-auto flex max-w-6xl flex-col gap-10 px-4 py-14 sm:py-20">
+          <PageBack href="/" label={tn("venues")} onImage />
+
+          <div>
+            <p className="text-sm font-medium text-cream">
+              {t(`types.${venue.type}`)} · {venue.city}
+              {isPublic ? ` · ${t("verified")}` : ` · ${t("pending")}`}
+            </p>
+            <h1 className="mt-3 text-4xl font-bold tracking-tight text-cream sm:text-5xl">{venue.name}</h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-cream">{venue.description}</p>
+          </div>
+
+          <div>
+            <p className="text-sm font-medium text-cream">
+              {venue.address} · {venue.phone}
+            </p>
+            <a
+              href={venue.proofUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-2 block text-sm font-medium text-cream hover:underline"
+            >
+              {t("maps")}
+            </a>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 text-sm font-medium text-cream">
+            <span>{t("publicLink")}:</span>
             <code className="rounded-full border border-line bg-surface/80 px-3 py-1 text-cream">
               {venue.slug}.ulaznice.rs
             </code>
             <CopyLink value={publicLink} />
-            <span className="text-muted">/v/{venue.slug}</span>
+            <span>/v/{venue.slug}</span>
           </div>
         </div>
       </section>
 
       <section className="mx-auto grid max-w-6xl gap-10 px-4 py-14 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
-          <h2 className="text-xl font-semibold tracking-tight">{t("upcoming")}</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-cream sm:text-3xl">{t("upcoming")}</h2>
           {venue.events.length === 0 ? (
             <p className="mt-6 text-muted">{t("noEvents")}</p>
           ) : (
@@ -90,7 +104,7 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
                   startsAt={event.startsAt}
                   price={event.price}
                   capacity={event.capacity}
-                  reservedGuests={event.reservations.reduce((sum, item) => sum + item.guests, 0)}
+                  reservedGuests={liveGuestCount(event.reservations)}
                 />
               ))}
             </div>
@@ -98,8 +112,8 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
         </div>
 
         <aside className="rounded-2xl border border-paper-line bg-paper p-6 text-paper-text">
-          <h2 className="text-lg font-semibold">{t("tableTitle")}</h2>
-          <p className="mt-2 text-sm text-paper-muted">{t("tableSubtitle")}</p>
+          <h2 className="text-lg font-bold">{t("tableTitle")}</h2>
+          <p className="mt-2 text-sm font-medium text-paper-muted">{t("tableSubtitle")}</p>
           {isPublic && session?.user ? (
             <div className="mt-6">
               <TableBookingForm venueId={venue.id} />

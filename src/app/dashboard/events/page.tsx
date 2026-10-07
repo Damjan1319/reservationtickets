@@ -4,7 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { deleteEvent } from "@/app/actions/event";
 import { prisma } from "@/lib/prisma";
 import { requireOwner } from "@/lib/staff";
-import { formatDateTime } from "@/lib/utils";
+import { formatDateTime, liveGuestCount } from "@/lib/utils";
 
 export default async function DashboardEventsPage() {
   const context = await requireOwner();
@@ -15,7 +15,7 @@ export default async function DashboardEventsPage() {
   const locale = await getLocale();
   const events = await prisma.event.findMany({
     where: { venueId: context.venue.id, startsAt: { gte: new Date() } },
-    include: { reservations: { where: { status: { not: "CANCELLED" } }, select: { guests: true } } },
+    include: { reservations: true },
     orderBy: { startsAt: "asc" },
   });
 
@@ -32,7 +32,7 @@ export default async function DashboardEventsPage() {
       ) : (
         <div className="mt-8 space-y-3">
           {events.map((event) => {
-            const reserved = event.reservations.reduce((sum, item) => sum + item.guests, 0);
+            const reserved = liveGuestCount(event.reservations);
             return (
               <div key={event.id} className="flex flex-col gap-3 rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:flex-row sm:items-center sm:justify-between sm:p-6">
                 <div>

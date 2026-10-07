@@ -9,7 +9,7 @@ import { monthKey, monthLabel, occupancyByDay, parseMonth, shiftMonth } from "@/
 import { prisma } from "@/lib/prisma";
 import { getStaffContext } from "@/lib/staff";
 import { parsePeriod } from "@/lib/stats";
-import { formatDateTime } from "@/lib/utils";
+import { formatDateTime, liveGuestCount } from "@/lib/utils";
 
 export default async function DashboardPage({
   searchParams,
@@ -33,7 +33,7 @@ export default async function DashboardPage({
   const [events, reservations] = await Promise.all([
     prisma.event.findMany({
       where: { venueId: context.venue.id, startsAt: { gte: now } },
-      include: { reservations: { where: { status: { not: "CANCELLED" } }, select: { guests: true } } },
+      include: { reservations: true },
       orderBy: { startsAt: "asc" },
     }),
     prisma.reservation.findMany({
@@ -108,7 +108,7 @@ export default async function DashboardPage({
               <p className="text-sm text-paper-muted">{t("emptyEvents")}</p>
             ) : (
               upcoming.map((event) => {
-                const reserved = event.reservations.reduce((sum, item) => sum + item.guests, 0);
+                const reserved = liveGuestCount(event.reservations);
                 return (
                   <div key={event.id} className="rounded-xl bg-paper-2 px-4 py-3">
                     <p className="text-base font-semibold">{event.title}</p>

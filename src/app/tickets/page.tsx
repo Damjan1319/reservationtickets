@@ -1,59 +1,40 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
+import { GuestReservations } from "@/components/guest-reservations";
+import { PageBack } from "@/components/page-back";
 import { prisma } from "@/lib/prisma";
-import { formatDateTime } from "@/lib/utils";
 
 export default async function TicketsPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login?callbackUrl=/tickets");
 
   const t = await getTranslations("ticket");
-  const tb = await getTranslations("booking");
-  const locale = await getLocale();
+  const tn = await getTranslations("nav");
   const tickets = await prisma.reservation.findMany({
     where: { userId: session.user.id },
     include: { event: true, venue: true },
-    orderBy: { createdAt: "desc" },
+    orderBy: { visitAt: "desc" },
   });
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-14">
-      <h1 className="text-2xl font-semibold tracking-tight">{t("myTickets")}</h1>
-      {tickets.length === 0 ? (
-        <p className="mt-8 text-muted">{t("empty")}</p>
-      ) : (
-        <div className="mt-8 space-y-4">
-          {tickets.map((ticket) => {
-            const title =
-              ticket.kind === "TABLE" && ticket.mealType
-                ? `${t("table")} · ${tb(`meals.${ticket.mealType}`)}`
-                : (ticket.event?.title ?? ticket.venue.name);
-            const when = ticket.event?.startsAt ?? ticket.visitAt;
-            return (
-              <Link
-                key={ticket.id}
-                href={`/tickets/${ticket.id}`}
-                className="block rounded-2xl border border-paper-line bg-paper p-5 text-paper-text hover:border-paper-text/25"
-              >
-                <p className="text-xs font-medium text-paper-muted">{ticket.venue.name}</p>
-                <h2 className="mt-1 text-lg font-semibold">{title}</h2>
-                <p className="mt-2 text-sm text-paper-muted">{formatDateTime(when, locale)}</p>
-                <p className="mt-3 text-sm text-paper-muted">
-                  {ticket.status === "PENDING"
-                    ? t("waitingConfirm")
-                    : ticket.status === "CANCELLED"
-                      ? t("cancelled")
-                      : ticket.kind === "TABLE"
-                        ? `${t("table")} · ${ticket.guests} ${t("guests").toLowerCase()}`
-                        : `${ticket.paymentStatus === "PAID" ? t("paid") : t("unpaid")} · ${ticket.guests} ${t("guests").toLowerCase()}`}
-                </p>
-              </Link>
-            );
-          })}
-        </div>
-      )}
+      <PageBack href="/" label={tn("venues")} />
+      <h1 className="text-3xl font-semibold tracking-tight">{t("myTickets")}</h1>
+      <p className="mt-2 text-sm text-muted">{t("myHint")}</p>
+      <GuestReservations
+        items={tickets.map((item) => ({
+          id: item.id,
+          kind: item.kind,
+          status: item.status,
+          guests: item.guests,
+          paymentStatus: item.paymentStatus,
+          mealType: item.mealType,
+          visitAt: item.visitAt.toISOString(),
+          venueName: item.venue.name,
+          eventTitle: item.event?.title ?? null,
+        }))}
+      />
     </div>
   );
 }

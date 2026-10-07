@@ -5,6 +5,7 @@
     "search": "Pretraži",
     "city": "Grad",
     "allCities": "Svi gradovi",
+    "allTypes": "Svi tipovi",
     "learnMore": "Saznaj više",
     "back": "Nazad",
     "save": "Sačuvaj",
@@ -17,7 +18,8 @@
     "copied": "Kopirano",
     "rsd": "RSD",
     "or": "ili",
-    "required": "Obavezno polje"
+    "required": "Obavezno polje",
+    "close": "Zatvori"
   },
   "nav": {
     "venues": "Lokali",
@@ -26,7 +28,7 @@
     "registerVenue": "Registruj lokal",
     "admin": "Admin",
     "dashboard": "Panel",
-    "tickets": "Moje karte",
+    "tickets": "Rezervacije",
     "logout": "Odjava",
     "scan": "Skener"
   },
@@ -44,7 +46,8 @@
     "step3Title": "Ulaz skenira kartu",
     "step3Body": "Osoblje potvrđuje rezervaciju, check-in i status plaćanja.",
     "venuesTitle": "Lokali",
-    "venuesEmpty": "Još nema registrovanih lokala."
+    "venuesEmpty": "Još nema registrovanih lokala.",
+    "venuesEmptyFilter": "Nema lokala za izabrani filter."
   },
   "auth": {
     "loginTitle": "Prijava",
@@ -91,8 +94,8 @@
     },
     "publicLink": "Javni link",
     "tableTitle": "Rezerviši sto",
-    "tableSubtitle": "Izaberi priliku, datum i broj osoba. Plaća se u lokalu.",
-    "upcoming": "Predstojeći događaji",
+    "tableSubtitle": "Izaberi termin, datum i broj osoba.",
+    "upcoming": "Karte",
     "noEvents": "Trenutno nema zakazanih događaja.",
     "notFound": "Lokal nije pronađen.",
     "ownerExists": "Već imaš registrovan lokal.",
@@ -159,8 +162,19 @@
   },
   "ticket": {
     "title": "QR karta",
-    "myTickets": "Moje karte",
+    "myTickets": "Rezervacije",
+    "myHint": "Stolovi i karte na jednom mestu. Filtriraj po datumu.",
     "empty": "Još nemaš rezervacija.",
+    "emptyDate": "Nema rezervacija za izabrani datum.",
+    "filterDate": "Datum",
+    "clearDate": "Svi datumi",
+    "kindTable": "Sto",
+    "kindEvent": "Karta",
+    "viewReservation": "Pogledaj",
+    "bookedTable": "Rezervacija stola je poslata lokalu.",
+    "bookedEvent": "Rezervacija je poslata. Kad lokal prihvati, dobijaš kartu.",
+    "waitingConfirm": "Čeka potvrdu lokala. Kad vlasnik prihvati, stići će mejl i karta.",
+    "waitingConfirmTable": "Čeka potvrdu lokala. Kad vlasnik prihvati, stići će mejl.",
     "guests": "Gostiju",
     "paid": "Plaćeno",
     "unpaid": "Nije plaćeno",
@@ -175,7 +189,6 @@
     "downloadAll": "Preuzmi sve QR kodove",
     "downloadOne": "Sačuvaj na telefon",
     "payAtVenue": "Plaća se u lokalu",
-    "waitingConfirm": "Čeka potvrdu lokala. Kad vlasnik prihvati, stići će mejl i karta.",
     "cancelled": "Ova rezervacija je otkazana."
   },
   "dashboard": {
@@ -218,6 +231,8 @@
     "statEarningsHint": "Plaćene karte × cena",
     "confirmBooking": "Potvrdi",
     "cancelBooking": "Otkaži",
+    "confirmBookingAsk": "Prihvatiti ovu rezervaciju?",
+    "cancelBookingAsk": "Otkazati ovu rezervaciju? Gost će dobiti mejl.",
     "statusConfirmed": "Prihvaćeno",
     "statusCancelled": "Otkazano",
     "statusPending": "Čeka potvrdu",
@@ -306,7 +321,11 @@
   },
   "settings": {
     "title": "Podešavanja lokala",
-    "saved": "Izmene su sačuvane."
+    "saved": "Izmene su sačuvane.",
+    "cover": "Slika lokala",
+    "coverHint": "Prikazuje se na početnoj i na stranici lokala. JPG, PNG ili WebP, do 1.5 MB.",
+    "coverType": "Dozvoljeni formati su JPG, PNG i WebP.",
+    "coverSize": "Slika mora biti manja od 1.5 MB."
   },
   "admin": {
     "title": "Admin",

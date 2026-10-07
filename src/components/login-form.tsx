@@ -73,7 +73,7 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
         }}
       >
         <label className="block space-y-2">
-          <span className="text-sm text-paper-muted">{t("email")}</span>
+          <span className="text-sm font-semibold text-paper-text">{t("email")}</span>
           <input
             name="email"
             type="email"
@@ -82,7 +82,7 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
           />
         </label>
         <label className="block space-y-2">
-          <span className="text-sm text-paper-muted">{t("password")}</span>
+          <span className="text-sm font-semibold text-paper-text">{t("password")}</span>
           <input
             name="password"
             type="password"

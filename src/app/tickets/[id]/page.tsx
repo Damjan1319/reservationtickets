@@ -6,6 +6,7 @@ import { reservationQrDataUrl } from "@/lib/qr";
 import { getStaffContext } from "@/lib/staff";
 import { formatDateTime, venueCover } from "@/lib/utils";
 import { DownloadOne, DownloadTickets } from "@/components/download-tickets";
+import { PageBack } from "@/components/page-back";
 
 export default async function TicketPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -47,11 +48,12 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
 
   return (
     <div className="mx-auto max-w-md px-4 py-14">
+      <PageBack href="/tickets" label={t("myTickets")} />
       <article className="overflow-hidden rounded-3xl border border-line bg-surface">
         <div className="relative overflow-hidden px-6 py-8">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={venueCover(reservation.venue.type)}
+            src={venueCover(reservation.venue.type, reservation.venue.coverUrl)}
             alt=""
             className="absolute inset-0 h-full w-full object-cover"
           />
@@ -65,7 +67,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
 
         {reservation.status === "PENDING" ? (
           <div className="space-y-3 px-6 py-8">
-            <p className="text-sm text-muted">{t("waitingConfirm")}</p>
+            <p className="text-sm text-muted">{isTable ? t("waitingConfirmTable") : t("waitingConfirm")}</p>
             <p className="text-lg font-semibold">{reservation.user.name}</p>
             <p className="text-sm text-muted">{reservation.user.email}</p>
           </div>
@@ -105,8 +107,14 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           </div>
           <div className="bg-surface p-4">
             <dt className="text-muted">{isTable ? t("table") : reservation.paymentMethod === "ONLINE" ? t("online") : t("onsite")}</dt>
-            <dd className={`mt-1 text-lg ${reservation.paymentStatus === "PAID" || isTable ? "text-cream" : "text-muted"}`}>
-              {isTable ? t("payAtVenue") : reservation.paymentStatus === "PAID" ? t("paid") : t("unpaid")}
+            <dd className={`mt-1 text-lg ${!isTable && reservation.paymentStatus !== "PAID" ? "text-muted" : "text-cream"}`}>
+              {isTable
+                ? reservation.status === "CANCELLED"
+                  ? t("cancelled")
+                  : t("kindTable")
+                : reservation.paymentStatus === "PAID"
+                  ? t("paid")
+                  : t("unpaid")}
             </dd>
           </div>
         </dl>

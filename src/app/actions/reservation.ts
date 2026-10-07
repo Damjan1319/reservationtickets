@@ -8,9 +8,7 @@ import { MAX_GUESTS, MEAL_TYPES, ONLINE_PAYMENTS_ENABLED, type MealType } from "
 import { sendReservationDecisionEmail } from "@/lib/mail";
 import { prisma } from "@/lib/prisma";
 import { requireStaff } from "@/lib/staff";
-import { combineDateTime, createQrToken, parseQrPayload } from "@/lib/utils";
-
-const activeReservation = { status: { not: "CANCELLED" } };
+import { combineDateTime, createQrToken, liveGuestCount, parseQrPayload } from "@/lib/utils";
 
 function paymentFromForm(formData: FormData) {
   const paymentMethod = String(formData.get("paymentMethod") ?? "ONSITE");
@@ -71,14 +69,14 @@ export async function createReservation(formData: FormData) {
     where: { id: eventId },
     include: {
       venue: true,
-      reservations: { where: activeReservation, select: { guests: true } },
+      reservations: true,
     },
   });
   if (!event) return { error: "required" as const };
   if (event.venue.verificationStatus !== "VERIFIED") return { error: "unverified" as const };
   if (event.startsAt.getTime() < Date.now()) return { error: "past" as const };
 
-  const reserved = event.reservations.reduce((sum, item) => sum + item.guests, 0);
+  const reserved = liveGuestCount(event.reservations);
   if (reserved + guests > event.capacity) {
     return { error: "full" as const };
   }
@@ -99,7 +97,7 @@ export async function createReservation(formData: FormData) {
 
   revalidatePath(`/v/${event.venue.slug}`);
   revalidatePath(`/tickets`);
-  redirect(`/tickets/${reservation.id}`);
+  return { ok: true as const, id: reservation.id };
 }
 
 export async function createTableReservation(formData: FormData) {
@@ -144,7 +142,7 @@ export async function createTableReservation(formData: FormData) {
 
   revalidatePath(`/v/${venue.slug}`);
   revalidatePath(`/tickets`);
-  redirect(`/tickets/${reservation.id}`);
+  return { ok: true as const, id: reservation.id };
 }
 
 export async function staffCreateBooking(formData: FormData) {
@@ -191,11 +189,11 @@ export async function staffCreateBooking(formData: FormData) {
 
     const event = await prisma.event.findFirst({
       where: { id: eventId, venueId: context.venue.id },
-      include: { reservations: { where: activeReservation, select: { guests: true } } },
+      include: { reservations: true },
     });
     if (!event) return { error: "required" as const };
     if (event.startsAt.getTime() < Date.now()) return { error: "past" as const };
-    const reserved = event.reservations.reduce((sum, item) => sum + item.guests, 0);
+    const reserved = liveGuestCount(event.reservations);
     if (reserved + guests > event.capacity) return { error: "full" as const };
 
     const reservation = await prisma.reservation.create({
