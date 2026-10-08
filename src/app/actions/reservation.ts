@@ -98,9 +98,12 @@ export async function createReservation(formData: FormData) {
       visitAt: event.startsAt,
       paymentMethod: "ONSITE",
       paymentStatus: "UNPAID",
-      status: "PENDING",
+      status: "CONFIRMED",
     },
+    include: { user: true, venue: true, event: true },
   });
+  await createTickets(reservation.id, guests);
+  await sendReservationDecisionEmail(reservation, "CONFIRMED");
 
   revalidatePath(`/v/${event.venue.slug}`);
   revalidatePath(`/tickets`);
@@ -373,6 +376,22 @@ export async function getDoorList() {
   if (!context) return { error: "noAccess" as const };
   await releaseNoShows(context.venue.id, context.venue.noShowMinutes);
   return { ok: true as const, items: await loadDoorList(context.venue.id) };
+}
+
+export async function admitByCode(rawCode: string) {
+  const looked = await lookupTicket(rawCode);
+  if (!("ok" in looked) || !looked.reservation) return looked;
+  if (looked.reservation.allIn) {
+    return { ok: true as const, warning: "allIn" as const, reservation: looked.reservation };
+  }
+  if (looked.reservation.paymentStatus !== "PAID") {
+    await prisma.reservation.update({
+      where: { id: looked.reservation.id },
+      data: { paymentStatus: "PAID" },
+    });
+  }
+  const checked = await checkInTicket(looked.reservation.ticketId);
+  return { ...checked, entered: true as const };
 }
 
 export async function lookupTicket(rawCode: string) {

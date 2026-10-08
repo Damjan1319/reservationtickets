@@ -3,7 +3,7 @@
 import { Html5Qrcode, Html5QrcodeScannerState } from "html5-qrcode";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState, useTransition } from "react";
-import { checkInTicket, lookupTicket, markReservationPaid, type ScannedTicket } from "@/app/actions/reservation";
+import { admitByCode, type ScannedTicket } from "@/app/actions/reservation";
 import { formatDate, formatTime } from "@/lib/utils";
 
 async function stopScanner(scanner: Html5Qrcode) {
@@ -84,6 +84,7 @@ export function Scanner({ locale, onNeedList }: { locale: string; onNeedList?: (
     reservation?: ScannedTicket;
     warning?: "allIn";
     ok?: boolean;
+    entered?: boolean;
   }) {
     if (result.reservation) {
       pauseCamera();
@@ -114,7 +115,7 @@ export function Scanner({ locale, onNeedList }: { locale: string; onNeedList?: (
     lastCode.current = normalized;
     lastAt.current = now;
     startTransition(async () => {
-      applyResult(await lookupTicket(normalized));
+      applyResult(await admitByCode(normalized));
     });
   }
 
@@ -168,8 +169,12 @@ export function Scanner({ locale, onNeedList }: { locale: string; onNeedList?: (
       if (event.key === "Escape") closePopup();
     }
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+    const autoClose = error ? 0 : window.setTimeout(() => closePopup(), 1600);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      if (autoClose) window.clearTimeout(autoClose);
+    };
+  }, [open, error, ticket?.ticketId]);
 
   async function startCamera() {
     setCameraError(false);
@@ -196,7 +201,6 @@ export function Scanner({ locale, onNeedList }: { locale: string; onNeedList?: (
     }
   }
 
-  const unpaid = ticket?.paymentStatus !== "PAID";
   const used = Boolean(ticket?.allIn);
   const when = ticket ? new Date(ticket.startsAt) : null;
   const kindLabel = ticket?.kind === "TABLE"
@@ -288,14 +292,10 @@ export function Scanner({ locale, onNeedList }: { locale: string; onNeedList?: (
               <div className="space-y-5">
                 <p
                   className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
-                    used
-                      ? "bg-paper-2 text-paper-muted"
-                      : unpaid
-                        ? "bg-paper-text text-paper"
-                        : "bg-paper-2 text-paper-text"
+                    used ? "bg-paper-text text-paper" : "bg-paper-2 text-paper-text"
                   }`}
                 >
-                  {used ? t("used") : unpaid ? tt("unpaid") : tt("paid")}
+                  {used ? t("letIn") : tt("paid")}
                 </p>
 
                 <div>
@@ -311,34 +311,7 @@ export function Scanner({ locale, onNeedList }: { locale: string; onNeedList?: (
                   <p className="mt-1 text-sm text-paper-muted">{ticket.guestEmail}</p>
                 </div>
 
-                {!used ? (
-                  <div className="flex flex-col gap-2">
-                    {unpaid ? (
-                      <button
-                        type="button"
-                        disabled={pending}
-                        onClick={() =>
-                          startTransition(async () =>
-                            applyResult(await markReservationPaid(ticket.id, ticket.ticketId)),
-                          )
-                        }
-                        className="btn btn-ghost"
-                      >
-                        {t("markPaid")}
-                      </button>
-                    ) : null}
-                    <button
-                      type="button"
-                      disabled={pending}
-                      onClick={() =>
-                        startTransition(async () => applyResult(await checkInTicket(ticket.ticketId)))
-                      }
-                      className="btn btn-primary min-h-14 text-xl"
-                    >
-                      {t("doCheckIn")}
-                    </button>
-                  </div>
-                ) : null}
+                {used ? <p className="text-2xl font-bold">{t("letIn")}</p> : null}
               </div>
             ) : null}
 
