@@ -4,11 +4,11 @@ import { auth, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { getStaffContext } from "@/lib/staff";
 import { SiteNav } from "@/components/site-nav";
-import { APP_NAME } from "@/lib/constants";
 import { getTheme } from "@/lib/theme";
 
 export async function Header() {
   const t = await getTranslations("nav");
+  const tc = await getTranslations("common");
   const theme = await getTheme();
   const session = await auth();
   const staff = session ? await getStaffContext() : null;
@@ -41,7 +41,7 @@ export async function Header() {
       <div className="relative mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <div className="flex min-w-0 items-center">
           <Link href="/" className="text-[1.15rem] font-semibold tracking-tight text-cream">
-            {APP_NAME}
+            {tc("appName")}
           </Link>
         </div>
         <SiteNav
