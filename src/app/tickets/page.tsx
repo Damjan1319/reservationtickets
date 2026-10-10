@@ -19,7 +19,7 @@ export default async function TicketsPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-14">
-      <PageBack href="/" label={tn("venues")} />
+      <PageBack href="/search" label={tn("venues")} />
       <h1 className="text-3xl font-semibold tracking-tight">{t("myTickets")}</h1>
       <p className="mt-2 text-sm text-muted">{t("myHint")}</p>
       <GuestReservations

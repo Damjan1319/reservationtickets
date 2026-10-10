@@ -4,6 +4,7 @@ import { auth, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { getStaffContext } from "@/lib/staff";
 import { SiteNav } from "@/components/site-nav";
+import { APP_NAME } from "@/lib/constants";
 import { getTheme } from "@/lib/theme";
 
 export async function Header() {
@@ -17,7 +18,7 @@ export async function Header() {
 
   const links = session
     ? [
-        { href: "/#venues", label: t("venues") },
+        { href: "/search", label: t("venues") },
         { href: "/tickets", label: t("tickets") },
         ...(staff
           ? [
@@ -30,7 +31,7 @@ export async function Header() {
         ...(admin?.isAdmin ? [{ href: "/admin", label: t("admin") }] : []),
       ]
     : [
-        { href: "/#venues", label: t("venues") },
+        { href: "/search", label: t("venues") },
         { href: "/register-venue", label: t("registerVenue") },
         { href: "/login", label: t("login") },
       ];
@@ -40,7 +41,7 @@ export async function Header() {
       <div className="relative mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <div className="flex min-w-0 items-center">
           <Link href="/" className="text-[1.15rem] font-semibold tracking-tight text-cream">
-            Ulaznice
+            {APP_NAME}
           </Link>
         </div>
         <SiteNav

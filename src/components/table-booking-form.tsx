@@ -16,6 +16,8 @@ export function TableBookingForm({
   closed,
   opensAt,
   closesAt,
+  initialDate,
+  initialGuests,
 }: {
   venueId: string;
   tableCapacity?: number;
@@ -23,6 +25,8 @@ export function TableBookingForm({
   closed?: boolean;
   opensAt?: string;
   closesAt?: string;
+  initialDate?: string;
+  initialGuests?: number;
 }) {
   const t = useTranslations("booking");
   const te = useTranslations("event");
@@ -30,12 +34,14 @@ export function TableBookingForm({
   const tt = useTranslations("ticket");
   const router = useRouter();
   const [mealType, setMealType] = useState<(typeof MEAL_TYPES)[number]>("DINNER");
-  const [guests, setGuests] = useState(2);
+  const taken = reservedByMeal[mealType] ?? 0;
+  const remaining = tableCapacity > 0 ? Math.max(0, tableCapacity - taken) : MAX_GUESTS;
+  const [guests, setGuests] = useState(() =>
+    Math.min(remaining, Math.max(1, initialGuests ?? 2)),
+  );
   const [error, setError] = useState<string | null>(null);
   const [doneId, setDoneId] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
-  const taken = reservedByMeal[mealType] ?? 0;
-  const remaining = tableCapacity > 0 ? Math.max(0, tableCapacity - taken) : MAX_GUESTS;
 
   if (closed) {
     return <p className="text-sm font-semibold text-paper-text">{t("closed")}</p>;
@@ -89,7 +95,7 @@ export function TableBookingForm({
             type="date"
             required
             min={todayInputValue()}
-            defaultValue={todayInputValue()}
+            defaultValue={initialDate && initialDate >= todayInputValue() ? initialDate : todayInputValue()}
             className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 font-semibold text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
           />
         </label>

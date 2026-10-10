@@ -9,10 +9,18 @@ import { prisma } from "@/lib/prisma";
 import { MEAL_TYPES } from "@/lib/constants";
 import { tableGuestsForSlot } from "@/lib/door";
 import { todayKey } from "@/lib/time";
+import { venueHref } from "@/lib/search";
 import { liveGuestCount, venueCover } from "@/lib/utils";
 
-export default async function VenuePage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function VenuePage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ date?: string; guests?: string }>;
+}) {
   const { slug } = await params;
+  const query = await searchParams;
   const t = await getTranslations("venue");
   const tb = await getTranslations("booking");
   const tn = await getTranslations("nav");
@@ -63,7 +71,7 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
         />
         <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/80 to-black/35" />
         <div className="relative mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 sm:py-16">
-          <PageBack href="/" label={tn("venues")} onImage />
+          <PageBack href="/search" label={tn("venues")} onImage />
           <div>
             <p className="text-sm font-medium text-cream/80">
               {t(`types.${venue.type}`)} · {venue.city}
@@ -124,12 +132,17 @@ export default async function VenuePage({ params }: { params: Promise<{ slug: st
                 closed={venue.closed}
                 opensAt={venue.opensAt}
                 closesAt={venue.closesAt}
+                initialDate={query.date}
+                initialGuests={Number.parseInt(query.guests ?? "", 10) || undefined}
               />
             </div>
           ) : isPublic ? (
             <div className="mt-6 space-y-4">
               <p className="text-paper-muted">{tb("needLogin")}</p>
-              <Link href={`/login?callbackUrl=/v/${slug}`} className="btn btn-primary">
+              <Link
+                href={`/login?callbackUrl=${encodeURIComponent(venueHref(slug, { date: query.date ?? "", guests: Number.parseInt(query.guests ?? "", 10) || 2 }))}`}
+                className="btn btn-primary"
+              >
                 {tn("login")}
               </Link>
             </div>

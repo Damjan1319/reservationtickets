@@ -13,15 +13,18 @@ type BookingFormProps = {
   price: number;
   remaining: number;
   locale: string;
+  initialGuests?: number;
 };
 
-export function BookingForm({ eventId, price, remaining, locale }: BookingFormProps) {
+export function BookingForm({ eventId, price, remaining, locale, initialGuests }: BookingFormProps) {
   const t = useTranslations("booking");
   const te = useTranslations("event");
   const tc = useTranslations("common");
   const tt = useTranslations("ticket");
   const router = useRouter();
-  const [guests, setGuests] = useState(1);
+  const [guests, setGuests] = useState(
+    Math.min(remaining, Math.max(1, initialGuests ?? 1)),
+  );
   const [error, setError] = useState<string | null>(null);
   const [doneId, setDoneId] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();

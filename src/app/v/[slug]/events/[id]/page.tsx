@@ -9,10 +9,13 @@ import { formatDateTime, formatMoney, liveGuestCount, remainingSpots } from "@/l
 
 export default async function EventPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string; id: string }>;
+  searchParams: Promise<{ guests?: string }>;
 }) {
   const raw = await params;
+  const query = await searchParams;
   const slug = String(raw.slug ?? "");
   const id = String(raw.id ?? "");
   const t = await getTranslations("event");
@@ -63,7 +66,13 @@ export default async function EventPage({
           <p className="mt-4 text-paper-muted">{tb("unverified")}</p>
         ) : session?.user ? (
           <div className="mt-6">
-            <BookingForm eventId={event.id} price={event.price} remaining={left} locale={locale} />
+            <BookingForm
+              eventId={event.id}
+              price={event.price}
+              remaining={left}
+              locale={locale}
+              initialGuests={Number.parseInt(query.guests ?? "", 10) || undefined}
+            />
           </div>
         ) : (
           <div className="mt-6 space-y-4">

@@ -180,6 +180,14 @@ textarea {
   font-weight: 600;
 }
 
+.bg-paper :is(input, select).search-plain {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+  -webkit-text-fill-color: var(--paper-text);
+}
+
 :is(.bg-paper, .bg-paper-2, .text-paper-text) option {
   background: #fff;
   color: #161615;

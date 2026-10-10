@@ -25,7 +25,7 @@ export function SiteNav({
   const actionLinks = links.filter((link) => link.kind === "ghost" || link.kind === "primary");
 
   function isActive(href: string) {
-    if (href === "/#venues") return pathname === "/";
+    if (href === "/search") return pathname === "/search";
     if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(`${href}/`);
   }
