@@ -6,6 +6,15 @@ import { cn } from "@/lib/utils";
 
 type Tab = "menu" | "events" | "reviews";
 
+function firstTab(initial: string | undefined, menuCount: number, eventCount: number): Tab {
+  if (initial === "menu" && menuCount > 0) return "menu";
+  if (initial === "events" && eventCount > 0) return "events";
+  if (initial === "reviews") return "reviews";
+  if (menuCount > 0) return "menu";
+  if (eventCount > 0) return "events";
+  return "reviews";
+}
+
 export function VenuePanel({
   menu,
   events,
@@ -13,6 +22,7 @@ export function VenuePanel({
   menuCount,
   eventCount,
   reviewCount,
+  initialTab,
 }: {
   menu: ReactNode;
   events: ReactNode;
@@ -20,11 +30,12 @@ export function VenuePanel({
   menuCount: number;
   eventCount: number;
   reviewCount: number;
+  initialTab?: string;
 }) {
   const t = useTranslations("venue");
   const to = useTranslations("offer");
   const tr = useTranslations("review");
-  const [tab, setTab] = useState<Tab>(menuCount > 0 ? "menu" : eventCount > 0 ? "events" : "reviews");
+  const [tab, setTab] = useState<Tab>(firstTab(initialTab, menuCount, eventCount));
 
   const tabs: Array<{ id: Tab; label: string; count?: number; hidden?: boolean }> = [
     { id: "menu", label: to("menusPublic"), count: menuCount, hidden: menuCount === 0 },

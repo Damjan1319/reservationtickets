@@ -23,7 +23,7 @@ export async function HomePicks({
             <h2 className="text-2xl font-bold tracking-normal text-cream sm:text-3xl">{t("goingOut")}</h2>
             <p className="mt-2 text-sm font-medium tracking-normal text-cream/70">{t("goingOutHint")}</p>
           </div>
-          <Link href={searchHref({ ...query, occasion: "NIGHT", kind: "event" })} className="text-sm font-semibold text-cream/75 hover:text-cream">
+          <Link href={searchHref({ ...query, occasion: "EVENTS", kind: "event" })} className="text-sm font-semibold text-cream/75 hover:text-cream">
             {th("ctaGuest")}
           </Link>
         </div>
@@ -32,7 +32,7 @@ export async function HomePicks({
         ) : (
           <div className="mt-6 grid gap-4">
             {goingOut.map((venue) => (
-              <SearchResultCard key={venue.id} venue={venue} query={{ ...query, occasion: "NIGHT", kind: "event" }} />
+              <SearchResultCard key={venue.id} venue={venue} query={{ ...query, occasion: "EVENTS", kind: "event" }} />
             ))}
           </div>
         )}

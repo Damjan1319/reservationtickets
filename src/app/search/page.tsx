@@ -4,7 +4,16 @@ import { getTranslations } from "next-intl/server";
 import { SearchBar } from "@/components/search-bar";
 import { SearchResultCard } from "@/components/search-result-card";
 import { VENUE_TYPES } from "@/lib/constants";
-import { listCities, parseSearchParams, searchHref, searchVenues, type SearchQuery } from "@/lib/search";
+import {
+  SEARCH_OCCASIONS,
+  listCities,
+  occasionFilter,
+  parseSearchParams,
+  searchHref,
+  searchVenues,
+  withOccasion,
+  type SearchQuery,
+} from "@/lib/search";
 import { cn } from "@/lib/utils";
 
 export default async function SearchPage({
@@ -44,28 +53,32 @@ export default async function SearchPage({
           <p className="text-sm font-bold">{t("filters")}</p>
           <FilterForm query={query}>
             <fieldset className="mt-4 space-y-2">
-              <legend className="text-xs font-semibold uppercase tracking-wide text-paper-muted">{tv("type")}</legend>
-              <FilterLink query={query} patch={{ type: "" }} active={!query.type}>
-                {tc("allTypes")}
+              <legend className="text-xs font-semibold uppercase tracking-wide text-paper-muted">{t("occasion")}</legend>
+              <FilterLink query={query} patch={withOccasion(query, "")} active={!query.occasion && query.kind === "all"}>
+                {t("occasionAny")}
               </FilterLink>
-              {VENUE_TYPES.map((item) => (
-                <FilterLink key={item} query={query} patch={{ type: item }} active={query.type === item}>
-                  {tv(`types.${item}`)}
+              {SEARCH_OCCASIONS.map((item) => (
+                <FilterLink
+                  key={item}
+                  query={query}
+                  patch={withOccasion(query, item)}
+                  active={query.occasion === item || (item === "EVENTS" && query.kind === "event" && !query.occasion)}
+                >
+                  {t(`occasions.${item}`)}
                 </FilterLink>
               ))}
             </fieldset>
 
             <fieldset className="mt-5 space-y-2">
-              <legend className="text-xs font-semibold uppercase tracking-wide text-paper-muted">{t("what")}</legend>
-              <FilterLink query={query} patch={{ kind: "all" }} active={query.kind === "all"}>
-                {t("kinds.all")}
+              <legend className="text-xs font-semibold uppercase tracking-wide text-paper-muted">{tv("type")}</legend>
+              <FilterLink query={query} patch={{ type: "" }} active={!query.type}>
+                {tc("allTypes")}
               </FilterLink>
-              <FilterLink query={query} patch={{ kind: "table" }} active={query.kind === "table"}>
-                {t("kinds.table")}
-              </FilterLink>
-              <FilterLink query={query} patch={{ kind: "event" }} active={query.kind === "event"}>
-                {t("kinds.event")}
-              </FilterLink>
+              {(occasionFilter(query.occasion)?.types ?? VENUE_TYPES).map((item) => (
+                <FilterLink key={item} query={query} patch={{ type: item }} active={query.type === item}>
+                  {tv(`types.${item}`)}
+                </FilterLink>
+              ))}
             </fieldset>
 
             <label className="mt-5 flex items-center gap-2 text-sm font-semibold">

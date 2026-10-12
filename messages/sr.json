@@ -22,6 +22,7 @@
     "close": "Zatvori"
   },
   "nav": {
+    "home": "Početna",
     "venues": "Lokali",
     "login": "Prijava",
     "register": "Nalog",
@@ -50,19 +51,20 @@
     "venuesEmptyFilter": "Nema lokala za izabrani filter."
   },
   "search": {
-    "where": "Gde ideš?",
+    "where": "Grad?",
     "wherePlaceholder": "npr. Beograd",
-    "when": "Kad",
-    "who": "Koliko vas",
-    "what": "Rezervacije ili događaji",
-    "occasion": "Šta?",
+    "when": "Datum",
+    "who": "Broj osoba",
+    "what": "Prilika",
+    "occasion": "Prilika",
     "occasionAny": "Sve",
     "occasions": {
       "KAFA": "Kafa",
       "LUNCH": "Ručak",
       "DINNER": "Večera",
-      "NIGHT": "Izlazak",
-      "DRINKS": "Piće"
+      "NIGHT": "Događaji",
+      "DRINKS": "Piće",
+      "EVENTS": "Događaji"
     },
     "kinds": {
       "all": "Sve",
@@ -89,6 +91,8 @@
     "noEvents": "Nema predstojećih događaja",
     "seeVenue": "Pogledaj",
     "seeTickets": "Događaji",
+    "seeMenu": "Pogledaj meni",
+    "takeTicket": "Uzmi kartu",
     "fromPrice": "od {price}",
     "hours": "{opens}–{closes}",
     "destinations": "Gradovi",

@@ -73,7 +73,7 @@ export function SearchBar({
           </select>
         </label>
 
-        {values.kind !== "all" ? <input type="hidden" name="kind" value={values.kind} /> : null}
+        {!values.occasion && values.kind !== "all" ? <input type="hidden" name="kind" value={values.kind} /> : null}
         {values.type ? <input type="hidden" name="type" value={values.type} /> : null}
         {values.sort !== "recommended" ? <input type="hidden" name="sort" value={values.sort} /> : null}
         {values.available ? <input type="hidden" name="available" value="1" /> : null}

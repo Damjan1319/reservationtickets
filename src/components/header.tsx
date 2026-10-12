@@ -19,7 +19,7 @@ export async function Header() {
 
   const links = session
     ? [
-        { href: "/search", label: t("venues") },
+        { href: "/", label: t("home") },
         { href: "/tickets", label: t("tickets") },
         ...(staff
           ? [
@@ -32,7 +32,7 @@ export async function Header() {
         ...(admin?.isAdmin ? [{ href: "/admin", label: t("admin") }] : []),
       ]
     : [
-        { href: "/search", label: t("venues") },
+        { href: "/", label: t("home") },
         { href: "/register-venue", label: t("registerVenue") },
         { href: "/login", label: t("login") },
       ];

@@ -23,13 +23,14 @@ export default async function VenuePage({
   searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ date?: string; guests?: string; meal?: string }>;
+  searchParams: Promise<{ date?: string; guests?: string; meal?: string; tab?: string }>;
 }) {
   const { slug } = await params;
   const query = await searchParams;
   const initialMeal = MEAL_TYPES.includes(query.meal as (typeof MEAL_TYPES)[number])
     ? (query.meal as (typeof MEAL_TYPES)[number])
     : undefined;
+  const initialTab = query.tab === "menu" || query.tab === "events" || query.tab === "reviews" ? query.tab : undefined;
   const t = await getTranslations("venue");
   const tb = await getTranslations("booking");
   const tn = await getTranslations("nav");
@@ -135,6 +136,7 @@ export default async function VenuePage({
             }))}
           />
           <VenuePanel
+            initialTab={initialTab}
             menuCount={venue.menus.reduce((sum, menu) => sum + menu.items.length, 0)}
             eventCount={venue.events.length}
             reviewCount={venue.reviews.length}

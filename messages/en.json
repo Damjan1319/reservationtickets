@@ -22,6 +22,7 @@
     "close": "Close"
   },
   "nav": {
+    "home": "Home",
     "venues": "Venues",
     "login": "Log in",
     "register": "Sign up",
@@ -50,19 +51,20 @@
     "venuesEmptyFilter": "No venues match this filter."
   },
   "search": {
-    "where": "Where to?",
+    "where": "City?",
     "wherePlaceholder": "e.g. Belgrade",
-    "when": "When",
+    "when": "Date",
     "who": "Guests",
-    "what": "Reservations or events",
-    "occasion": "What?",
+    "what": "Occasion",
+    "occasion": "Occasion",
     "occasionAny": "Anything",
     "occasions": {
       "KAFA": "Coffee",
       "LUNCH": "Lunch",
       "DINNER": "Dinner",
-      "NIGHT": "Night out",
-      "DRINKS": "Drinks"
+      "NIGHT": "Events",
+      "DRINKS": "Drinks",
+      "EVENTS": "Events"
     },
     "kinds": {
       "all": "Anything",
@@ -89,6 +91,8 @@
     "noEvents": "No upcoming events",
     "seeVenue": "See venue",
     "seeTickets": "Events",
+    "seeMenu": "See menu",
+    "takeTicket": "Get a ticket",
     "fromPrice": "from {price}",
     "hours": "{opens}–{closes}",
     "destinations": "Cities",
