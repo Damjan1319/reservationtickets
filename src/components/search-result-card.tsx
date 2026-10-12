@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { type SearchQuery, type SearchVenue, venueHref } from "@/lib/search";
+import { RatingBadge } from "@/components/review-form";
 import { formatDateTime, formatMoney } from "@/lib/utils";
 
 export async function SearchResultCard({
@@ -12,6 +13,7 @@ export async function SearchResultCard({
 }) {
   const t = await getTranslations("search");
   const tv = await getTranslations("venue");
+  const tr = await getTranslations("review");
   const locale = await getLocale();
   const href = venueHref(venue.slug, query);
 
@@ -38,6 +40,9 @@ export async function SearchResultCard({
               {venue.name}
             </Link>
           </h2>
+          <div className="mt-2">
+            <RatingBadge overall={venue.ratingAvg} count={venue.ratingCount} label={tr("countLabel")} />
+          </div>
           {venue.address && venue.address !== venue.city ? (
             <p className="mt-1 text-sm font-medium text-paper-muted">{venue.address}</p>
           ) : null}

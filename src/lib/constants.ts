@@ -42,6 +42,15 @@ export type MenuKind = (typeof MENU_KINDS)[number];
 export const PROMO_KINDS = ["HAPPY_HOUR", "DISCOUNT", "MENU", "NIGHT", "OTHER"] as const;
 export type PromoKind = (typeof PROMO_KINDS)[number];
 
+export const REVIEW_ASPECTS = ["FOOD", "DRINKS", "NIGHT"] as const;
+export type ReviewAspect = (typeof REVIEW_ASPECTS)[number];
+
+export function reviewAspectsForType(type: string): ReviewAspect[] {
+  if (type === "CLUB" || type === "BAR") return ["NIGHT", "DRINKS"];
+  if (type === "CAFE") return ["DRINKS", "FOOD"];
+  return ["FOOD", "DRINKS"];
+}
+
 export const ROOT_HOSTS = new Set([
   "localhost",
   "127.0.0.1",

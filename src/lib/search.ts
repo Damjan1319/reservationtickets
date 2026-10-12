@@ -2,6 +2,7 @@ import { MAX_GUESTS, MEAL_TYPES, VENUE_TYPES, type MealType } from "@/lib/consta
 import { prisma } from "@/lib/prisma";
 import { todayKey, dayKeyInTz } from "@/lib/time";
 import { isPromoLive } from "@/lib/offers";
+import { summarizeReviews } from "@/lib/reviews";
 import { liveGuestCount, remainingSpots, venueCover } from "@/lib/utils";
 
 export const SEARCH_KINDS = ["all", "table", "event"] as const;
@@ -66,6 +67,9 @@ export type SearchVenue = {
   bookable: boolean;
   promoTitle: string | null;
   hasMenu: boolean;
+  hasEventOnDate: boolean;
+  ratingAvg: number | null;
+  ratingCount: number;
 };
 
 type RawParams = {
@@ -200,6 +204,7 @@ export async function searchVenues(query: SearchQuery): Promise<SearchVenue[]> {
         where: { published: true },
         select: { id: true, items: { where: { available: true }, select: { id: true } } },
       },
+      reviews: { select: { food: true, drinks: true, night: true } },
     },
     orderBy: { name: "asc" },
   });
@@ -212,7 +217,14 @@ export async function searchVenues(query: SearchQuery): Promise<SearchVenue[]> {
       price: event.price,
       left: remainingSpots(event.capacity, liveGuestCount(event.reservations)),
     }));
-    const fitting = events.find((event) => event.left >= query.guests) ?? events[0] ?? null;
+    const todayEvents = events.filter((event) => dayKeyInTz(new Date(event.startsAt)) === query.date);
+    const fitting =
+      todayEvents.find((event) => event.left >= query.guests) ??
+      events.find((event) => event.left >= query.guests) ??
+      todayEvents[0] ??
+      events[0] ??
+      null;
+    const ratings = summarizeReviews(venue.reviews);
     const tableLeft = tableLeftForDay(venue.tableCapacity, venue.reservations, query.date, occasion?.meal);
     const bookableTable = !venue.closed && (tableLeft == null || tableLeft >= query.guests);
     const bookableEvent = Boolean(fitting && fitting.left >= query.guests);
@@ -240,6 +252,9 @@ export async function searchVenues(query: SearchQuery): Promise<SearchVenue[]> {
       bookable,
       promoTitle: venue.promotions.find(isPromoLive)?.title ?? null,
       hasMenu: venue.menus.some((menu) => menu.items.length > 0),
+      hasEventOnDate: todayEvents.length > 0,
+      ratingAvg: ratings.overall,
+      ratingCount: ratings.count,
     };
   });
 

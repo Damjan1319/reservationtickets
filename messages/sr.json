@@ -96,7 +96,13 @@
     "moreCities": "Ostali gradovi",
     "hasMenu": "Meni",
     "browseTypes": "Šta tražiš",
-    "popular": "Lokali za večeras",
+    "popular": "Gde da izađem?",
+    "goingOut": "Gde da izađem?",
+    "goingOutHint": "Žurke i događaji koji su večeras.",
+    "goingOutEmpty": "Večeras još nema objavljenih žurki.",
+    "sitDown": "Gde da sednemo?",
+    "sitDownHint": "Restorani i kafići — sto, kafa, ručak ili večera.",
+    "sitDownEmpty": "Još nema restorana i kafića za rezervaciju.",
     "guestsShort": "{count, plural, one {# gost} few {# gosta} other {# gostiju}}"
   },
   "auth": {
@@ -344,6 +350,7 @@
     "calBoth": "Oba",
     "calFree": "Slobodno",
     "pendingBanner": "Lokal čeka proveru. Gosti te neće videti dok ne potvrdimo PIB, adresu i mapu.",
+    "disabledBanner": "Admin je isključio lokal. Gosti ga ne vide dok se ponovo ne uključi.",
     "guest": "Gost",
     "status": "Status",
     "checkIn": "Check-in",
@@ -418,6 +425,14 @@
     "statEmailsHint": "Jedinstveni gosti",
     "approve": "Potvrdi",
     "reject": "Odbij",
+    "enable": "Uključi",
+    "disable": "Isključi",
+    "disabled": "Isključen",
+    "disableAsk": "Isključiti ovaj lokal?",
+    "disableHint": "Gosti ga više neće videti u pretrazi niti moći da rezervišu. Možeš da ga uključiš ponovo.",
+    "delete": "Obriši",
+    "deleteAsk": "Obrisati lokal zauvek?",
+    "deleteHint": "Brišu se rezervacije, događaji, meniji, ocene i osoblje. Ovo se ne može vratiti.",
     "empty": "Nema lokala na čekanju.",
     "emptyBookings": "Još nema rezervacija.",
     "all": "Svi lokali",
@@ -441,6 +456,28 @@
       "week": "7 dana",
       "month": "30 dana",
       "all": "Sve"
+    }
+  },
+  "review": {
+    "title": "Ocene",
+    "write": "Ostavi ocenu",
+    "yours": "Tvoja ocena",
+    "empty": "Još nema ocena. Budi prvi.",
+    "body": "Komentar",
+    "bodyHint": "Opciono — šta ti se svidelo, a šta ne.",
+    "submit": "Objavi ocenu",
+    "update": "Sačuvaj izmenu",
+    "saved": "Ocena je sačuvana.",
+    "needLogin": "Da ostaviš ocenu, prijavi se.",
+    "own": "Za svoj lokal ne možeš da ostaviš ocenu.",
+    "scores": "Oceni sve što važi za ovaj lokal.",
+    "scoresHint": "Ocena je obavezna, tekst nije.",
+    "rate": "Sačekaj malo pa pokušaj ponovo.",
+    "countLabel": "ocena",
+    "aspects": {
+      "FOOD": "Hrana",
+      "DRINKS": "Piće",
+      "NIGHT": "Provod"
     }
   },
   "offer": {

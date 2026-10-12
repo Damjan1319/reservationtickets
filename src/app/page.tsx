@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { CityDestinations } from "@/components/city-destinations";
 import { HomeHero } from "@/components/home-hero";
-import { SearchResultCard } from "@/components/search-result-card";
+import { HomePicks } from "@/components/home-picks";
 import { VENUE_TYPES } from "@/lib/constants";
 import { listCities, listDestinations, parseSearchParams, searchHref, searchVenues } from "@/lib/search";
 import { venueCover } from "@/lib/utils";
@@ -53,23 +53,11 @@ export default async function Home() {
 
       <CityDestinations destinations={destinations} defaults={defaults} />
 
-      <section id="venues" className="mx-auto max-w-6xl px-4 py-8 sm:py-10">
-        <div className="flex items-end justify-between gap-4">
-          <h2 className="text-2xl font-bold tracking-tight text-cream sm:text-3xl">{ts("popular")}</h2>
-          <Link href="/search" className="text-sm font-semibold text-cream/75 hover:text-cream">
-            {t("ctaGuest")}
-          </Link>
-        </div>
-        {featured.length === 0 ? (
-          <p className="mt-6 font-medium text-cream">{t("venuesEmpty")}</p>
-        ) : (
-          <div className="mt-6 grid gap-4">
-            {featured.slice(0, 6).map((venue) => (
-              <SearchResultCard key={venue.id} venue={venue} query={defaults} />
-            ))}
-          </div>
-        )}
-      </section>
+      <HomePicks
+        goingOut={featured.filter((venue) => venue.hasEventOnDate).slice(0, 6)}
+        sitDown={featured.filter((venue) => venue.type === "RESTAURANT" || venue.type === "CAFE").slice(0, 6)}
+        query={defaults}
+      />
 
       <section className="mx-auto max-w-6xl px-4 pb-16 pt-4 sm:pb-20">
         <p className="text-sm font-medium text-cream/70">{t("howTitle")}</p>

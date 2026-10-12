@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
-import { setVenueVerification } from "@/app/actions/venue";
+import { AdminVenueActions } from "@/components/admin-venue-actions";
 import { PageHeader } from "@/components/page-header";
 import { StatsDashboard } from "@/components/stats-dashboard";
 import { prisma } from "@/lib/prisma";
@@ -179,7 +179,9 @@ function VenueAdminCard({
       ? tv("verified")
       : venue.verificationStatus === "REJECTED"
         ? tv("rejected")
-        : tv("pending");
+        : venue.verificationStatus === "DISABLED"
+          ? t("disabled")
+          : tv("pending");
 
   return (
     <article className="overflow-hidden rounded-2xl border border-line bg-surface">
@@ -222,7 +224,7 @@ function VenueAdminCard({
                 "rounded-full px-3 py-1 text-xs font-semibold",
                 venue.verificationStatus === "VERIFIED"
                   ? "bg-paper text-paper-text"
-                  : venue.verificationStatus === "REJECTED"
+                  : venue.verificationStatus === "REJECTED" || venue.verificationStatus === "DISABLED"
                     ? "border border-danger text-danger"
                     : "border border-line text-cream/80",
               )}
@@ -230,30 +232,7 @@ function VenueAdminCard({
               {status}
             </span>
           </div>
-          {venue.verificationStatus !== "VERIFIED" ? (
-            <div className="mt-4 flex gap-2">
-              <form
-                action={async () => {
-                  "use server";
-                  await setVenueVerification(venue.id, "VERIFIED");
-                }}
-              >
-                <button type="submit" className="btn btn-primary !px-4 !py-2">
-                  {t("approve")}
-                </button>
-              </form>
-              <form
-                action={async () => {
-                  "use server";
-                  await setVenueVerification(venue.id, "REJECTED");
-                }}
-              >
-                <button type="submit" className="btn btn-ghost !px-4 !py-2">
-                  {t("reject")}
-                </button>
-              </form>
-            </div>
-          ) : null}
+          <AdminVenueActions venueId={venue.id} status={venue.verificationStatus} />
         </div>
       </div>
     </article>

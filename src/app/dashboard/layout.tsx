@@ -39,7 +39,13 @@ export default async function DashboardLayout({ children }: { children: ReactNod
       roleLabel={owner ? ts("roleOwner") : ts("roleStaff")}
       venueName={context.venue.name}
       venueSlug={context.venue.slug}
-      pendingBanner={context.venue.verificationStatus !== "VERIFIED" ? t("pendingBanner") : undefined}
+      pendingBanner={
+        context.venue.verificationStatus === "DISABLED"
+          ? t("disabledBanner")
+          : context.venue.verificationStatus !== "VERIFIED"
+            ? t("pendingBanner")
+            : undefined
+      }
       links={links.map((link) => ({
         href: link.href,
         label: t(link.key),

@@ -194,17 +194,45 @@ export async function updateVenue(formData: FormData) {
   return { ok: true as const };
 }
 
-export async function setVenueVerification(venueId: string, status: "VERIFIED" | "REJECTED") {
+export async function setVenueVerification(
+  venueId: string,
+  status: "VERIFIED" | "REJECTED" | "DISABLED",
+) {
   const admin = await requireAdmin();
   if (!admin) return { error: "adminOnly" as const };
 
+  const venue = await prisma.venue.findUnique({ where: { id: venueId }, select: { slug: true } });
+  if (!venue) return { error: "required" as const };
+
   await prisma.venue.update({
     where: { id: venueId },
-    data: { verificationStatus: status },
+    data: {
+      verificationStatus: status,
+      closed: status === "DISABLED" ? true : status === "VERIFIED" ? false : undefined,
+    },
   });
 
   revalidatePath("/");
+  revalidatePath("/search");
   revalidatePath("/admin");
   revalidatePath("/dashboard");
+  revalidatePath(`/v/${venue.slug}`);
+  return { ok: true as const };
+}
+
+export async function deleteVenue(venueId: string) {
+  const admin = await requireAdmin();
+  if (!admin) return { error: "adminOnly" as const };
+
+  const venue = await prisma.venue.findUnique({ where: { id: venueId }, select: { slug: true } });
+  if (!venue) return { error: "required" as const };
+
+  await prisma.venue.delete({ where: { id: venueId } });
+
+  revalidatePath("/");
+  revalidatePath("/search");
+  revalidatePath("/admin");
+  revalidatePath("/dashboard");
+  revalidatePath(`/v/${venue.slug}`);
   return { ok: true as const };
 }

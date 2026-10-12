@@ -6,7 +6,9 @@ import { EventCard } from "@/components/event-card";
 import { PageBack } from "@/components/page-back";
 import { TableBookingForm } from "@/components/table-booking-form";
 import { VenueOffers } from "@/components/venue-offers";
+import { VenueReviews } from "@/components/venue-reviews";
 import { isPromoLive } from "@/lib/offers";
+import { summarizeReviews } from "@/lib/reviews";
 import { prisma } from "@/lib/prisma";
 import { MEAL_TYPES } from "@/lib/constants";
 import { tableGuestsForSlot } from "@/lib/door";
@@ -47,12 +49,23 @@ export default async function VenuePage({
         where: { active: true },
         orderBy: { createdAt: "desc" },
       },
+      reviews: {
+        include: { user: { select: { id: true, name: true } } },
+        orderBy: { createdAt: "desc" },
+      },
     },
   });
 
   if (!venue) notFound();
 
   const isOwner = session?.user?.id === venue.ownerId;
+  const isTeam = Boolean(
+    session?.user?.id &&
+      (await prisma.staffMembership.findFirst({
+        where: { venueId: venue.id, userId: session.user.id },
+        select: { id: true },
+      })),
+  );
   const isPublic = venue.verificationStatus === "VERIFIED";
   if (!isPublic && !isOwner) {
     return (
@@ -150,6 +163,34 @@ export default async function VenuePage({
               ))}
             </div>
           )}
+          <VenueReviews
+            venueId={venue.id}
+            venueType={venue.type}
+            slug={venue.slug}
+            summary={summarizeReviews(venue.reviews)}
+            items={venue.reviews.map((item) => ({
+              id: item.id,
+              name: item.user.name,
+              body: item.body,
+              food: item.food,
+              drinks: item.drinks,
+              night: item.night,
+            }))}
+            mine={
+              venue.reviews
+                .filter((item) => item.userId === session?.user?.id)
+                .map((item) => ({
+                  id: item.id,
+                  name: item.user.name,
+                  body: item.body,
+                  food: item.food,
+                  drinks: item.drinks,
+                  night: item.night,
+                }))[0] ?? null
+            }
+            canReview={Boolean(session?.user?.id && !isOwner && !isTeam)}
+            loggedIn={Boolean(session?.user)}
+          />
         </div>
 
         <aside className="rounded-2xl border border-paper-line bg-paper p-6 text-paper-text lg:sticky lg:top-24">

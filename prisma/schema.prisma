@@ -22,6 +22,7 @@ model User {
   memberships  StaffMembership[]
   reservations Reservation[]
   promotions   Promotion[]
+  reviews      Review[]
 }
 
 model Venue {
@@ -53,6 +54,7 @@ model Venue {
   reservations Reservation[]
   menus        Menu[]
   promotions   Promotion[]
+  reviews      Review[]
 }
 
 model StaffMembership {
@@ -151,6 +153,23 @@ model Promotion {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
+  @@index([venueId])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  venueId   String
+  venue     Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  body      String   @default("")
+  food      Int?
+  drinks    Int?
+  night     Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([venueId, userId])
   @@index([venueId])
 }
 

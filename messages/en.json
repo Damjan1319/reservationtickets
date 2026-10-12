@@ -96,7 +96,13 @@
     "moreCities": "More cities",
     "hasMenu": "Menu",
     "browseTypes": "What are you looking for",
-    "popular": "Venues for tonight",
+    "popular": "Where should we go?",
+    "goingOut": "Where should we go out?",
+    "goingOutHint": "Parties and events happening tonight.",
+    "goingOutEmpty": "No parties listed for tonight yet.",
+    "sitDown": "Where should we sit?",
+    "sitDownHint": "Restaurants and cafés — a table for coffee, lunch or dinner.",
+    "sitDownEmpty": "No restaurants or cafés to book yet.",
     "guestsShort": "{count, plural, one {# guest} other {# guests}}"
   },
   "auth": {
@@ -344,6 +350,7 @@
     "calBoth": "Both",
     "calFree": "Free",
     "pendingBanner": "Your venue is waiting for review. Guests will not see it until we confirm the tax ID, address and map.",
+    "disabledBanner": "An admin turned this venue off. Guests cannot see it until it is enabled again.",
     "guest": "Guest",
     "status": "Status",
     "checkIn": "Check-in",
@@ -418,6 +425,14 @@
     "statEmailsHint": "Unique guests",
     "approve": "Approve",
     "reject": "Reject",
+    "enable": "Enable",
+    "disable": "Disable",
+    "disabled": "Disabled",
+    "disableAsk": "Disable this venue?",
+    "disableHint": "Guests will not see it in search and cannot book. You can enable it later.",
+    "delete": "Delete",
+    "deleteAsk": "Delete this venue for good?",
+    "deleteHint": "Reservations, events, menus, reviews and staff go with it. This cannot be undone.",
     "empty": "No venues waiting.",
     "emptyBookings": "No reservations yet.",
     "all": "All venues",
@@ -441,6 +456,28 @@
       "week": "7 days",
       "month": "30 days",
       "all": "All"
+    }
+  },
+  "review": {
+    "title": "Reviews",
+    "write": "Leave a review",
+    "yours": "Your review",
+    "empty": "No reviews yet. Be the first.",
+    "body": "Comment",
+    "bodyHint": "Optional — what you liked, and what you didn’t.",
+    "submit": "Post review",
+    "update": "Save changes",
+    "saved": "Review saved.",
+    "needLogin": "Log in to leave a review.",
+    "own": "You can’t review your own venue.",
+    "scores": "Rate everything that applies to this venue.",
+    "scoresHint": "Scores are required, the text is not.",
+    "rate": "Wait a bit and try again.",
+    "countLabel": "reviews",
+    "aspects": {
+      "FOOD": "Food",
+      "DRINKS": "Drinks",
+      "NIGHT": "Night out"
     }
   },
   "offer": {
