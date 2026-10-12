@@ -21,6 +21,7 @@ model User {
   ownedVenues  Venue[]
   memberships  StaffMembership[]
   reservations Reservation[]
+  promotions   Promotion[]
 }
 
 model Venue {
@@ -50,6 +51,8 @@ model Venue {
   members      StaffMembership[]
   events       Event[]
   reservations Reservation[]
+  menus        Menu[]
+  promotions   Promotion[]
 }
 
 model StaffMembership {
@@ -103,6 +106,52 @@ model Reservation {
 
   @@index([venueId, visitAt])
   @@index([venueId, status])
+}
+
+model Menu {
+  id         String     @id @default(cuid())
+  venueId    String
+  venue      Venue      @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  title      String
+  kind       String
+  published  Boolean    @default(true)
+  sortOrder  Int        @default(0)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  items      MenuItem[]
+
+  @@index([venueId])
+}
+
+model MenuItem {
+  id          String   @id @default(cuid())
+  menuId      String
+  menu        Menu     @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  name        String
+  description String   @default("")
+  price       Int      @default(0)
+  section     String   @default("")
+  available   Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model Promotion {
+  id          String    @id @default(cuid())
+  venueId     String
+  venue       Venue     @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  title       String
+  body        String    @default("")
+  kind        String
+  startsAt    DateTime?
+  endsAt      DateTime?
+  active      Boolean   @default(true)
+  createdById String
+  createdBy   User      @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([venueId])
 }
 
 model Ticket {

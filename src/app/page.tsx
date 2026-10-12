@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { CityDestinations } from "@/components/city-destinations";
 import { HomeHero } from "@/components/home-hero";
 import { SearchResultCard } from "@/components/search-result-card";
 import { VENUE_TYPES } from "@/lib/constants";
@@ -50,32 +51,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {destinations.length > 0 ? (
-        <section className="mx-auto max-w-6xl px-4 py-8 sm:py-10">
-          <h2 className="text-2xl font-bold tracking-tight text-cream sm:text-3xl">{ts("destinations")}</h2>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {destinations.map((item) => (
-              <Link
-                key={item.city}
-                href={searchHref({ ...defaults, city: item.city })}
-                className="group relative overflow-hidden rounded-2xl border border-line"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={item.cover}
-                  alt=""
-                  className="h-40 w-full object-cover transition duration-300 group-hover:scale-[1.03]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-4">
-                  <p className="text-xl font-bold text-cream">{item.city}</p>
-                  <p className="mt-0.5 text-sm font-medium text-cream/80">{ts("results", { count: item.count })}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      ) : null}
+      <CityDestinations destinations={destinations} defaults={defaults} />
 
       <section id="venues" className="mx-auto max-w-6xl px-4 py-8 sm:py-10">
         <div className="flex items-end justify-between gap-4">

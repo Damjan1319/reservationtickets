@@ -26,7 +26,13 @@ export async function SearchResultCard({
         <div>
           <p className="text-xs font-semibold text-paper-muted">
             {tv(`types.${venue.type}`)} · {venue.city}
+            {venue.hasMenu ? ` · ${t("hasMenu")}` : ""}
           </p>
+          {venue.promoTitle ? (
+            <p className="mt-2 inline-flex rounded-full bg-paper-text px-2.5 py-1 text-xs font-semibold text-paper">
+              {venue.promoTitle}
+            </p>
+          ) : null}
           <h2 className="mt-1 text-xl font-bold tracking-tight">
             <Link href={href} className="hover:underline">
               {venue.name}

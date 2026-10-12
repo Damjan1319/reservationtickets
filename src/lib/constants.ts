@@ -1,3 +1,6 @@
+export const APP_NAME = "Ulaznice";
+export const APP_HOST = "ulaznice.rs";
+
 export const VENUE_TYPES = ["CLUB", "CAFE", "RESTAURANT", "BAR"] as const;
 export type VenueType = (typeof VENUE_TYPES)[number];
 
@@ -7,6 +10,7 @@ export const RESERVED_SLUGS = new Set([
   "api",
   "admin",
   "ulaznice",
+  "mesto",
   "www",
   "mail",
   "dashboard",
@@ -32,9 +36,17 @@ export const PAYMENT_STATUSES = ["PAID", "UNPAID"] as const;
 export const RESERVATION_STATUSES = ["PENDING", "CONFIRMED", "CANCELLED"] as const;
 export const STAFF_ROLES = ["OWNER", "STAFF"] as const;
 
+export const MENU_KINDS = ["FOOD", "DRINK", "TICKET", "OTHER"] as const;
+export type MenuKind = (typeof MENU_KINDS)[number];
+
+export const PROMO_KINDS = ["HAPPY_HOUR", "DISCOUNT", "MENU", "NIGHT", "OTHER"] as const;
+export type PromoKind = (typeof PROMO_KINDS)[number];
+
 export const ROOT_HOSTS = new Set([
   "localhost",
   "127.0.0.1",
   "ulaznice.rs",
   "www.ulaznice.rs",
+  "mesto.rs",
+  "www.mesto.rs",
 ]);

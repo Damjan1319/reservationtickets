@@ -27,7 +27,7 @@ export function HomeHero({
         <h1 className="mt-3 max-w-3xl text-4xl font-bold tracking-tight text-cream sm:text-5xl lg:text-[3.15rem] lg:leading-[1.1]">
           {title}
         </h1>
-        <p className="mt-4 max-w-lg text-base leading-relaxed text-cream/80">{subtitle}</p>
+        <p className="mt-4 max-w-lg text-base font-medium leading-7 tracking-normal text-cream/80">{subtitle}</p>
         <div className="mt-8">
           <SearchBar cities={cities} values={searchDefaults} />
         </div>

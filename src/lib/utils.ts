@@ -1,4 +1,4 @@
-import { MEAL_HOURS, type MealType, RESERVED_SLUGS } from "@/lib/constants";
+import { APP_HOST, MEAL_HOURS, type MealType, RESERVED_SLUGS } from "@/lib/constants";
 
 export function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -79,7 +79,7 @@ export function toLocalInputValue(date: Date) {
 }
 
 export function venuePublicHost(slug: string) {
-  return `${slug}.ulaznice.rs`;
+  return `${slug}.${APP_HOST}`;
 }
 
 const VENUE_COVERS: Record<string, string> = {

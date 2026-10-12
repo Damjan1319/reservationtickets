@@ -19,6 +19,7 @@ export default async function SearchPage({
     guests: str(raw.guests),
     type: str(raw.type),
     kind: str(raw.kind),
+    occasion: str(raw.occasion),
     sort: str(raw.sort),
     available: str(raw.available),
   });
@@ -47,11 +48,24 @@ export default async function SearchPage({
               <FilterLink query={query} patch={{ type: "" }} active={!query.type}>
                 {tc("allTypes")}
               </FilterLink>
-              {VENUE_TYPES.filter((item) => item !== "BAR").map((item) => (
+              {VENUE_TYPES.map((item) => (
                 <FilterLink key={item} query={query} patch={{ type: item }} active={query.type === item}>
                   {tv(`types.${item}`)}
                 </FilterLink>
               ))}
+            </fieldset>
+
+            <fieldset className="mt-5 space-y-2">
+              <legend className="text-xs font-semibold uppercase tracking-wide text-paper-muted">{t("what")}</legend>
+              <FilterLink query={query} patch={{ kind: "all" }} active={query.kind === "all"}>
+                {t("kinds.all")}
+              </FilterLink>
+              <FilterLink query={query} patch={{ kind: "table" }} active={query.kind === "table"}>
+                {t("kinds.table")}
+              </FilterLink>
+              <FilterLink query={query} patch={{ kind: "event" }} active={query.kind === "event"}>
+                {t("kinds.event")}
+              </FilterLink>
             </fieldset>
 
             <label className="mt-5 flex items-center gap-2 text-sm font-semibold">
@@ -84,6 +98,7 @@ export default async function SearchPage({
           </h1>
           <p className="mt-2 text-sm font-medium text-cream/65">
             {query.date} · {t("guestsShort", { count: query.guests })}
+            {query.occasion ? ` · ${t(`occasions.${query.occasion}`)}` : ""}
           </p>
 
           {venues.length === 0 ? (
@@ -112,6 +127,7 @@ function FilterForm({ query, children }: { query: SearchQuery; children: ReactNo
       <input type="hidden" name="date" value={query.date} />
       <input type="hidden" name="guests" value={query.guests} />
       <input type="hidden" name="kind" value={query.kind} />
+      {query.occasion ? <input type="hidden" name="occasion" value={query.occasion} /> : null}
       {query.type ? <input type="hidden" name="type" value={query.type} /> : null}
       {children}
     </form>

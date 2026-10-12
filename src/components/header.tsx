@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { auth, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { getStaffContext } from "@/lib/staff";
+import { HeaderBack } from "@/components/header-back";
 import { SiteNav } from "@/components/site-nav";
 import { getTheme } from "@/lib/theme";
 
@@ -39,7 +40,8 @@ export async function Header() {
   return (
     <header className="site-header sticky top-0 z-40 bg-bg/80 backdrop-blur-md">
       <div className="relative mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3">
-        <div className="flex min-w-0 items-center">
+        <div className="flex min-w-0 items-center gap-1">
+          <HeaderBack label={tc("back")} />
           <Link href="/" className="text-[1.15rem] font-semibold tracking-tight text-cream">
             {tc("appName")}
           </Link>

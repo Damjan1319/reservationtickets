@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     default: "Ulaznice",
     template: "%s · Ulaznice",
   },
-  description: "Booking za restorane, kafiće i klubove — sto ili karta.",
+  description: "Stolovi i rezervacije. Žurke i događaji.",
   manifest: "/manifest.webmanifest",
 };
 

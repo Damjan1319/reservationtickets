@@ -21,6 +21,8 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     ...(owner ? [{ href: "/dashboard", key: "overview" as const }] : []),
     { href: "/dashboard/scan", key: "scan" as const },
     { href: "/dashboard/create", key: "newBooking" as const },
+    { href: "/dashboard/menu", key: "menu" as const },
+    { href: "/dashboard/promos", key: "promos" as const },
     ...(owner ? [{ href: "/dashboard/events", key: "parties" as const }] : []),
     { href: "/dashboard/tickets", key: "tickets" as const, badge: pendingTickets },
     { href: "/dashboard/reservations", key: "tables" as const, badge: pendingTables },

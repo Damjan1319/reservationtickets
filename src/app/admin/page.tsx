@@ -7,7 +7,7 @@ import { StatsDashboard } from "@/components/stats-dashboard";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/staff";
 import { parsePeriod } from "@/lib/stats";
-import { cn, formatDateTime, venueCover } from "@/lib/utils";
+import { cn, formatDateTime, venueCover, venuePublicHost } from "@/lib/utils";
 
 const VIEWS = ["stats", "pending", "venues", "bookings"] as const;
 type View = (typeof VIEWS)[number];
@@ -213,7 +213,7 @@ function VenueAdminCard({
               ) : null}
               {showCounts ? (
                 <p className="mt-2 text-xs text-cream/50">
-                  {venue._count.events} · {venue._count.reservations} · {venue.slug}.ulaznice.rs
+                  {venue._count.events} · {venue._count.reservations} · {venuePublicHost(venue.slug)}
                 </p>
               ) : null}
             </div>

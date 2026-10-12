@@ -18,6 +18,7 @@ export function TableBookingForm({
   closesAt,
   initialDate,
   initialGuests,
+  initialMeal,
 }: {
   venueId: string;
   tableCapacity?: number;
@@ -27,13 +28,16 @@ export function TableBookingForm({
   closesAt?: string;
   initialDate?: string;
   initialGuests?: number;
+  initialMeal?: (typeof MEAL_TYPES)[number];
 }) {
   const t = useTranslations("booking");
   const te = useTranslations("event");
   const tc = useTranslations("common");
   const tt = useTranslations("ticket");
   const router = useRouter();
-  const [mealType, setMealType] = useState<(typeof MEAL_TYPES)[number]>("DINNER");
+  const [mealType, setMealType] = useState<(typeof MEAL_TYPES)[number]>(
+    initialMeal && MEAL_TYPES.includes(initialMeal) ? initialMeal : "DINNER",
+  );
   const taken = reservedByMeal[mealType] ?? 0;
   const remaining = tableCapacity > 0 ? Math.max(0, tableCapacity - taken) : MAX_GUESTS;
   const [guests, setGuests] = useState(() =>

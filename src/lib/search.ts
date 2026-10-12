@@ -1,6 +1,7 @@
-import { MAX_GUESTS, MEAL_TYPES, VENUE_TYPES } from "@/lib/constants";
+import { MAX_GUESTS, MEAL_TYPES, VENUE_TYPES, type MealType } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
 import { todayKey, dayKeyInTz } from "@/lib/time";
+import { isPromoLive } from "@/lib/offers";
 import { liveGuestCount, remainingSpots, venueCover } from "@/lib/utils";
 
 export const SEARCH_KINDS = ["all", "table", "event"] as const;
@@ -9,12 +10,29 @@ export type SearchKind = (typeof SEARCH_KINDS)[number];
 export const SEARCH_SORTS = ["recommended", "seats", "events"] as const;
 export type SearchSort = (typeof SEARCH_SORTS)[number];
 
+export const SEARCH_OCCASIONS = ["KAFA", "LUNCH", "DINNER", "NIGHT", "DRINKS"] as const;
+export type SearchOccasion = (typeof SEARCH_OCCASIONS)[number];
+
+const OCCASION_MAP: Record<SearchOccasion, { types: string[]; meal?: MealType }> = {
+  KAFA: { types: ["CAFE"], meal: "DRINKS" },
+  LUNCH: { types: ["RESTAURANT", "CAFE"], meal: "LUNCH" },
+  DINNER: { types: ["RESTAURANT", "CAFE"], meal: "DINNER" },
+  NIGHT: { types: ["CLUB", "BAR"] },
+  DRINKS: { types: ["BAR", "CAFE", "CLUB"], meal: "DRINKS" },
+};
+
+export function occasionFilter(occasion: string) {
+  if (!SEARCH_OCCASIONS.includes(occasion as SearchOccasion)) return null;
+  return OCCASION_MAP[occasion as SearchOccasion];
+}
+
 export type SearchQuery = {
   city: string;
   date: string;
   guests: number;
   type: string;
   kind: SearchKind;
+  occasion: string;
   sort: SearchSort;
   available: boolean;
 };
@@ -46,6 +64,8 @@ export type SearchVenue = {
   bookableTable: boolean;
   bookableEvent: boolean;
   bookable: boolean;
+  promoTitle: string | null;
+  hasMenu: boolean;
 };
 
 type RawParams = {
@@ -54,6 +74,7 @@ type RawParams = {
   guests?: string;
   type?: string;
   kind?: string;
+  occasion?: string;
   sort?: string;
   available?: string;
 };
@@ -64,6 +85,7 @@ export function parseSearchParams(raw: RawParams): SearchQuery {
   const guests = Math.min(MAX_GUESTS, Math.max(1, Number.parseInt(raw.guests ?? "2", 10) || 2));
   const type = VENUE_TYPES.includes(raw.type as (typeof VENUE_TYPES)[number]) ? (raw.type as string) : "";
   const kind = SEARCH_KINDS.includes(raw.kind as SearchKind) ? (raw.kind as SearchKind) : "all";
+  const occasion = SEARCH_OCCASIONS.includes(raw.occasion as SearchOccasion) ? (raw.occasion as string) : "";
   const sort = SEARCH_SORTS.includes(raw.sort as SearchSort) ? (raw.sort as SearchSort) : "recommended";
   const available = raw.available === "1" || raw.available === "on";
   return {
@@ -72,6 +94,7 @@ export function parseSearchParams(raw: RawParams): SearchQuery {
     guests,
     type,
     kind,
+    occasion,
     sort,
     available,
   };
@@ -84,16 +107,19 @@ export function searchHref(query: Partial<SearchQuery>) {
   if (query.guests) params.set("guests", String(query.guests));
   if (query.type) params.set("type", query.type);
   if (query.kind && query.kind !== "all") params.set("kind", query.kind);
+  if (query.occasion) params.set("occasion", query.occasion);
   if (query.sort && query.sort !== "recommended") params.set("sort", query.sort);
   if (query.available) params.set("available", "1");
   const qs = params.toString();
   return qs ? `/search?${qs}` : "/search";
 }
 
-export function venueHref(slug: string, query: Pick<SearchQuery, "date" | "guests">) {
+export function venueHref(slug: string, query: Pick<SearchQuery, "date" | "guests"> & { occasion?: string }) {
   const params = new URLSearchParams();
   if (query.date) params.set("date", query.date);
   if (query.guests) params.set("guests", String(query.guests));
+  const meal = occasionFilter(query.occasion ?? "")?.meal;
+  if (meal) params.set("meal", meal);
   const qs = params.toString();
   return qs ? `/v/${slug}?${qs}` : `/v/${slug}`;
 }
@@ -130,22 +156,30 @@ function tableLeftForDay(
   tableCapacity: number,
   reservations: Array<{ guests: number; visitAt: Date; mealType: string | null }>,
   day: string,
+  meal?: MealType,
 ) {
   if (tableCapacity <= 0) return null;
   const taken: Record<string, number> = {};
   for (const row of reservations) {
     if (dayKeyInTz(row.visitAt) !== day) continue;
-    const meal = row.mealType ?? "DINNER";
-    taken[meal] = (taken[meal] ?? 0) + row.guests;
+    const slot = row.mealType ?? "DINNER";
+    taken[slot] = (taken[slot] ?? 0) + row.guests;
   }
-  return Math.max(...MEAL_TYPES.map((meal) => tableCapacity - (taken[meal] ?? 0)));
+  const slots = meal ? [meal] : [...MEAL_TYPES];
+  return Math.max(...slots.map((slot) => tableCapacity - (taken[slot] ?? 0)));
 }
 
 export async function searchVenues(query: SearchQuery): Promise<SearchVenue[]> {
+  const occasion = occasionFilter(query.occasion);
+  const typeFilter = query.type
+    ? [query.type]
+    : occasion
+      ? occasion.types
+      : undefined;
   const venues = await prisma.venue.findMany({
     where: {
       verificationStatus: "VERIFIED",
-      ...(query.type ? { type: query.type } : {}),
+      ...(typeFilter ? { type: { in: typeFilter } } : {}),
       ...(query.city ? { city: { contains: query.city, mode: "insensitive" } } : {}),
     },
     include: {
@@ -157,6 +191,14 @@ export async function searchVenues(query: SearchQuery): Promise<SearchVenue[]> {
       reservations: {
         where: { kind: "TABLE", status: { not: "CANCELLED" } },
         select: { guests: true, visitAt: true, mealType: true },
+      },
+      promotions: {
+        where: { active: true },
+        select: { title: true, startsAt: true, endsAt: true, active: true },
+      },
+      menus: {
+        where: { published: true },
+        select: { id: true, items: { where: { available: true }, select: { id: true } } },
       },
     },
     orderBy: { name: "asc" },
@@ -171,7 +213,7 @@ export async function searchVenues(query: SearchQuery): Promise<SearchVenue[]> {
       left: remainingSpots(event.capacity, liveGuestCount(event.reservations)),
     }));
     const fitting = events.find((event) => event.left >= query.guests) ?? events[0] ?? null;
-    const tableLeft = tableLeftForDay(venue.tableCapacity, venue.reservations, query.date);
+    const tableLeft = tableLeftForDay(venue.tableCapacity, venue.reservations, query.date, occasion?.meal);
     const bookableTable = !venue.closed && (tableLeft == null || tableLeft >= query.guests);
     const bookableEvent = Boolean(fitting && fitting.left >= query.guests);
     const bookable =
@@ -196,6 +238,8 @@ export async function searchVenues(query: SearchQuery): Promise<SearchVenue[]> {
       bookableTable,
       bookableEvent,
       bookable,
+      promoTitle: venue.promotions.find(isPromoLive)?.title ?? null,
+      hasMenu: venue.menus.some((menu) => menu.items.length > 0),
     };
   });
 

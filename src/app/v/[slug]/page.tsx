@@ -5,6 +5,8 @@ import { auth } from "@/auth";
 import { EventCard } from "@/components/event-card";
 import { PageBack } from "@/components/page-back";
 import { TableBookingForm } from "@/components/table-booking-form";
+import { VenueOffers } from "@/components/venue-offers";
+import { isPromoLive } from "@/lib/offers";
 import { prisma } from "@/lib/prisma";
 import { MEAL_TYPES } from "@/lib/constants";
 import { tableGuestsForSlot } from "@/lib/door";
@@ -17,10 +19,13 @@ export default async function VenuePage({
   searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ date?: string; guests?: string }>;
+  searchParams: Promise<{ date?: string; guests?: string; meal?: string }>;
 }) {
   const { slug } = await params;
   const query = await searchParams;
+  const initialMeal = MEAL_TYPES.includes(query.meal as (typeof MEAL_TYPES)[number])
+    ? (query.meal as (typeof MEAL_TYPES)[number])
+    : undefined;
   const t = await getTranslations("venue");
   const tb = await getTranslations("booking");
   const tn = await getTranslations("nav");
@@ -32,6 +37,15 @@ export default async function VenuePage({
         where: { startsAt: { gte: new Date() } },
         orderBy: { startsAt: "asc" },
         include: { reservations: true },
+      },
+      menus: {
+        where: { published: true },
+        orderBy: { createdAt: "asc" },
+        include: { items: { where: { available: true }, orderBy: [{ section: "asc" }, { createdAt: "asc" }] } },
+      },
+      promotions: {
+        where: { active: true },
+        orderBy: { createdAt: "desc" },
       },
     },
   });
@@ -97,7 +111,25 @@ export default async function VenuePage({
 
       <section className="mx-auto grid max-w-6xl items-start gap-10 px-4 py-10 lg:grid-cols-[1.15fr_0.85fr] lg:py-12">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-cream sm:text-3xl">{t("upcoming")}</h2>
+          <VenueOffers
+            promos={venue.promotions.filter(isPromoLive).map((promo) => ({
+              id: promo.id,
+              title: promo.title,
+              body: promo.body,
+              kind: promo.kind,
+            }))}
+            menus={venue.menus
+              .filter((menu) => menu.items.length > 0)
+              .map((menu) => ({
+                id: menu.id,
+                title: menu.title,
+                kind: menu.kind,
+                items: menu.items,
+              }))}
+          />
+          <h2 className={`${venue.menus.length || venue.promotions.length ? "mt-10" : ""} text-2xl font-bold tracking-tight text-cream sm:text-3xl`}>
+            {t("upcoming")}
+          </h2>
           {venue.events.length === 0 ? (
             <p className="mt-5 text-cream/70">{t("noEvents")}</p>
           ) : (
@@ -134,6 +166,7 @@ export default async function VenuePage({
                 closesAt={venue.closesAt}
                 initialDate={query.date}
                 initialGuests={Number.parseInt(query.guests ?? "", 10) || undefined}
+                initialMeal={initialMeal}
               />
             </div>
           ) : isPublic ? (
