@@ -57,7 +57,7 @@ export function TableBookingForm({
   return (
     <>
       <form
-        className="space-y-6"
+        className="space-y-5"
         onSubmit={(event) => {
           event.preventDefault();
           const data = new FormData(event.currentTarget);
@@ -80,7 +80,7 @@ export function TableBookingForm({
                 type="button"
                 onClick={() => setMealType(meal)}
                 className={cn(
-                  "rounded-2xl border px-3 py-3 text-sm font-semibold",
+                  "rounded-xl border px-2.5 py-2.5 text-sm font-semibold",
                   mealType === meal
                     ? "border-paper-text bg-paper-text text-paper"
                     : "border-paper-line bg-white text-paper-text hover:border-paper-text/50",

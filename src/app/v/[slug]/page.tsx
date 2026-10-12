@@ -5,7 +5,9 @@ import { auth } from "@/auth";
 import { EventCard } from "@/components/event-card";
 import { PageBack } from "@/components/page-back";
 import { TableBookingForm } from "@/components/table-booking-form";
+import { VenueMenu } from "@/components/venue-menu";
 import { VenueOffers } from "@/components/venue-offers";
+import { VenuePanel } from "@/components/venue-panel";
 import { VenueReviews } from "@/components/venue-reviews";
 import { isPromoLive } from "@/lib/offers";
 import { summarizeReviews } from "@/lib/reviews";
@@ -122,8 +124,8 @@ export default async function VenuePage({
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-6xl items-start gap-10 px-4 py-10 lg:grid-cols-[1.15fr_0.85fr] lg:py-12">
-        <div>
+      <section className="mx-auto grid max-w-6xl items-start gap-8 px-4 py-8 lg:grid-cols-[minmax(0,1fr)_20.5rem] lg:gap-12 lg:py-10">
+        <div className="min-w-0">
           <VenueOffers
             promos={venue.promotions.filter(isPromoLive).map((promo) => ({
               id: promo.id,
@@ -131,69 +133,79 @@ export default async function VenuePage({
               body: promo.body,
               kind: promo.kind,
             }))}
-            menus={venue.menus
-              .filter((menu) => menu.items.length > 0)
-              .map((menu) => ({
-                id: menu.id,
-                title: menu.title,
-                kind: menu.kind,
-                items: menu.items,
-              }))}
           />
-          <h2 className={`${venue.menus.length || venue.promotions.length ? "mt-10" : ""} text-2xl font-bold tracking-tight text-cream sm:text-3xl`}>
-            {t("upcoming")}
-          </h2>
-          {venue.events.length === 0 ? (
-            <p className="mt-5 text-cream/70">{t("noEvents")}</p>
-          ) : (
-            <div className="mt-6 grid gap-4">
-              {venue.events.map((event) => (
-                <EventCard
-                  key={event.id}
-                  id={event.id}
-                  venueSlug={venue.slug}
-                  venueName={venue.name}
-                  title={event.title}
-                  artist={event.artist}
-                  startsAt={event.startsAt}
-                  price={event.price}
-                  capacity={event.capacity}
-                  reservedGuests={liveGuestCount(event.reservations)}
-                />
-              ))}
-            </div>
-          )}
-          <VenueReviews
-            venueId={venue.id}
-            venueType={venue.type}
-            slug={venue.slug}
-            summary={summarizeReviews(venue.reviews)}
-            items={venue.reviews.map((item) => ({
-              id: item.id,
-              name: item.user.name,
-              body: item.body,
-              food: item.food,
-              drinks: item.drinks,
-              night: item.night,
-            }))}
-            mine={
-              venue.reviews
-                .filter((item) => item.userId === session?.user?.id)
-                .map((item) => ({
+          <VenuePanel
+            menuCount={venue.menus.reduce((sum, menu) => sum + menu.items.length, 0)}
+            eventCount={venue.events.length}
+            reviewCount={venue.reviews.length}
+            menu={
+              <VenueMenu
+                menus={venue.menus
+                  .filter((menu) => menu.items.length > 0)
+                  .map((menu) => ({
+                    id: menu.id,
+                    title: menu.title,
+                    kind: menu.kind,
+                    items: menu.items,
+                  }))}
+              />
+            }
+            events={
+              venue.events.length === 0 ? (
+                <p className="text-cream/70">{t("noEvents")}</p>
+              ) : (
+                <div className="grid gap-4">
+                  {venue.events.map((event) => (
+                    <EventCard
+                      key={event.id}
+                      id={event.id}
+                      venueSlug={venue.slug}
+                      venueName={venue.name}
+                      title={event.title}
+                      artist={event.artist}
+                      startsAt={event.startsAt}
+                      price={event.price}
+                      capacity={event.capacity}
+                      reservedGuests={liveGuestCount(event.reservations)}
+                    />
+                  ))}
+                </div>
+              )
+            }
+            reviews={
+              <VenueReviews
+                venueId={venue.id}
+                venueType={venue.type}
+                slug={venue.slug}
+                summary={summarizeReviews(venue.reviews)}
+                items={venue.reviews.map((item) => ({
                   id: item.id,
                   name: item.user.name,
                   body: item.body,
                   food: item.food,
                   drinks: item.drinks,
                   night: item.night,
-                }))[0] ?? null
+                }))}
+                mine={
+                  venue.reviews
+                    .filter((item) => item.userId === session?.user?.id)
+                    .map((item) => ({
+                      id: item.id,
+                      name: item.user.name,
+                      body: item.body,
+                      food: item.food,
+                      drinks: item.drinks,
+                      night: item.night,
+                    }))[0] ?? null
+                }
+                canReview={Boolean(session?.user?.id && !isOwner && !isTeam)}
+                loggedIn={Boolean(session?.user)}
+              />
             }
-            canReview={Boolean(session?.user?.id && !isOwner && !isTeam)}
-            loggedIn={Boolean(session?.user)}
           />
         </div>
 
-        <aside className="rounded-2xl border border-paper-line bg-paper p-6 text-paper-text lg:sticky lg:top-24">
+        <aside id="rezervacija" className="rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6 lg:sticky lg:top-24">
           <h2 className="text-lg font-bold">{t("tableTitle")}</h2>
           <p className="mt-2 text-sm font-medium text-paper-muted">{t("tableSubtitle")}</p>
           {isPublic && session?.user ? (
