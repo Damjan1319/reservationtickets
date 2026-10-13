@@ -17,5 +17,5 @@ export default async function AfterLoginPage() {
   });
   if (admin?.isAdmin) redirect("/admin");
 
-  redirect("/tickets");
+  redirect("/");
 }

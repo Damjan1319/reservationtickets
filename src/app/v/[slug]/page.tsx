@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
-import { EventCard } from "@/components/event-card";
 import { PageBack } from "@/components/page-back";
 import { TableBookingForm } from "@/components/table-booking-form";
 import { VenueMenu } from "@/components/venue-menu";
@@ -125,119 +124,108 @@ export default async function VenuePage({
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-6xl items-start gap-8 px-4 py-8 lg:grid-cols-[minmax(0,1fr)_20.5rem] lg:gap-12 lg:py-10">
-        <div className="min-w-0">
-          <VenueOffers
-            promos={venue.promotions.filter(isPromoLive).map((promo) => ({
-              id: promo.id,
-              title: promo.title,
-              body: promo.body,
-              kind: promo.kind,
-            }))}
-          />
-          <VenuePanel
-            initialTab={initialTab}
-            menuCount={venue.menus.reduce((sum, menu) => sum + menu.items.length, 0)}
-            eventCount={venue.events.length}
-            reviewCount={venue.reviews.length}
-            menu={
-              <VenueMenu
-                menus={venue.menus
-                  .filter((menu) => menu.items.length > 0)
-                  .map((menu) => ({
-                    id: menu.id,
-                    title: menu.title,
-                    kind: menu.kind,
-                    items: menu.items,
-                  }))}
-              />
-            }
-            events={
-              venue.events.length === 0 ? (
-                <p className="text-cream/70">{t("noEvents")}</p>
-              ) : (
-                <div className="grid gap-4">
-                  {venue.events.map((event) => (
-                    <EventCard
-                      key={event.id}
-                      id={event.id}
-                      venueSlug={venue.slug}
-                      venueName={venue.name}
-                      title={event.title}
-                      artist={event.artist}
-                      startsAt={event.startsAt}
-                      price={event.price}
-                      capacity={event.capacity}
-                      reservedGuests={liveGuestCount(event.reservations)}
-                    />
-                  ))}
-                </div>
-              )
-            }
-            reviews={
-              <VenueReviews
-                venueId={venue.id}
-                venueType={venue.type}
-                slug={venue.slug}
-                summary={summarizeReviews(venue.reviews)}
-                items={venue.reviews.map((item) => ({
-                  id: item.id,
-                  name: item.user.name,
-                  body: item.body,
-                  food: item.food,
-                  drinks: item.drinks,
-                  night: item.night,
+      <section className="mx-auto max-w-6xl px-4 py-8 lg:py-10">
+        <VenueOffers
+          promos={venue.promotions.filter(isPromoLive).map((promo) => ({
+            id: promo.id,
+            title: promo.title,
+            body: promo.body,
+            kind: promo.kind,
+          }))}
+        />
+        <VenuePanel
+          initialTab={initialTab}
+          menuCount={venue.menus.reduce((sum, menu) => sum + menu.items.length, 0)}
+          eventCount={venue.events.length}
+          reviewCount={venue.reviews.length}
+          loggedIn={Boolean(isPublic && session?.user)}
+          loginHref={`/login?callbackUrl=${encodeURIComponent(`/v/${slug}?tab=events`)}`}
+          initialGuests={Number.parseInt(query.guests ?? "", 10) || undefined}
+          events={venue.events.map((event) => ({
+            id: event.id,
+            title: event.title,
+            artist: event.artist?.trim() || venue.name,
+            startsAt: event.startsAt.toISOString(),
+            price: event.price,
+            capacity: event.capacity,
+            reservedGuests: liveGuestCount(event.reservations),
+          }))}
+          menu={
+            <VenueMenu
+              menus={venue.menus
+                .filter((menu) => menu.items.length > 0)
+                .map((menu) => ({
+                  id: menu.id,
+                  title: menu.title,
+                  kind: menu.kind,
+                  items: menu.items,
                 }))}
-                mine={
-                  venue.reviews
-                    .filter((item) => item.userId === session?.user?.id)
-                    .map((item) => ({
-                      id: item.id,
-                      name: item.user.name,
-                      body: item.body,
-                      food: item.food,
-                      drinks: item.drinks,
-                      night: item.night,
-                    }))[0] ?? null
-                }
-                canReview={Boolean(session?.user?.id && !isOwner && !isTeam)}
-                loggedIn={Boolean(session?.user)}
-              />
-            }
-          />
-        </div>
-
-        <aside id="rezervacija" className="rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6 lg:sticky lg:top-24">
-          <h2 className="text-lg font-bold">{t("tableTitle")}</h2>
-          <p className="mt-2 text-sm font-medium text-paper-muted">{t("tableSubtitle")}</p>
-          {isPublic && session?.user ? (
-            <div className="mt-6">
-              <TableBookingForm
-                venueId={venue.id}
-                tableCapacity={venue.tableCapacity}
-                reservedByMeal={reservedByMeal}
-                closed={venue.closed}
-                opensAt={venue.opensAt}
-                closesAt={venue.closesAt}
-                initialDate={query.date}
-                initialGuests={Number.parseInt(query.guests ?? "", 10) || undefined}
-                initialMeal={initialMeal}
-              />
-            </div>
-          ) : isPublic ? (
-            <div className="mt-6 space-y-4">
-              <p className="text-paper-muted">{tb("needLogin")}</p>
-              <Link
-                href={`/login?callbackUrl=${encodeURIComponent(venueHref(slug, { date: query.date ?? "", guests: Number.parseInt(query.guests ?? "", 10) || 2 }))}`}
-                className="btn btn-primary"
-              >
-                {tn("login")}
-              </Link>
-            </div>
-          ) : (
-            <p className="mt-6 text-paper-muted">{t("pendingPublic")}</p>
-          )}
-        </aside>
+            />
+          }
+          reviews={
+            <VenueReviews
+              venueId={venue.id}
+              venueType={venue.type}
+              slug={venue.slug}
+              summary={summarizeReviews(venue.reviews)}
+              items={venue.reviews.map((item) => ({
+                id: item.id,
+                name: item.user.name,
+                body: item.body,
+                food: item.food,
+                drinks: item.drinks,
+                night: item.night,
+              }))}
+              mine={
+                venue.reviews
+                  .filter((item) => item.userId === session?.user?.id)
+                  .map((item) => ({
+                    id: item.id,
+                    name: item.user.name,
+                    body: item.body,
+                    food: item.food,
+                    drinks: item.drinks,
+                    night: item.night,
+                  }))[0] ?? null
+              }
+              canReview={Boolean(session?.user?.id && !isOwner && !isTeam)}
+              loggedIn={Boolean(session?.user)}
+            />
+          }
+          tableAside={
+            <>
+              <h2 className="text-lg font-bold">{t("tableTitle")}</h2>
+              <p className="mt-2 text-sm font-medium text-paper-muted">{t("tableSubtitle")}</p>
+              {isPublic && session?.user ? (
+                <div className="mt-6">
+                  <TableBookingForm
+                    venueId={venue.id}
+                    tableCapacity={venue.tableCapacity}
+                    reservedByMeal={reservedByMeal}
+                    closed={venue.closed}
+                    opensAt={venue.opensAt}
+                    closesAt={venue.closesAt}
+                    initialDate={query.date}
+                    initialGuests={Number.parseInt(query.guests ?? "", 10) || undefined}
+                    initialMeal={initialMeal}
+                  />
+                </div>
+              ) : isPublic ? (
+                <div className="mt-6 space-y-4">
+                  <p className="text-paper-muted">{tb("needLogin")}</p>
+                  <Link
+                    href={`/login?callbackUrl=${encodeURIComponent(venueHref(slug, { date: query.date ?? "", guests: Number.parseInt(query.guests ?? "", 10) || 2 }))}`}
+                    className="btn btn-primary"
+                  >
+                    {tn("login")}
+                  </Link>
+                </div>
+              ) : (
+                <p className="mt-6 text-paper-muted">{t("pendingPublic")}</p>
+              )}
+            </>
+          }
+        />
       </section>
     </div>
   );

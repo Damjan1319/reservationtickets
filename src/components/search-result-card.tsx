@@ -21,13 +21,15 @@ export async function SearchResultCard({
   const cta = eventMode ? t("takeTicket") : tableMode ? t("seeMenu") : t("seeVenue");
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-paper-line bg-paper text-paper-text md:grid md:grid-cols-[220px_1fr_200px]">
-      <Link href={href} className="relative block h-48 md:h-full md:min-h-[11.5rem]">
+    <article className="relative overflow-hidden rounded-2xl border border-paper-line bg-paper text-paper-text md:grid md:grid-cols-[220px_1fr_200px]">
+      <Link href={href} className="absolute inset-0 z-10" aria-label={`${venue.name}. ${cta}`} />
+
+      <div className="relative h-48 md:h-full md:min-h-[11.5rem]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={venue.coverUrl} alt="" className="h-full w-full object-cover" />
-      </Link>
+      </div>
 
-      <div className="flex flex-col justify-between p-5">
+      <div className="relative flex flex-col justify-between p-5">
         <div>
           <p className="text-xs font-semibold text-paper-muted">
             {tv(`types.${venue.type}`)} · {venue.city}
@@ -38,11 +40,7 @@ export async function SearchResultCard({
               {venue.promoTitle}
             </p>
           ) : null}
-          <h2 className="mt-1 text-xl font-bold tracking-tight">
-            <Link href={href} className="hover:underline">
-              {venue.name}
-            </Link>
-          </h2>
+          <h2 className="mt-1 text-xl font-bold tracking-tight">{venue.name}</h2>
           <div className="mt-2">
             <RatingBadge overall={venue.ratingAvg} count={venue.ratingCount} label={tr("countLabel")} />
           </div>
@@ -53,7 +51,7 @@ export async function SearchResultCard({
             <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-paper-muted">{venue.description}</p>
           ) : null}
           {eventMode && venue.events.length > 0 ? (
-            <ul className="mt-3 space-y-2">
+            <ul className="relative z-20 mt-3 space-y-2">
               {venue.events.map((event) => (
                 <li key={event.id}>
                   <Link
@@ -79,7 +77,7 @@ export async function SearchResultCard({
         ) : null}
       </div>
 
-      <div className="flex flex-col justify-between border-t border-paper-line p-5 md:border-l md:border-t-0">
+      <div className="relative flex flex-col justify-between border-t border-paper-line p-5 md:border-l md:border-t-0">
         <div className="space-y-1.5 text-sm font-semibold">
           {eventMode ? (
             venue.nextEvent ? (
@@ -120,9 +118,7 @@ export async function SearchResultCard({
           )}
         </div>
         <div className="mt-4">
-          <Link href={href} className="btn btn-primary btn-full">
-            {cta}
-          </Link>
+          <span className="btn btn-primary btn-full pointer-events-none">{cta}</span>
         </div>
       </div>
     </article>
