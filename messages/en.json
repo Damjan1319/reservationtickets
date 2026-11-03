@@ -65,7 +65,46 @@
     },
     "heroCardStatus": "Confirmed",
     "heroCardTitle": "Table for 2 · today 19:30",
-    "heroCardMeta": "Your QR is in your account"
+    "heroCardMeta": "Your QR is in your account",
+    "guestPoints": {
+      "0": {
+        "title": "Book without calling",
+        "body": "Pick a time and party size, the venue confirms within minutes."
+      },
+      "1": {
+        "title": "Tickets right on your phone",
+        "body": "For parties and events your QR ticket arrives instantly."
+      },
+      "2": {
+        "title": "No upfront payment",
+        "body": "You pay at the venue, as usual."
+      }
+    },
+    "venuePoints": {
+      "0": {
+        "title": "Tables and tickets in one place",
+        "body": "Table bookings and event tickets in the same dashboard."
+      },
+      "1": {
+        "title": "Door scanner",
+        "body": "Staff scan QR codes with a phone, no extra hardware."
+      },
+      "2": {
+        "title": "One-click confirmation",
+        "body": "Requests land in your dashboard, you accept or decline."
+      },
+      "3": {
+        "title": "Your own page",
+        "body": "Menu, offers, events and reviews on one link."
+      }
+    },
+    "quickTitle": "Quick:",
+    "guestsTitle": "For guests",
+    "guestsSubtitle": "Going out without the wait, from your phone.",
+    "venuesTitle2": "For venues",
+    "venuesSubtitle": "Everything you need for bookings and the door.",
+    "venuesCta": "List your venue for free",
+    "venuesFree": "Currently free for all venues."
   },
   "search": {
     "where": "City?",

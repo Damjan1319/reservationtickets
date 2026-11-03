@@ -65,7 +65,46 @@
     },
     "heroCardStatus": "Potvrđeno",
     "heroCardTitle": "Sto za 2 · danas 19:30",
-    "heroCardMeta": "QR je u tvom nalogu"
+    "heroCardMeta": "QR je u tvom nalogu",
+    "guestPoints": {
+      "0": {
+        "title": "Rezervacija bez poziva",
+        "body": "Izaberi termin i broj ljudi, lokal potvrdi u par minuta."
+      },
+      "1": {
+        "title": "Karta odmah na telefonu",
+        "body": "Za žurke i događaje karta sa QR kodom stiže odmah."
+      },
+      "2": {
+        "title": "Bez plaćanja unapred",
+        "body": "Plaćaš u lokalu, kao i do sada."
+      }
+    },
+    "venuePoints": {
+      "0": {
+        "title": "Stolovi i karte na jednom mestu",
+        "body": "Rezervacije stolova i karte za događaje u istom panelu."
+      },
+      "1": {
+        "title": "Skener na ulazu",
+        "body": "Osoblje skenira QR telefonom, bez dodatne opreme."
+      },
+      "2": {
+        "title": "Potvrda jednim klikom",
+        "body": "Zahtevi stižu u panel, ti ih prihvatiš ili odbiješ."
+      },
+      "3": {
+        "title": "Tvoja stranica",
+        "body": "Meni, akcije, događaji i ocene na jednom linku."
+      }
+    },
+    "quickTitle": "Brzo:",
+    "guestsTitle": "Za goste",
+    "guestsSubtitle": "Izlazak bez čekanja na telefonu.",
+    "venuesTitle2": "Za lokale",
+    "venuesSubtitle": "Sve što ti treba za rezervacije i ulaz.",
+    "venuesCta": "Otvori lokal besplatno",
+    "venuesFree": "Trenutno besplatno za sve lokale."
   },
   "search": {
     "where": "Grad?",

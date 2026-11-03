@@ -3,20 +3,33 @@ import { getTranslations } from "next-intl/server";
 import { CityDestinations } from "@/components/city-destinations";
 import { HomeHero } from "@/components/home-hero";
 import { HomePicks } from "@/components/home-picks";
-import { VENUE_TYPES } from "@/lib/constants";
-import { listCities, listDestinations, parseSearchParams, searchHref, searchVenues } from "@/lib/search";
-import { venueCover } from "@/lib/utils";
+import {
+  SEARCH_OCCASIONS,
+  listCities,
+  listDestinations,
+  parseSearchParams,
+  searchHref,
+  searchVenues,
+  withOccasion,
+} from "@/lib/search";
+
+const GUEST_POINTS = ["0", "1", "2"] as const;
+const VENUE_POINTS = ["0", "1", "2", "3"] as const;
 
 export default async function Home() {
   const t = await getTranslations("home");
   const ts = await getTranslations("search");
-  const tv = await getTranslations("venue");
   const defaults = parseSearchParams({});
   const [cities, destinations, featured] = await Promise.all([
     listCities(),
     listDestinations(),
     searchVenues(defaults),
   ]);
+
+  const quickLinks = SEARCH_OCCASIONS.map((occasion) => ({
+    label: ts(`occasions.${occasion}`),
+    href: searchHref({ ...defaults, ...withOccasion(defaults, occasion) }),
+  }));
 
   return (
     <div>
@@ -27,40 +40,11 @@ export default async function Home() {
         ctaVenue={t("ctaVenue")}
         ctaVenueLink={t("ctaVenueLink")}
         card={{ status: t("heroCardStatus"), title: t("heroCardTitle"), meta: t("heroCardMeta") }}
+        quickTitle={t("quickTitle")}
+        quickLinks={quickLinks}
         cities={cities}
         searchDefaults={defaults}
       />
-
-      <section className="mx-auto max-w-6xl px-4 pb-16">
-        <div className="border-t border-line pt-6">
-          <h2 className="text-xl font-semibold text-cream">{ts("browseTypes")}</h2>
-        </div>
-        <div className="mt-6 grid gap-3 sm:grid-cols-3">
-          {VENUE_TYPES.filter((item) => item !== "BAR").map((type) => (
-            <Link
-              key={type}
-              href={searchHref({ ...defaults, type })}
-              prefetch
-              className="group flex items-center gap-4 rounded-xl border border-line p-3 pr-4 transition hover:border-cream/25"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={venueCover(type)}
-                alt=""
-                decoding="async"
-                className="h-16 w-16 shrink-0 rounded-lg bg-surface-2 object-cover saturate-[.8]"
-              />
-              <span className="min-w-0 flex-1">
-                <span className="block text-base font-semibold text-cream">{tv(`types.${type}`)}</span>
-                <span className="mt-0.5 block truncate text-[13px] text-muted">{t(`typeHints.${type}`)}</span>
-              </span>
-              <span aria-hidden className="text-muted transition group-hover:translate-x-0.5 group-hover:text-cream">
-                →
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
 
       <HomePicks
         goingOut={featured.filter((venue) => venue.hasEventOnDate).slice(0, 6)}
@@ -70,36 +54,61 @@ export default async function Home() {
 
       <CityDestinations destinations={destinations} defaults={defaults} />
 
-      <section className="mx-auto max-w-6xl px-4 pb-16">
-        <div className="border-t border-line pt-6">
-          <h2 className="text-xl font-semibold text-cream">{t("howTitle")}</h2>
-        </div>
-        <div className="mt-6 grid gap-8 md:grid-cols-3">
-          {[
-            ["1", t("step1Title"), t("step1Body")],
-            ["2", t("step2Title"), t("step2Body")],
-            ["3", t("step3Title"), t("step3Body")],
-          ].map(([num, title, body]) => (
-            <div key={num}>
-              <p className="text-[13px] font-semibold text-muted">{num}</p>
-              <h3 className="mt-2 text-base font-semibold text-cream">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       <section className="mx-auto max-w-6xl px-4 pb-20 sm:pb-24">
-        <div className="flex flex-col items-start justify-between gap-6 rounded-xl bg-surface-2/70 p-8 sm:flex-row sm:items-center sm:p-10">
-          <div>
-            <h2 className="text-2xl font-semibold text-cream">{t("venueBoxTitle")}</h2>
-            <p className="mt-2 text-[15px] text-muted">{t("venueBoxBody")}</p>
+        <div className="grid gap-4 lg:grid-cols-2">
+          <div className="rounded-2xl border border-line p-7 sm:p-9">
+            <h2 className="text-2xl font-semibold text-cream">{t("guestsTitle")}</h2>
+            <p className="mt-1.5 text-[15px] text-muted">{t("guestsSubtitle")}</p>
+            <ul className="mt-7 space-y-5">
+              {GUEST_POINTS.map((key) => (
+                <Point key={key} title={t(`guestPoints.${key}.title`)} body={t(`guestPoints.${key}.body`)} />
+              ))}
+            </ul>
+            <Link href={searchHref(defaults)} className="btn btn-ghost mt-8">
+              {t("ctaGuest")}
+            </Link>
           </div>
-          <Link href="/register-venue" className="btn btn-primary shrink-0 !px-5 !py-3 !text-[15px]">
-            {t("venueBoxCta")}
-          </Link>
+
+          <div className="rounded-2xl bg-surface-2/70 p-7 sm:p-9">
+            <h2 className="text-2xl font-semibold text-cream">{t("venuesTitle2")}</h2>
+            <p className="mt-1.5 text-[15px] text-muted">{t("venuesSubtitle")}</p>
+            <ul className="mt-7 grid gap-5 sm:grid-cols-2">
+              {VENUE_POINTS.map((key) => (
+                <Point key={key} title={t(`venuePoints.${key}.title`)} body={t(`venuePoints.${key}.body`)} />
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2">
+              <Link href="/register-venue" className="btn btn-primary">
+                {t("venuesCta")}
+              </Link>
+              <p className="text-[13px] text-muted">{t("venuesFree")}</p>
+            </div>
+          </div>
         </div>
       </section>
     </div>
+  );
+}
+
+function Point({ title, body }: { title: string; body: string }) {
+  return (
+    <li className="flex gap-3">
+      <svg
+        viewBox="0 0 20 20"
+        aria-hidden
+        className="mt-0.5 h-5 w-5 shrink-0 text-cream"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="m5 10.5 3.2 3.2L15 7" />
+      </svg>
+      <span>
+        <span className="block text-[15px] font-semibold text-cream">{title}</span>
+        <span className="mt-0.5 block text-sm leading-relaxed text-muted">{body}</span>
+      </span>
+    </li>
   );
 }

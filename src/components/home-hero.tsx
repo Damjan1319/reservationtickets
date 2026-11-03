@@ -9,6 +9,8 @@ export function HomeHero({
   ctaVenue,
   ctaVenueLink,
   card,
+  quickTitle,
+  quickLinks,
   cities,
   searchDefaults,
 }: {
@@ -18,6 +20,8 @@ export function HomeHero({
   ctaVenue: string;
   ctaVenueLink: string;
   card: { status: string; title: string; meta: string };
+  quickTitle: string;
+  quickLinks: Array<{ label: string; href: string }>;
   cities: string[];
   searchDefaults: SearchQuery;
 }) {
@@ -56,7 +60,19 @@ export function HomeHero({
       <div className="mt-10 lg:mt-14">
         <SearchBar cities={cities} values={searchDefaults} />
       </div>
-      <p className="mt-4 text-sm text-muted">
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <span className="mr-1 text-sm text-muted">{quickTitle}</span>
+        {quickLinks.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="rounded-full border border-line px-3.5 py-1.5 text-sm font-medium text-cream transition hover:border-cream/35"
+          >
+            {item.label}
+          </Link>
+        ))}
+      </div>
+      <p className="mt-5 text-sm text-muted">
         {ctaVenue}{" "}
         <Link href="/register-venue" className="font-semibold text-cream underline underline-offset-[3px]">
           {ctaVenueLink}
