@@ -19,7 +19,11 @@
     "rsd": "RSD",
     "or": "ili",
     "required": "Obavezno polje",
-    "close": "Zatvori"
+    "close": "Zatvori",
+    "notFoundTitle": "Ova stranica ne postoji",
+    "notFoundBody": "Link je možda pogrešan ili lokal više nije aktivan.",
+    "notFoundHome": "Na početnu",
+    "notFoundSearch": "Pretraži lokale"
   },
   "nav": {
     "home": "Početna",

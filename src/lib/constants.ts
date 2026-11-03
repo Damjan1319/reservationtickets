@@ -1,5 +1,5 @@
 export const APP_NAME = "booktable";
-export const APP_DOMAIN = "ostavisto.dscode.rs";
+export const APP_DOMAIN = "booktable.dscode.rs";
 export const APP_HOST = "ulaznice.rs";
 
 export const VENUE_TYPES = ["CLUB", "CAFE", "RESTAURANT", "BAR"] as const;
@@ -59,6 +59,7 @@ export const ROOT_HOSTS = new Set([
   "www.ulaznice.rs",
   "mesto.rs",
   "www.mesto.rs",
+  "booktable.dscode.rs",
   "ostavisto.dscode.rs",
   "booktable.rs",
   "www.booktable.rs",

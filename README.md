@@ -1,6 +1,6 @@
 # booktable
 
-Rezervacije i QR karte za klubove, kafiće i restorane. Svaki lokal dobija svoj link (`ostavisto.dscode.rs/v/ime`), gosti rezervišu mesto ili kartu, a osoblje na ulazu skenira QR.
+Rezervacije i QR karte za klubove, kafiće i restorane. Svaki lokal dobija svoj link (`booktable.dscode.rs/v/ime`), gosti rezervišu mesto ili kartu, a osoblje na ulazu skenira QR.
 
 ## Pokretanje
 

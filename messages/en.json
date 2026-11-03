@@ -19,7 +19,11 @@
     "rsd": "RSD",
     "or": "or",
     "required": "Required field",
-    "close": "Close"
+    "close": "Close",
+    "notFoundTitle": "This page does not exist",
+    "notFoundBody": "The link may be wrong, or the venue is no longer active.",
+    "notFoundHome": "Go home",
+    "notFoundSearch": "Browse venues"
   },
   "nav": {
     "home": "Home",
