@@ -11,7 +11,7 @@ export function AdminChart({
 
   return (
     <div>
-      <div className="flex flex-wrap gap-4 text-xs text-cream/55">
+      <div className="flex flex-wrap gap-4 text-xs text-muted">
         <span className="inline-flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-paper" />
           {reservationsLabel}
@@ -39,7 +39,7 @@ export function AdminChart({
                 title={`${arrivedLabel}: ${day.arrived}`}
               />
             </div>
-            <span className="text-[10px] text-cream/45">{day.label}</span>
+            <span className="text-[10px] text-muted">{day.label}</span>
           </div>
         ))}
       </div>

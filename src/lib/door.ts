@@ -1,5 +1,6 @@
+import { MEAL_TYPES } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
-import { dayKeyInTz, todayKey } from "@/lib/time";
+import { dayKeyInTz, dayRangeInTz, todayKey } from "@/lib/time";
 import { liveGuestCount } from "@/lib/utils";
 
 export type DoorItem = {
@@ -78,9 +79,40 @@ export async function loadDoorList(venueId: string): Promise<DoorItem[]> {
 }
 
 export async function tableGuestsForSlot(venueId: string, day: string, mealType: string) {
+  const range = dayRangeInTz(day);
   const rows = await prisma.reservation.findMany({
-    where: { venueId, kind: "TABLE", mealType, status: { not: "CANCELLED" } },
+    where: {
+      venueId,
+      kind: "TABLE",
+      mealType,
+      status: { not: "CANCELLED" },
+      ...(range ? { visitAt: { gte: range.start, lt: range.end } } : {}),
+    },
     select: { guests: true, visitAt: true, status: true },
   });
-  return liveGuestCount(rows.filter((item) => dayKeyInTz(item.visitAt) === day));
+  return liveGuestCount(range ? rows : rows.filter((item) => dayKeyInTz(item.visitAt) === day));
+}
+
+export async function tableGuestsForDay(venueId: string, day: string) {
+  const range = dayRangeInTz(day);
+  const rows = await prisma.reservation.findMany({
+    where: {
+      venueId,
+      kind: "TABLE",
+      status: { not: "CANCELLED" },
+      ...(range ? { visitAt: { gte: range.start, lt: range.end } } : {}),
+    },
+    select: { guests: true, visitAt: true, mealType: true, status: true },
+  });
+  const totals = Object.fromEntries(MEAL_TYPES.map((meal) => [meal, 0])) as Record<
+    (typeof MEAL_TYPES)[number],
+    number
+  >;
+  for (const row of rows) {
+    if (!range && dayKeyInTz(row.visitAt) !== day) continue;
+    const meal = MEAL_TYPES.find((item) => item === row.mealType);
+    if (!meal || row.status === "CANCELLED") continue;
+    totals[meal] += row.guests;
+  }
+  return totals;
 }

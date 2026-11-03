@@ -56,6 +56,18 @@ export function timeIsWithinHours(opensAt: string, closesAt: string, timeValue: 
   return at >= open && at < close;
 }
 
+export function dayRangeInTz(dateKey: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) return null;
+  const start = belgradeToDate(dateKey, "00:00");
+  const [year, month, day] = dateKey.split("-").map(Number);
+  if (!year || !month || !day || !start) return null;
+  const next = new Date(Date.UTC(year, month - 1, day + 1));
+  const nextKey = `${next.getUTCFullYear()}-${pad(next.getUTCMonth() + 1)}-${pad(next.getUTCDate())}`;
+  const end = belgradeToDate(nextKey, "00:00");
+  if (!end) return null;
+  return { start, end };
+}
+
 export function belgradeToDate(dateValue: string, timeValue: string) {
   const naive = `${dateValue}T${timeValue}:00`;
   const asUtc = Date.parse(`${naive}Z`);

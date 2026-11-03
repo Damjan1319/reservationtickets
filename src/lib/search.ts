@@ -1,6 +1,6 @@
 import { MAX_GUESTS, MEAL_TYPES, VENUE_TYPES, type MealType } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
-import { todayKey, dayKeyInTz } from "@/lib/time";
+import { todayKey, dayKeyInTz, dayRangeInTz } from "@/lib/time";
 import { isPromoLive } from "@/lib/offers";
 import { summarizeReviews } from "@/lib/reviews";
 import { liveGuestCount, remainingSpots, venueCover } from "@/lib/utils";
@@ -227,20 +227,47 @@ export async function searchVenues(query: SearchQuery): Promise<SearchVenue[]> {
     : occasion
       ? occasion.types
       : undefined;
+  const day = dayRangeInTz(query.date);
   const venues = await prisma.venue.findMany({
     where: {
       verificationStatus: "VERIFIED",
       ...(typeFilter && typeFilter.length > 0 ? { type: { in: typeFilter } } : {}),
       ...(query.city ? { city: { contains: query.city, mode: "insensitive" } } : {}),
     },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      type: true,
+      city: true,
+      address: true,
+      description: true,
+      coverUrl: true,
+      opensAt: true,
+      closesAt: true,
+      closed: true,
+      tableCapacity: true,
       events: {
         where: { startsAt: { gte: new Date() } },
         orderBy: { startsAt: "asc" },
-        include: { reservations: { select: { guests: true, status: true } } },
+        select: {
+          id: true,
+          title: true,
+          startsAt: true,
+          price: true,
+          capacity: true,
+          reservations: {
+            where: { status: { not: "CANCELLED" } },
+            select: { guests: true, status: true },
+          },
+        },
       },
       reservations: {
-        where: { kind: "TABLE", status: { not: "CANCELLED" } },
+        where: {
+          kind: "TABLE",
+          status: { not: "CANCELLED" },
+          ...(day ? { visitAt: { gte: day.start, lt: day.end } } : {}),
+        },
         select: { guests: true, visitAt: true, mealType: true },
       },
       promotions: {
@@ -248,8 +275,9 @@ export async function searchVenues(query: SearchQuery): Promise<SearchVenue[]> {
         select: { title: true, startsAt: true, endsAt: true, active: true },
       },
       menus: {
-        where: { published: true },
-        select: { id: true, items: { where: { available: true }, select: { id: true } } },
+        where: { published: true, items: { some: { available: true } } },
+        select: { id: true },
+        take: 1,
       },
       reviews: { select: { food: true, drinks: true, night: true } },
     },
@@ -300,7 +328,7 @@ export async function searchVenues(query: SearchQuery): Promise<SearchVenue[]> {
       bookableEvent,
       bookable,
       promoTitle: venue.promotions.find(isPromoLive)?.title ?? null,
-      hasMenu: venue.menus.some((menu) => menu.items.length > 0),
+      hasMenu: venue.menus.length > 0,
       hasEventOnDate: todayEvents.length > 0,
       ratingAvg: ratings.overall,
       ratingCount: ratings.count,

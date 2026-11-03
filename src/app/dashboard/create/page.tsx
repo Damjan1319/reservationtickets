@@ -17,7 +17,7 @@ export default async function CreateBookingPage() {
   return (
     <div className="space-y-6">
       <PageHeader title={t("newBooking")} description={t("newBookingHint")} />
-      <div className="max-w-lg overflow-hidden rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
+      <div className="max-w-lg overflow-hidden rounded-xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
         <StaffBookingForm events={events} />
       </div>
     </div>

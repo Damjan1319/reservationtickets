@@ -13,7 +13,7 @@ export function CreatePromoForm() {
 
   return (
     <form
-      className="grid gap-3 rounded-2xl border border-paper-line bg-paper p-5 text-paper-text"
+      className="grid gap-3 rounded-xl border border-paper-line bg-paper p-5 text-paper-text"
       onSubmit={(event) => {
         event.preventDefault();
         const form = event.currentTarget;
@@ -32,18 +32,18 @@ export function CreatePromoForm() {
         name="title"
         required
         placeholder={t("promoTitle")}
-        className="rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+        className="rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none focus:border-paper-text"
       />
       <textarea
         name="body"
         rows={3}
         placeholder={t("promoBody")}
-        className="rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+        className="rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none focus:border-paper-text"
       />
       <div className="grid gap-3 sm:grid-cols-3">
         <select
           name="kind"
-          className="rounded-xl border border-paper-line bg-white px-3 py-3 text-sm font-semibold text-paper-text outline-none"
+          className="rounded-xl border border-paper-line bg-paper px-3 py-3 text-sm font-semibold text-paper-text outline-none"
         >
           {PROMO_KINDS.map((kind) => (
             <option key={kind} value={kind}>
@@ -54,12 +54,12 @@ export function CreatePromoForm() {
         <input
           name="startsAt"
           type="datetime-local"
-          className="rounded-xl border border-paper-line bg-white px-3 py-3 text-sm text-paper-text outline-none [color-scheme:light]"
+          className="rounded-xl border border-paper-line bg-paper px-3 py-3 text-sm text-paper-text outline-none [color-scheme:light]"
         />
         <input
           name="endsAt"
           type="datetime-local"
-          className="rounded-xl border border-paper-line bg-white px-3 py-3 text-sm text-paper-text outline-none [color-scheme:light]"
+          className="rounded-xl border border-paper-line bg-paper px-3 py-3 text-sm text-paper-text outline-none [color-scheme:light]"
         />
       </div>
       <button type="submit" disabled={pending} className="btn btn-primary justify-self-start">

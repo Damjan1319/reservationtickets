@@ -29,7 +29,7 @@ export function AppDialog({
       onClick={onCancel}
     >
       <div
-        className="w-full max-w-sm rounded-2xl border border-paper-line bg-paper p-5 text-paper-text shadow-lg sm:p-6"
+        className="w-full max-w-sm rounded-xl border border-paper-line bg-paper p-5 text-paper-text  sm:p-6"
         onClick={(event) => event.stopPropagation()}
         role="dialog"
         aria-modal="true"

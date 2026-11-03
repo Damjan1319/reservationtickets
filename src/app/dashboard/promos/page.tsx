@@ -24,19 +24,19 @@ export default async function DashboardPromosPage() {
         <CreatePromoForm />
       </div>
       {promos.length === 0 ? (
-        <p className="mt-8 text-cream/70">{t("promosEmpty")}</p>
+        <p className="mt-8 text-muted">{t("promosEmpty")}</p>
       ) : (
         <div className="mt-6 space-y-3">
           {promos.map((promo) => (
-            <article key={promo.id} className="rounded-2xl border border-line bg-surface p-5">
+            <article key={promo.id} className="rounded-xl border border-line bg-surface p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xl font-bold tracking-tight text-cream">{promo.title}</p>
-                  <p className="mt-1 text-sm font-medium text-cream/65">
+                  <p className="text-xl font-semibold tracking-tight text-cream">{promo.title}</p>
+                  <p className="mt-1 text-sm font-medium text-muted">
                     {t(`promoKinds.${promo.kind}`)} · {isPromoLive(promo) ? t("live") : t("off")}
                   </p>
-                  {promo.body ? <p className="mt-3 max-w-2xl text-sm leading-relaxed text-cream/75">{promo.body}</p> : null}
-                  <p className="mt-3 text-xs font-medium text-cream/50">
+                  {promo.body ? <p className="mt-3 max-w-2xl text-sm leading-relaxed text-cream">{promo.body}</p> : null}
+                  <p className="mt-3 text-xs font-medium text-muted">
                     {promo.startsAt || promo.endsAt
                       ? `${promo.startsAt ? formatDateTime(promo.startsAt, locale) : "—"} → ${promo.endsAt ? formatDateTime(promo.endsAt, locale) : "—"}`
                       : t("noDates")}

@@ -12,7 +12,7 @@ export function CopyEmails({ emails, className }: { emails: string[]; className?
     <button
       type="button"
       onClick={() => void navigator.clipboard.writeText(emails.join("\n"))}
-      className={cn("text-sm font-semibold text-cream/70 hover:text-cream", className)}
+      className={cn("text-sm font-semibold text-muted hover:text-cream", className)}
     >
       {t("copyEmails")}
     </button>

@@ -24,22 +24,22 @@ export default async function DashboardMenuPage() {
         <CreateMenuForm />
       </div>
       {menus.length === 0 ? (
-        <p className="mt-8 text-cream/70">{t("menusEmpty")}</p>
+        <p className="mt-8 text-muted">{t("menusEmpty")}</p>
       ) : (
         <div className="mt-6 space-y-4">
           {menus.map((menu) => (
-            <section key={menu.id} className="rounded-2xl border border-line bg-surface p-5">
+            <section key={menu.id} className="rounded-xl border border-line bg-surface p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xl font-bold tracking-tight text-cream">{menu.title}</p>
-                  <p className="mt-1 text-sm font-medium text-cream/65">
+                  <p className="text-xl font-semibold tracking-tight text-cream">{menu.title}</p>
+                  <p className="mt-1 text-sm font-medium text-muted">
                     {t(`menuKinds.${menu.kind}`)} · {menu.published ? t("published") : t("hidden")}
                   </p>
                 </div>
                 <MenuActions menuId={menu.id} published={menu.published} />
               </div>
               {menu.items.length === 0 ? (
-                <p className="mt-4 text-sm text-cream/60">{t("itemsEmpty")}</p>
+                <p className="mt-4 text-sm text-muted">{t("itemsEmpty")}</p>
               ) : (
                 <ul className="mt-4 divide-y divide-line/70">
                   {menu.items.map((item) => (
@@ -48,10 +48,10 @@ export default async function DashboardMenuPage() {
                         <p className="font-semibold text-cream">
                           {item.name}
                           {item.section ? (
-                            <span className="ml-2 text-xs font-medium text-cream/50">{item.section}</span>
+                            <span className="ml-2 text-xs font-medium text-muted">{item.section}</span>
                           ) : null}
                         </p>
-                        {item.description ? <p className="mt-1 text-sm text-cream/60">{item.description}</p> : null}
+                        {item.description ? <p className="mt-1 text-sm text-muted">{item.description}</p> : null}
                       </div>
                       <div className="flex shrink-0 items-center gap-3">
                         <p className="text-sm font-semibold text-cream">

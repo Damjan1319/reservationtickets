@@ -83,7 +83,7 @@ export function DoorBoard({
       <div className="flex items-center justify-between gap-3 px-4 py-3">
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-cream">{venueName}</p>
-          <p className="text-xs text-cream/55">
+          <p className="text-xs text-muted">
             {t("todayGuestsHint")}: {items.length} · {t("todayInsideHint")}: {inside}
             {waiting ? ` · ${waiting}` : ""}
           </p>
@@ -94,7 +94,7 @@ export function DoorBoard({
             onClick={() => setTab("camera")}
             className={cn(
               "rounded-full px-3 py-1 text-xs font-semibold",
-              tab === "camera" ? "bg-paper text-paper-text" : "text-cream/80",
+              tab === "camera" ? "bg-paper text-paper-text" : "text-cream",
             )}
           >
             {t("title")}
@@ -104,7 +104,7 @@ export function DoorBoard({
             onClick={() => setTab("list")}
             className={cn(
               "rounded-full px-3 py-1 text-xs font-semibold",
-              tab === "list" ? "bg-paper text-paper-text" : "text-cream/80",
+              tab === "list" ? "bg-paper text-paper-text" : "text-cream",
             )}
           >
             {t("toList")}
@@ -132,7 +132,7 @@ export function DoorBoard({
           </div>
           <div className="min-h-0 flex-1 space-y-2 overflow-auto">
             {visible.length === 0 ? (
-              <p className="pt-8 text-center text-sm text-cream/65">{t("listEmpty")}</p>
+              <p className="pt-8 text-center text-sm text-muted">{t("listEmpty")}</p>
             ) : (
               visible.map((item) => {
                 const title =
@@ -140,12 +140,12 @@ export function DoorBoard({
                     ? `${tt("table")} · ${tb(`meals.${item.mealType}`)}`
                     : (item.eventTitle ?? tt("kindEvent"));
                 return (
-                  <article key={item.id} className="rounded-2xl border border-line bg-surface p-4">
+                  <article key={item.id} className="rounded-xl border border-line bg-surface p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="text-lg font-bold tracking-tight text-cream">{item.guestName}</p>
-                        <p className="text-sm text-cream/60">{item.guestEmail}</p>
-                        <p className="mt-1 text-sm text-cream/75">
+                        <p className="text-lg font-semibold tracking-tight text-cream">{item.guestName}</p>
+                        <p className="text-sm text-muted">{item.guestEmail}</p>
+                        <p className="mt-1 text-sm text-cream">
                           {title} · {item.guests} · {formatTime(new Date(item.visitAt), locale)}
                         </p>
                       </div>
@@ -155,7 +155,7 @@ export function DoorBoard({
                           item.status === "PENDING"
                             ? "bg-paper text-paper-text"
                             : item.checkedIn
-                              ? "border border-line text-cream/55"
+                              ? "border border-line text-muted"
                               : "border border-cream/35 text-cream",
                         )}
                       >

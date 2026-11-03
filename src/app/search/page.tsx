@@ -1,8 +1,9 @@
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { SearchBar } from "@/components/search-bar";
-import { SearchResultCard } from "@/components/search-result-card";
+import { SearchFilterShell } from "@/components/search-filter-shell";
+import { SearchResults, SearchResultsFallback } from "@/components/search-results";
 import { VENUE_TYPES } from "@/lib/constants";
 import {
   SEARCH_OCCASIONS,
@@ -10,7 +11,6 @@ import {
   occasionFilter,
   parseSearchParams,
   searchHref,
-  searchVenues,
   withOccasion,
   type SearchQuery,
 } from "@/lib/search";
@@ -32,28 +32,31 @@ export default async function SearchPage({
     sort: str(raw.sort),
     available: str(raw.available),
   });
-  const [t, tv, tc, cities, venues] = await Promise.all([
+  const [t, tv, tc, cities] = await Promise.all([
     getTranslations("search"),
     getTranslations("venue"),
     getTranslations("common"),
     listCities(),
-    searchVenues(query),
   ]);
+  const activeFilters =
+    Number(Boolean(query.occasion)) +
+    Number(Boolean(query.type)) +
+    Number(query.available) +
+    Number(query.sort !== "recommended");
 
   return (
     <div>
-      <div className="sticky top-[52px] z-30 border-b border-line/50 bg-bg/90 backdrop-blur-md">
+      <div className="sticky top-16 z-30 border-b border-line bg-bg/95 backdrop-blur-md">
         <div className="mx-auto max-w-6xl px-4 py-3">
-          <SearchBar cities={cities} values={query} compact />
+          <SearchBar key={searchHref(query)} cities={cities} values={query} compact />
         </div>
       </div>
 
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:grid-cols-[220px_1fr] lg:py-10">
-        <aside className="h-fit rounded-2xl border border-paper-line bg-paper p-5 text-paper-text lg:sticky lg:top-36">
-          <p className="text-sm font-bold">{t("filters")}</p>
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:grid-cols-[220px_1fr] lg:gap-12 lg:py-10">
+        <SearchFilterShell key={searchHref(query)} title={t("filters")} closeLabel={tc("close")} activeCount={activeFilters}>
           <FilterForm query={query}>
-            <fieldset className="mt-4 space-y-2">
-              <legend className="text-xs font-semibold uppercase tracking-wide text-paper-muted">{t("occasion")}</legend>
+            <fieldset className="mt-2 space-y-1">
+              <legend className="mb-2 text-[13px] font-semibold text-paper-text">{t("occasion")}</legend>
               <FilterLink query={query} patch={withOccasion(query, "")} active={!query.occasion && query.kind === "all"}>
                 {t("occasionAny")}
               </FilterLink>
@@ -69,8 +72,8 @@ export default async function SearchPage({
               ))}
             </fieldset>
 
-            <fieldset className="mt-5 space-y-2">
-              <legend className="text-xs font-semibold uppercase tracking-wide text-paper-muted">{tv("type")}</legend>
+            <fieldset className="mt-6 space-y-1">
+              <legend className="mb-2 text-[13px] font-semibold text-paper-text">{tv("type")}</legend>
               <FilterLink query={query} patch={{ type: "" }} active={!query.type}>
                 {tc("allTypes")}
               </FilterLink>
@@ -81,17 +84,17 @@ export default async function SearchPage({
               ))}
             </fieldset>
 
-            <label className="mt-5 flex items-center gap-2 text-sm font-semibold">
-              <input type="checkbox" name="available" value="1" defaultChecked={query.available} className="size-4" />
+            <label className="mt-6 flex items-center gap-2.5 text-sm font-medium">
+              <input type="checkbox" name="available" value="1" defaultChecked={query.available} className="size-4 accent-current" />
               {t("availableOnly")}
             </label>
 
             <label className="mt-4 block space-y-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-paper-muted">{t("sort")}</span>
+              <span className="text-[13px] font-semibold text-paper-text">{t("sort")}</span>
               <select
                 name="sort"
                 defaultValue={query.sort}
-                className="w-full rounded-xl border border-paper-line bg-white px-3 py-2 text-sm font-semibold"
+                className="w-full rounded-lg border border-paper-line px-3 py-2 text-sm font-medium"
               >
                 <option value="recommended">{t("sorts.recommended")}</option>
                 <option value="seats">{t("sorts.seats")}</option>
@@ -103,27 +106,11 @@ export default async function SearchPage({
               {t("applyFilters")}
             </button>
           </FilterForm>
-        </aside>
+        </SearchFilterShell>
 
-        <section>
-          <h1 className="text-2xl font-bold tracking-tight text-cream sm:text-3xl">
-            {query.city ? t("resultsIn", { count: venues.length, city: query.city }) : t("results", { count: venues.length })}
-          </h1>
-          <p className="mt-2 text-sm font-medium text-cream/65">
-            {query.date} · {t("guestsShort", { count: query.guests })}
-            {query.occasion ? ` · ${t(`occasions.${query.occasion}`)}` : ""}
-          </p>
-
-          {venues.length === 0 ? (
-            <p className="mt-8 font-medium text-cream">{t("empty")}</p>
-          ) : (
-            <div className="mt-6 grid gap-4">
-              {venues.map((venue) => (
-                <SearchResultCard key={venue.id} venue={venue} query={query} />
-              ))}
-            </div>
-          )}
-        </section>
+        <Suspense fallback={<SearchResultsFallback />}>
+          <SearchResults query={query} />
+        </Suspense>
       </div>
     </div>
   );
@@ -162,8 +149,8 @@ function FilterLink({
     <Link
       href={searchHref({ ...query, ...patch })}
       className={cn(
-        "block rounded-lg px-2 py-1.5 text-sm font-semibold",
-        active ? "bg-paper-text text-paper" : "text-paper-text hover:bg-white",
+        "flex min-h-10 items-center rounded-lg px-2.5 text-sm font-medium active:opacity-70",
+        active ? "bg-surface-2 text-paper-text" : "text-paper-muted hover:text-paper-text",
       )}
     >
       {children}

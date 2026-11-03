@@ -92,7 +92,7 @@ function FilterChip({
       onClick={onClick}
       className={cn(
         "rounded-full px-3 py-1 text-[13px] font-semibold transition",
-        active ? "bg-paper text-paper-text" : "border border-line text-cream/85 hover:bg-surface",
+        active ? "bg-paper text-paper-text" : "border border-line text-cream hover:bg-surface",
       )}
     >
       {children}

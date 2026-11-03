@@ -64,10 +64,10 @@ export function ReviewForm({
                 type="button"
                 onClick={() => setFor(aspect, score)}
                 className={cn(
-                  "h-10 w-10 rounded-xl border text-sm font-bold",
+                  "h-10 w-10 rounded-xl border text-sm font-semibold",
                   valueFor(aspect) >= score
                     ? "border-paper-text bg-paper-text text-paper"
-                    : "border-paper-line bg-white text-paper-muted hover:border-paper-text/50",
+                    : "border-paper-line bg-paper text-paper-muted hover:border-paper-text/50",
                 )}
                 aria-label={`${score}`}
               >
@@ -85,7 +85,7 @@ export function ReviewForm({
           maxLength={500}
           defaultValue={initial?.body ?? ""}
           placeholder={t("bodyHint")}
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-sm font-medium text-paper-text outline-none focus:border-paper-text"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-sm font-medium text-paper-text outline-none focus:border-paper-text"
         />
       </label>
       {error ? <p className="text-sm text-danger">{error}</p> : null}
@@ -115,13 +115,13 @@ export function RatingBadge({
       <span
         className={
           tone === "cream"
-            ? "rounded-md bg-paper px-1.5 py-0.5 text-xs font-bold text-paper-text"
-            : "rounded-md bg-paper-text px-1.5 py-0.5 text-xs font-bold text-paper"
+            ? "rounded-md bg-paper px-1.5 py-0.5 text-xs font-semibold text-paper-text"
+            : "rounded-md bg-paper-text px-1.5 py-0.5 text-xs font-semibold text-paper"
         }
       >
         {overall.toFixed(1)}
       </span>
-      <span className={tone === "cream" ? "text-cream/70" : "text-paper-muted"}>
+      <span className={tone === "cream" ? "text-muted" : "text-paper-muted"}>
         {count} {label}
       </span>
     </p>

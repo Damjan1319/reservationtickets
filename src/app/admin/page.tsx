@@ -72,7 +72,7 @@ export default async function AdminPage({
             href={viewHref(key)}
             className={cn(
               "rounded-full px-3 py-1 text-[13px] font-semibold transition",
-              view === key ? "bg-paper text-paper-text" : "border border-line text-cream/80 hover:bg-surface",
+              view === key ? "bg-paper text-paper-text" : "border border-line text-cream hover:bg-surface",
             )}
           >
             {label}
@@ -82,7 +82,7 @@ export default async function AdminPage({
 
       {view === "stats" && pendingCount > 0 ? (
         <p className="mt-6 text-sm font-medium text-cream">
-          <Link href={viewHref("pending")} className="underline underline-offset-2 hover:text-white">
+          <Link href={viewHref("pending")} className="underline underline-offset-2 hover:text-cream">
             {t("pendingCue", { count: pendingCount })}
           </Link>
         </p>
@@ -97,7 +97,7 @@ export default async function AdminPage({
       {view === "pending" ? (
         <section className="mt-6 space-y-3">
           {pending.length === 0 ? (
-            <p className="text-cream/70">{t("empty")}</p>
+            <p className="text-muted">{t("empty")}</p>
           ) : (
             pending.map((venue) => <VenueAdminCard key={venue.id} venue={venue} tv={tv} t={t} />)
           )}
@@ -113,9 +113,9 @@ export default async function AdminPage({
       ) : null}
 
       {view === "bookings" ? (
-        <section className="mt-6 overflow-hidden rounded-2xl border border-line bg-surface">
+        <section className="mt-6 overflow-hidden rounded-xl border border-line bg-surface">
           {reservations.length === 0 ? (
-            <p className="p-5 text-cream/70">{t("emptyBookings")}</p>
+            <p className="p-5 text-muted">{t("emptyBookings")}</p>
           ) : (
             <ul className="divide-y divide-line">
               {reservations.slice(0, 50).map((item) => {
@@ -130,12 +130,12 @@ export default async function AdminPage({
                 return (
                   <li key={item.id} className="grid gap-2 px-4 py-4 sm:grid-cols-[1fr_auto] sm:items-center">
                     <div>
-                      <p className="text-base font-bold text-cream">{title}</p>
-                      <p className="mt-1 text-sm text-cream/65">
+                      <p className="text-base font-semibold text-cream">{title}</p>
+                      <p className="mt-1 text-sm text-muted">
                         {item.venue.name} · {item.user.name} · {item.user.email} · {formatDateTime(item.visitAt, locale)}
                       </p>
                     </div>
-                    <p className="text-sm font-medium text-cream/70">
+                    <p className="text-sm font-medium text-muted">
                       {item.guests} · {inside}/{item.guests}
                     </p>
                   </li>
@@ -184,21 +184,21 @@ function VenueAdminCard({
           : tv("pending");
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-line bg-surface">
+    <article className="overflow-hidden rounded-xl border border-line bg-surface">
       <div className="grid sm:grid-cols-[140px_1fr]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={venueCover(venue.type, venue.coverUrl)} alt="" className="h-32 w-full object-cover sm:h-full" />
         <div className="p-4 sm:p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-xs font-semibold text-cream/60">
+              <p className="text-xs font-semibold text-muted">
                 {tv(`types.${venue.type}`)} · {venue.city}
               </p>
-              <h2 className="mt-1 text-xl font-bold tracking-tight text-cream">{venue.name}</h2>
-              <p className="mt-1 text-sm text-cream/70">
+              <h2 className="mt-1 text-xl font-semibold tracking-tight text-cream">{venue.name}</h2>
+              <p className="mt-1 text-sm text-muted">
                 {venue.owner.name} · {venue.owner.email}
               </p>
-              <p className="mt-2 text-sm text-cream/55">
+              <p className="mt-2 text-sm text-muted">
                 {venue.address}
                 {venue.phone ? ` · ${venue.phone}` : ""}
                 {venue.pib ? ` · ${tv("pib")} ${venue.pib}` : ""}
@@ -208,13 +208,13 @@ function VenueAdminCard({
                   href={venue.proofUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-1 inline-block text-sm font-medium text-cream/80 hover:text-cream hover:underline"
+                  className="mt-1 inline-block text-sm font-medium text-cream hover:text-cream hover:underline"
                 >
                   {tv("maps")}
                 </a>
               ) : null}
               {showCounts ? (
-                <p className="mt-2 text-xs text-cream/50">
+                <p className="mt-2 text-xs text-muted">
                   {venue._count.events} · {venue._count.reservations} · {venuePublicHost(venue.slug)}
                 </p>
               ) : null}
@@ -226,7 +226,7 @@ function VenueAdminCard({
                   ? "bg-paper text-paper-text"
                   : venue.verificationStatus === "REJECTED" || venue.verificationStatus === "DISABLED"
                     ? "border border-danger text-danger"
-                    : "border border-line text-cream/80",
+                    : "border border-line text-cream",
               )}
             >
               {status}

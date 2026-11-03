@@ -19,7 +19,7 @@ export function GuestCount({
       <button
         type="button"
         onClick={() => onChange(Math.max(1, value - 1))}
-        className="h-11 w-11 rounded-full border border-paper-line bg-white text-xl font-semibold text-paper-text hover:border-paper-text"
+        className="h-11 w-11 rounded-full border border-paper-line bg-paper text-xl font-semibold text-paper-text hover:border-paper-text"
         aria-label="-"
       >
         −
@@ -34,12 +34,12 @@ export function GuestCount({
           if (!Number.isFinite(next)) return;
           onChange(Math.min(limit, Math.max(1, Math.floor(next))));
         }}
-        className="h-11 w-20 rounded-xl border border-paper-line bg-white text-center text-lg font-semibold text-paper-text outline-none focus:border-paper-text"
+        className="h-11 w-20 rounded-xl border border-paper-line bg-paper text-center text-lg font-semibold text-paper-text outline-none focus:border-paper-text"
       />
       <button
         type="button"
         onClick={() => onChange(Math.min(limit, value + 1))}
-        className="h-11 w-11 rounded-full border border-paper-line bg-white text-xl font-semibold text-paper-text hover:border-paper-text"
+        className="h-11 w-11 rounded-full border border-paper-line bg-paper text-xl font-semibold text-paper-text hover:border-paper-text"
         aria-label="+"
       >
         +

@@ -11,9 +11,11 @@ function tenantSlugFromHost(hostHeader: string) {
     if (sub && !RESERVED_SLUGS.has(sub)) return sub;
   }
 
-  if (hostname.endsWith(".ulaznice.rs")) {
-    const sub = hostname.slice(0, -".ulaznice.rs".length);
-    if (sub && !RESERVED_SLUGS.has(sub)) return sub;
+  for (const root of [".booktable.rs", ".ulaznice.rs"]) {
+    if (hostname.endsWith(root)) {
+      const sub = hostname.slice(0, -root.length);
+      if (sub && !RESERVED_SLUGS.has(sub)) return sub;
+    }
   }
 
   return null;

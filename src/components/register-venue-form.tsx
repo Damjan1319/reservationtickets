@@ -130,7 +130,7 @@ export function RegisterVenueForm({ signedIn }: { signedIn: boolean }) {
           className="w-full rounded-xl border border-paper-line bg-paper-2 px-4 py-3 outline-none focus:border-paper-text"
         />
       </label>
-      <div className="rounded-2xl bg-paper-2 p-4">
+      <div className="rounded-xl bg-paper-2 p-4">
         <p className="font-medium">{t("proofTitle")}</p>
         <p className="mt-1 text-xs text-paper-muted">{t("proofHint")}</p>
       </div>

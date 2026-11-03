@@ -32,7 +32,7 @@ export function HeaderBack({ label }: { label: string }) {
         }
         router.push(fallback(pathname));
       }}
-      className="-ml-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cream/80 transition hover:bg-surface hover:text-cream"
+      className="-ml-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cream transition hover:bg-surface hover:text-cream"
     >
       <svg width="10" height="16" viewBox="0 0 10 16" aria-hidden className="shrink-0">
         <path

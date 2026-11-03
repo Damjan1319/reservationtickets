@@ -65,7 +65,7 @@ export default async function TicketEvidencePage({
 
       <div className="mt-6 space-y-3">
         {filtered.length === 0 ? (
-          <p className="text-cream/70">{t("emptyReservations")}</p>
+          <p className="text-muted">{t("emptyReservations")}</p>
         ) : (
           filtered.map((item) => {
             const inside = item.tickets.filter((ticket) => ticket.checkedInAt).length;
@@ -74,16 +74,16 @@ export default async function TicketEvidencePage({
                 key={item.id}
                 className={
                   item.status === "PENDING"
-                    ? "rounded-2xl border border-cream/35 bg-surface p-5 sm:p-6"
-                    : "rounded-2xl border border-line bg-surface p-5 sm:p-6"
+                    ? "rounded-xl border border-cream/35 bg-surface p-5 sm:p-6"
+                    : "rounded-xl border border-line bg-surface p-5 sm:p-6"
                 }
               >
-                <p className="text-xl font-bold tracking-tight text-cream">{item.event?.title ?? t("tickets")}</p>
-                <p className="mt-1 text-sm text-cream/85">
+                <p className="text-xl font-semibold tracking-tight text-cream">{item.event?.title ?? t("tickets")}</p>
+                <p className="mt-1 text-sm text-cream">
                   {item.user.name}
-                  <span className="mt-0.5 block text-cream/55">{item.user.email}</span>
+                  <span className="mt-0.5 block text-muted">{item.user.email}</span>
                 </p>
-                <p className="mt-3 text-sm text-cream/55">
+                <p className="mt-3 text-sm text-muted">
                   {tt("guests")}: {item.guests} · QR: {item.tickets.length} · {t("inside")}: {inside}/{item.guests}
                 </p>
                 <div className="mt-4">

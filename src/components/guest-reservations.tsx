@@ -72,7 +72,7 @@ export function GuestReservations({ items }: { items: GuestReservationItem[] }) 
               <Link
                 key={item.id}
                 href={`/tickets/${item.id}`}
-                className="block rounded-2xl border border-paper-line bg-paper p-5 text-paper-text hover:border-paper-text/25"
+                className="block rounded-xl border border-paper-line bg-paper p-5 text-paper-text hover:border-paper-text/25"
               >
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-xs font-medium text-paper-muted">{item.venueName}</p>

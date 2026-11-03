@@ -89,12 +89,12 @@ export function VenuePanel({
                     "shrink-0 border-b-2 px-3 py-3 text-sm font-semibold sm:px-4",
                     tab === item.id
                       ? "border-cream text-cream"
-                      : "border-transparent text-cream/55 hover:text-cream/85",
+                      : "border-transparent text-muted hover:text-cream",
                   )}
                 >
                   {item.label}
                   {item.count ? (
-                    <span className="ml-1.5 font-medium text-cream/45">{item.count}</span>
+                    <span className="ml-1.5 font-medium text-muted">{item.count}</span>
                   ) : null}
                 </button>
               ))}
@@ -121,7 +121,7 @@ export function VenuePanel({
           {tab === "menu" ? menu : null}
           {tab === "events" ? (
             events.length === 0 ? (
-              <p className="text-cream/70">{t("noEvents")}</p>
+              <p className="text-muted">{t("noEvents")}</p>
             ) : (
               <div className="grid gap-3">
                 {events.map((item) => {
@@ -133,25 +133,25 @@ export function VenuePanel({
                       type="button"
                       onClick={() => setEventId(item.id)}
                       className={cn(
-                        "rounded-2xl border p-5 text-left transition",
+                        "rounded-xl border p-5 text-left transition",
                         active
                           ? "border-cream bg-surface text-cream"
                           : "border-line bg-surface/60 text-cream hover:border-cream/35",
                       )}
                     >
-                      <p className="text-xs font-semibold text-cream/70">
+                      <p className="text-xs font-semibold text-muted">
                         {formatDateTime(new Date(item.startsAt), locale)}
                       </p>
-                      <h3 className="mt-2 text-xl font-bold tracking-tight">{item.title}</h3>
-                      <p className="mt-1.5 text-sm font-medium text-cream/80">
+                      <h3 className="mt-2 text-xl font-semibold tracking-tight">{item.title}</h3>
+                      <p className="mt-1.5 text-sm font-medium text-cream">
                         {te("act")} · {item.artist}
                       </p>
                       <div className="mt-4 flex items-end justify-between text-sm">
                         <p className="font-semibold">
                           {formatMoney(item.price, locale)}
-                          <span className="font-medium text-cream/60"> / {te("perPerson")}</span>
+                          <span className="font-medium text-muted"> / {te("perPerson")}</span>
                         </p>
-                        <p className={left === 0 ? "font-semibold text-danger" : "font-medium text-cream/70"}>
+                        <p className={left === 0 ? "font-semibold text-danger" : "font-medium text-muted"}>
                           {left === 0 ? te("soldOut") : `${left} · ${te("spots")}`}
                         </p>
                       </div>
@@ -168,7 +168,7 @@ export function VenuePanel({
       {tab === "menu" ? (
         <aside
           id="rezervacija"
-          className="rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6 lg:sticky lg:top-24"
+          className="rounded-xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6 lg:sticky lg:top-24"
         >
           {tableAside}
         </aside>
@@ -177,9 +177,9 @@ export function VenuePanel({
       {tab === "events" && selected ? (
         <aside
           id="karta"
-          className="rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6 lg:sticky lg:top-24"
+          className="rounded-xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6 lg:sticky lg:top-24"
         >
-          <h2 className="text-lg font-bold">{ts("takeTicket")}</h2>
+          <h2 className="text-lg font-semibold">{ts("takeTicket")}</h2>
           <p className="mt-1 text-sm font-semibold">{selected.title}</p>
           <p className="mt-1 text-sm font-medium text-paper-muted">
             {formatDateTime(new Date(selected.startsAt), locale)}

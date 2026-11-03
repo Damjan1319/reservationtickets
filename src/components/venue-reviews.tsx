@@ -40,7 +40,7 @@ export async function VenueReviews({
     <section>
       <div className="flex flex-wrap items-end justify-between gap-3">
         {summary.count > 0 ? (
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium text-cream/75">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium text-cream">
             <RatingBadge overall={summary.overall} count={summary.count} label={t("countLabel")} tone="cream" />
             {aspects.map((aspect) => {
               const value = aspect === "FOOD" ? summary.food : aspect === "DRINKS" ? summary.drinks : summary.night;
@@ -53,12 +53,12 @@ export async function VenueReviews({
             })}
           </div>
         ) : (
-          <p className="text-cream/70">{t("empty")}</p>
+          <p className="text-muted">{t("empty")}</p>
         )}
       </div>
 
       {canReview ? (
-        <div className="mt-6 rounded-2xl border border-paper-line bg-paper p-5 text-paper-text">
+        <div className="mt-6 rounded-xl border border-paper-line bg-paper p-5 text-paper-text">
           <p className="mb-4 text-sm font-semibold">{mine ? t("yours") : t("write")}</p>
           <ReviewForm
             venueId={venueId}
@@ -67,9 +67,9 @@ export async function VenueReviews({
           />
         </div>
       ) : loggedIn ? (
-        <p className="mt-4 text-sm font-medium text-cream/55">{t("own")}</p>
+        <p className="mt-4 text-sm font-medium text-muted">{t("own")}</p>
       ) : (
-        <p className="mt-4 text-sm font-medium text-cream/70">
+        <p className="mt-4 text-sm font-medium text-muted">
           {t("needLogin")}{" "}
           <Link href={`/login?callbackUrl=${encodeURIComponent(`/v/${slug}`)}`} className="font-semibold text-cream underline">
             {tn("login")}
@@ -83,7 +83,7 @@ export async function VenueReviews({
             <li key={item.id} className="py-4">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <p className="font-semibold text-cream">{item.name}</p>
-                <p className="text-sm font-medium text-cream/60">
+                <p className="text-sm font-medium text-muted">
                   {aspects
                     .map((aspect) => {
                       const value = aspect === "FOOD" ? item.food : aspect === "DRINKS" ? item.drinks : item.night;
@@ -93,7 +93,7 @@ export async function VenueReviews({
                     .join(" · ")}
                 </p>
               </div>
-              {item.body ? <p className="mt-2 text-sm leading-relaxed text-cream/75">{item.body}</p> : null}
+              {item.body ? <p className="mt-2 text-sm leading-relaxed text-cream">{item.body}</p> : null}
             </li>
           ))}
         </ul>

@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { DashboardNav, type DashboardLink } from "@/components/dashboard-nav";
+import { APP_DOMAIN } from "@/lib/constants";
 
 export function DashboardChrome({
   roleLabel,
@@ -25,16 +26,19 @@ export function DashboardChrome({
   }
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-6 lg:flex-row lg:py-8">
-      <aside className="w-full shrink-0 lg:sticky lg:top-20 lg:w-56">
-        <p className="text-xs font-medium text-cream/55">{roleLabel}</p>
-        <p className="mt-1 text-lg font-bold tracking-tight text-cream">{venueName}</p>
-        <p className="mt-0.5 text-xs text-cream/45">{venueSlug}.ulaznice.rs</p>
+    <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-6 lg:flex-row lg:gap-10 lg:py-8">
+      <aside className="w-full shrink-0 lg:sticky lg:top-24 lg:h-fit lg:w-56">
+        <div className="rounded-xl border border-line px-3 py-2.5">
+          <p className="truncate text-sm font-semibold text-cream">{venueName}</p>
+          <p className="mt-0.5 truncate text-xs text-muted">
+            {roleLabel} · {APP_DOMAIN}/v/{venueSlug}
+          </p>
+        </div>
         <DashboardNav links={links} />
       </aside>
       <div className="min-w-0 flex-1">
         {pendingBanner ? (
-          <p className="mb-6 rounded-2xl border border-line bg-surface px-4 py-3 text-sm leading-relaxed text-cream/70">
+          <p className="mb-6 rounded-xl border border-line px-4 py-3 text-sm leading-relaxed text-muted">
             {pendingBanner}
           </p>
         ) : null}

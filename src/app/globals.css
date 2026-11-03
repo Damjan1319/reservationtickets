@@ -1,56 +1,56 @@
 @import "tailwindcss";
 
 :root,
-html.dark {
-  --bg: #353532;
-  --surface: #3f3f3c;
-  --surface-2: #4a4a46;
-  --line: #5c5c57;
-  --cream: #f7f6f2;
-  --muted: #d2d1cb;
-  --gold: #f7f6f2;
-  --gold-soft: #ffffff;
-  --on-gold: #1c1c1a;
-  --danger: #c47a76;
-  --success: #7a9484;
-  --cal-table: #3f6e66;
-  --cal-event: #8a5a42;
-  --cal-both: #4a5d78;
-  --cal-ink: #f3f1ec;
-  --paper: #f4f3ef;
-  --paper-2: #ffffff;
-  --paper-text: #161615;
-  --paper-muted: #4a4a46;
-  --paper-line: #d5d3cd;
-  color-scheme: dark;
-}
-
 html.light {
-  --bg: #ecebe7;
-  --surface: #f6f5f2;
-  --surface-2: #e4e3de;
-  --line: #d4d2cc;
-  --cream: #1f1f1d;
-  --muted: #6a6a65;
-  --gold: #1f1f1d;
-  --gold-soft: #3a3a37;
-  --on-gold: #f6f5f2;
+  --bg: #ffffff;
+  --surface: #fafaf9;
+  --surface-2: #f2f2ef;
+  --line: #e6e6e3;
+  --cream: #111111;
+  --muted: #6b6b6b;
+  --gold: #111111;
+  --gold-soft: #2b2b2b;
+  --on-gold: #ffffff;
   --danger: #b42318;
-  --success: #3f6b56;
-  --cal-table: #cfe6df;
-  --cal-event: #f1d9c8;
-  --cal-both: #d5deec;
-  --cal-ink: #1c1c1c;
+  --success: #1f6f54;
+  --cal-table: #dcefe7;
+  --cal-event: #f3e3d6;
+  --cal-both: #dde5f1;
+  --cal-ink: #111111;
   --paper: #ffffff;
-  --paper-2: #f4f3ef;
-  --paper-text: #161615;
-  --paper-muted: #3f3f3c;
-  --paper-line: #d5d3cd;
+  --paper-2: #fafaf9;
+  --paper-text: #111111;
+  --paper-muted: #6b6b6b;
+  --paper-line: #e6e6e3;
   color-scheme: light;
 }
 
+html.dark {
+  --bg: #111111;
+  --surface: #181818;
+  --surface-2: #202020;
+  --line: #2c2c2c;
+  --cream: #f2f2f2;
+  --muted: #a3a3a3;
+  --gold: #f2f2f2;
+  --gold-soft: #ffffff;
+  --on-gold: #111111;
+  --danger: #e5776f;
+  --success: #6fbf9c;
+  --cal-table: #234a3e;
+  --cal-event: #5a3e2c;
+  --cal-both: #2f3d55;
+  --cal-ink: #f2f2f2;
+  --paper: #181818;
+  --paper-2: #202020;
+  --paper-text: #f2f2f2;
+  --paper-muted: #a3a3a3;
+  --paper-line: #2c2c2c;
+  color-scheme: dark;
+}
+
 @theme inline {
-  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
@@ -80,17 +80,18 @@ body {
 }
 
 body {
-  font-family: var(--font-manrope), sans-serif;
+  font-family: var(--font-inter), sans-serif;
   min-height: 100%;
+  touch-action: manipulation;
 }
 
 ::selection,
 input::selection,
 textarea::selection,
 select::selection {
-  background: #c4c2bb;
-  color: #161615;
-  -webkit-text-fill-color: #161615;
+  background: color-mix(in srgb, var(--cream) 16%, transparent);
+  color: inherit;
+  -webkit-text-fill-color: currentColor;
 }
 
 input,
@@ -98,16 +99,22 @@ select,
 textarea {
   color: inherit;
   font: inherit;
-  font-weight: 600;
+  font-weight: 500;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
 }
 
 .btn {
-  letter-spacing: -0.01em;
-  border-radius: 0.625rem;
+  border-radius: 0.5rem;
+  min-height: 2.5rem;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  padding: 0.62rem 1rem;
+  padding: 0.6rem 1rem;
   font-size: 0.875rem;
   font-weight: 600;
   line-height: 1.15;
@@ -124,18 +131,18 @@ textarea {
 }
 
 .btn-primary:hover {
-  background: var(--gold-soft);
+  background: color-mix(in srgb, var(--cream) 85%, var(--bg));
 }
 
 .btn-ghost {
-  border: 1px solid color-mix(in srgb, currentColor 42%, transparent);
-  background: color-mix(in srgb, currentColor 6%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  background: transparent;
   color: inherit;
 }
 
 .btn-ghost:hover {
-  border-color: color-mix(in srgb, currentColor 62%, transparent);
-  background: color-mix(in srgb, currentColor 12%, transparent);
+  border-color: color-mix(in srgb, currentColor 45%, transparent);
+  background: color-mix(in srgb, currentColor 4%, transparent);
 }
 
 .btn-full {
@@ -150,7 +157,7 @@ textarea {
 
 .bg-paper .btn-primary:hover,
 .text-paper-text .btn-primary:hover {
-  background: color-mix(in srgb, var(--paper-text) 86%, white);
+  background: color-mix(in srgb, var(--paper-text) 85%, var(--paper));
 }
 
 .bg-paper .btn-ghost:hover,
@@ -159,10 +166,6 @@ textarea {
   border-color: color-mix(in srgb, var(--paper-text) 28%, transparent);
 }
 
-.bg-paper,
-.bg-paper-2 {
-  color-scheme: light;
-}
 
 :is(.bg-paper, .bg-paper-2, .text-paper-text) .text-muted {
   color: var(--paper-muted);
@@ -171,26 +174,52 @@ textarea {
 :is(.bg-paper, .bg-paper-2, .text-paper-text)
   :is(input, select, textarea):not([type="hidden"]):not([type="checkbox"]),
 :is(input, select, textarea):is(.bg-paper, .bg-paper-2, .bg-white) {
-  color-scheme: light;
   border: 1px solid var(--paper-line);
-  background: #fff;
+  background: var(--paper);
   color: var(--paper-text);
   -webkit-text-fill-color: var(--paper-text);
   caret-color: var(--paper-text);
-  font-weight: 600;
+  font-weight: 500;
+  border-radius: 0.5rem;
+}
+
+:is(.bg-paper, .bg-paper-2, .text-paper-text)
+  :is(input, select, textarea):not([type="hidden"]):not([type="checkbox"]):focus,
+:is(input, select, textarea):is(.bg-paper, .bg-paper-2, .bg-white):focus {
+  outline: none;
+  border-color: var(--paper-text);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--paper-text) 8%, transparent);
 }
 
 .search-bar {
-  border-radius: 1.15rem;
+  border-radius: 0.75rem;
   background: var(--paper);
   color: var(--paper-text);
   padding: 0.4rem;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--paper-text) 16%, transparent);
 }
 
 .search-bar-compact {
-  box-shadow: none;
   box-shadow: 0 0 0 1px var(--paper-line);
+}
+
+.search-summary {
+  width: 100%;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border: 0;
+  border-radius: 0.75rem;
+  background: var(--paper);
+  color: var(--paper-text);
+  padding: 0.75rem 1rem;
+  box-shadow: 0 0 0 1px var(--paper-line);
+  text-align: left;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .search-bar-grid {
@@ -245,8 +274,8 @@ textarea {
   display: block;
   margin-bottom: 0.15rem;
   color: var(--paper-muted);
-  font-size: 0.72rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.3;
   text-transform: none;
@@ -268,22 +297,21 @@ textarea {
   line-height: 1.4;
   outline: none;
   -webkit-text-fill-color: var(--paper-text);
-  color-scheme: light;
 }
 
 .search-bar .search-input::placeholder {
-  color: #7a7a74;
+  color: var(--paper-muted);
   font-weight: 500;
   letter-spacing: 0.01em;
-  -webkit-text-fill-color: #7a7a74;
+  -webkit-text-fill-color: var(--paper-muted);
   opacity: 1;
 }
 
 .search-submit {
   margin: 0.35rem;
-  min-height: 3.1rem;
+  min-height: 3rem;
   border: 0;
-  border-radius: 0.85rem;
+  border-radius: 0.5rem;
   background: var(--paper-text);
   color: var(--paper);
   padding: 0 1.35rem;
@@ -294,12 +322,12 @@ textarea {
 }
 
 .search-submit:hover {
-  background: color-mix(in srgb, var(--paper-text) 86%, white);
+  background: color-mix(in srgb, var(--paper-text) 85%, var(--paper));
 }
 
 :is(.bg-paper, .bg-paper-2, .text-paper-text) option {
-  background: #fff;
-  color: #161615;
+  background: var(--paper);
+  color: var(--paper-text);
 }
 
 :is(.bg-paper, .bg-paper-2, .text-paper-text) input[type="file"]::file-selector-button {
@@ -329,7 +357,7 @@ textarea {
 :is(input, select, textarea):is(.bg-paper, .bg-paper-2, .bg-white):-webkit-autofill {
   -webkit-text-fill-color: var(--paper-text);
   caret-color: var(--paper-text);
-  box-shadow: 0 0 0 1000px #fff inset;
+  box-shadow: 0 0 0 1000px var(--paper) inset;
   border: 1px solid var(--paper-line);
 }
 
@@ -341,7 +369,6 @@ textarea {
     .bg-white,
     .text-paper-text
   ) {
-  color-scheme: light;
   color: var(--paper-text);
 }
 
@@ -426,13 +453,8 @@ textarea {
 }
 
 .band-paper {
-  background: #4c4c48;
+  background: var(--surface);
   color: var(--cream);
-}
-
-html.light .band-paper {
-  background: var(--paper);
-  color: var(--paper-text);
 }
 
 #qr-reader__dashboard_section,
@@ -441,22 +463,5 @@ html.light .band-paper {
 }
 
 .site-header {
-  position: sticky;
-}
-
-.site-header::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  pointer-events: none;
-  background: linear-gradient(
-    to right,
-    transparent,
-    color-mix(in srgb, var(--cream) 12%, transparent) 18%,
-    color-mix(in srgb, var(--cream) 12%, transparent) 82%,
-    transparent
-  );
+  border-bottom: 1px solid var(--line);
 }

@@ -43,25 +43,25 @@ export default async function EventPage({
     <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 lg:grid-cols-[1.1fr_0.9fr]">
       <div>
         <PageBack href={`/v/${venueSlug}`} label={event.venue.name} />
-        <h1 className="text-3xl font-bold tracking-tight text-cream">{event.title}</h1>
-        <p className="mt-3 text-base font-semibold text-cream/85">
+        <h1 className="text-3xl font-semibold tracking-tight text-cream">{event.title}</h1>
+        <p className="mt-3 text-base font-semibold text-cream">
           {t("act")} · {event.artist.trim() || event.venue.name}
         </p>
         <p className="mt-4 font-medium text-cream">{formatDateTime(event.startsAt, locale)}</p>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-cream">{event.description}</p>
         <dl className="mt-10 grid max-w-md grid-cols-2 gap-4 text-sm">
-          <div className="rounded-2xl border border-paper-line bg-paper p-4 text-paper-text">
+          <div className="rounded-xl border border-paper-line bg-paper p-4 text-paper-text">
             <dt className="font-semibold text-paper-muted">{t("price")}</dt>
-            <dd className="mt-1 text-lg font-bold">{formatMoney(event.price, locale)}</dd>
+            <dd className="mt-1 text-lg font-semibold">{formatMoney(event.price, locale)}</dd>
           </div>
-          <div className="rounded-2xl border border-paper-line bg-paper p-4 text-paper-text">
+          <div className="rounded-xl border border-paper-line bg-paper p-4 text-paper-text">
             <dt className="font-semibold text-paper-muted">{t("spots")}</dt>
-            <dd className="mt-1 text-lg font-bold">{left === 0 ? t("soldOut") : left}</dd>
+            <dd className="mt-1 text-lg font-semibold">{left === 0 ? t("soldOut") : left}</dd>
           </div>
         </dl>
       </div>
-      <aside className="rounded-2xl border border-paper-line bg-paper p-6 text-paper-text lg:sticky lg:top-24">
-        <h2 className="text-lg font-bold">{tb("title")}</h2>
+      <aside className="rounded-xl border border-paper-line bg-paper p-6 text-paper-text lg:sticky lg:top-24">
+        <h2 className="text-lg font-semibold">{tb("title")}</h2>
         {event.venue.verificationStatus !== "VERIFIED" ? (
           <p className="mt-4 text-paper-muted">{tb("unverified")}</p>
         ) : session?.user ? (

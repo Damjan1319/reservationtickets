@@ -59,13 +59,13 @@ export default async function DashboardPage({
       <PageHeader title={context.venue.name} description={t("statsIntro")} />
 
       {pendingInbox.length > 0 ? (
-        <section className="space-y-3 rounded-2xl border border-cream/35 bg-surface p-4 sm:p-5">
-          <h2 className="text-lg font-bold tracking-tight text-cream">{t("pendingInbox")}</h2>
+        <section className="space-y-3 rounded-xl border border-cream/35 bg-surface p-4 sm:p-5">
+          <h2 className="text-lg font-semibold tracking-tight text-cream">{t("pendingInbox")}</h2>
           {pendingInbox.map((item) => (
             <div key={item.id} className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3 first:border-0 first:pt-0">
               <div>
                 <p className="font-semibold text-cream">{item.user.name}</p>
-                <p className="text-sm text-cream/65">
+                <p className="text-sm text-muted">
                   {item.kind === "TABLE" ? t("tables") : t("tickets")} · {item.guests} · {formatDateTime(item.visitAt, locale)}
                 </p>
               </div>
@@ -103,27 +103,27 @@ export default async function DashboardPage({
           legendFree={t("calFree")}
         />
 
-        <section className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
+        <section className="rounded-xl border border-line bg-surface p-5 sm:p-6">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-lg font-bold tracking-tight text-cream">{t("tonight")}</h2>
-            <Link href="/dashboard/events" className="text-sm font-medium text-cream/60 hover:text-cream">
+            <h2 className="text-lg font-semibold tracking-tight text-cream">{t("tonight")}</h2>
+            <Link href="/dashboard/events" className="text-sm font-medium text-muted hover:text-cream">
               {t("parties")}
             </Link>
           </div>
           <div className="mt-5 space-y-3">
             {upcoming.length === 0 ? (
-              <p className="text-sm text-cream/65">{t("emptyEvents")}</p>
+              <p className="text-sm text-muted">{t("emptyEvents")}</p>
             ) : (
               upcoming.map((event) => {
                 const reserved = liveGuestCount(event.reservations);
                 return (
                   <div key={event.id} className="rounded-xl border border-line px-4 py-3">
-                    <p className="text-base font-bold tracking-tight text-cream">{event.title}</p>
-                    <p className="mt-1 text-xs font-semibold text-cream/70">
+                    <p className="text-base font-semibold tracking-tight text-cream">{event.title}</p>
+                    <p className="mt-1 text-xs font-semibold text-muted">
                       {event.artist.trim() || context.venue.name}
                     </p>
-                    <p className="mt-1 text-sm text-cream/65">{formatDateTime(event.startsAt, locale)}</p>
-                    <p className="mt-1 text-sm text-cream/55">
+                    <p className="mt-1 text-sm text-muted">{formatDateTime(event.startsAt, locale)}</p>
+                    <p className="mt-1 text-sm text-muted">
                       {t("sold")}: {reserved}/{event.capacity}
                     </p>
                   </div>

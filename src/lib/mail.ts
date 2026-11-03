@@ -38,13 +38,13 @@ export async function sendReservationDecisionEmail(
       : `Reservation cancelled — ${reservation.venue.name}`;
   const body = accepted
     ? sr
-      ? `Zdravo ${reservation.user.name},\n\nRezervacija u lokalu ${reservation.venue.name} je prihvaćena.\n${title}\n${when}\nGostiju: ${reservation.guests}\n\nKartu ili potvrdu vidiš u svom nalogu na Ulaznice.`
-      : `Hi ${reservation.user.name},\n\nYour reservation at ${reservation.venue.name} was accepted.\n${title}\n${when}\nGuests: ${reservation.guests}\n\nOpen Ulaznice to see your ticket or confirmation.`
+      ? `Zdravo ${reservation.user.name},\n\nRezervacija u lokalu ${reservation.venue.name} je prihvaćena.\n${title}\n${when}\nGostiju: ${reservation.guests}\n\nKartu ili potvrdu vidiš u svom nalogu na booktable.`
+      : `Hi ${reservation.user.name},\n\nYour reservation at ${reservation.venue.name} was accepted.\n${title}\n${when}\nGuests: ${reservation.guests}\n\nOpen booktable to see your ticket or confirmation.`
     : sr
       ? `Zdravo ${reservation.user.name},\n\nRezervacija u lokalu ${reservation.venue.name} je otkazana.\n${title}\n${when}\n\nAko imaš pitanje, javi se lokalu.`
       : `Hi ${reservation.user.name},\n\nYour reservation at ${reservation.venue.name} was cancelled.\n${title}\n${when}\n\nContact the venue if you have questions.`;
 
-  const from = process.env.MAIL_FROM || "Ulaznice <onboarding@resend.dev>";
+  const from = process.env.MAIL_FROM || "booktable <onboarding@resend.dev>";
   try {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",

@@ -40,7 +40,7 @@ export function EventForm({ event }: EventFormProps) {
           name="title"
           defaultValue={event?.title}
           required
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
@@ -49,7 +49,7 @@ export function EventForm({ event }: EventFormProps) {
           name="artist"
           defaultValue={event?.artist}
           placeholder={t("artistHint")}
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
@@ -59,7 +59,7 @@ export function EventForm({ event }: EventFormProps) {
           defaultValue={event?.description}
           required
           rows={4}
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
@@ -69,7 +69,7 @@ export function EventForm({ event }: EventFormProps) {
           type="datetime-local"
           defaultValue={event?.startsAt}
           required
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
         />
       </label>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -81,7 +81,7 @@ export function EventForm({ event }: EventFormProps) {
             min={1}
             defaultValue={event?.capacity ?? 40}
             required
-            className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
+            className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
           />
         </label>
         <label className="block space-y-2">
@@ -92,7 +92,7 @@ export function EventForm({ event }: EventFormProps) {
             min={0}
             defaultValue={event?.price ?? 0}
             required
-            className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
+            className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
           />
         </label>
       </div>

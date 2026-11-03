@@ -33,21 +33,21 @@ export async function EventCard({
   return (
     <Link
       href={`/v/${venueSlug}/events/${id}`}
-      className="flex flex-col justify-between rounded-2xl border border-line bg-surface p-5 text-cream transition hover:border-cream/35"
+      className="flex flex-col justify-between rounded-xl border border-line bg-surface p-5 text-cream transition hover:border-cream/35"
     >
       <div>
-        <p className="text-xs font-semibold text-cream/70">{formatDateTime(startsAt, locale)}</p>
-        <h3 className="mt-2 text-xl font-bold tracking-tight">{title}</h3>
-        <p className="mt-1.5 text-sm font-medium text-cream/80">
+        <p className="text-xs font-semibold text-muted">{formatDateTime(startsAt, locale)}</p>
+        <h3 className="mt-2 text-xl font-semibold tracking-tight">{title}</h3>
+        <p className="mt-1.5 text-sm font-medium text-cream">
           {t("act")} · {act}
         </p>
       </div>
       <div className="mt-6 flex items-end justify-between text-sm">
         <p className="font-semibold">
           {formatMoney(price, locale)}
-          <span className="font-medium text-cream/60"> / {t("perPerson")}</span>
+          <span className="font-medium text-muted"> / {t("perPerson")}</span>
         </p>
-        <p className={left === 0 ? "font-semibold text-danger" : "font-medium text-cream/70"}>
+        <p className={left === 0 ? "font-semibold text-danger" : "font-medium text-muted"}>
           {left === 0 ? t("soldOut") : `${left} · ${t("spots")}`}
         </p>
       </div>

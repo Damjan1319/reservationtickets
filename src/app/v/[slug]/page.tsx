@@ -12,7 +12,7 @@ import { isPromoLive } from "@/lib/offers";
 import { summarizeReviews } from "@/lib/reviews";
 import { prisma } from "@/lib/prisma";
 import { MEAL_TYPES } from "@/lib/constants";
-import { tableGuestsForSlot } from "@/lib/door";
+import { tableGuestsForDay } from "@/lib/door";
 import { todayKey } from "@/lib/time";
 import { venueHref } from "@/lib/search";
 import { liveGuestCount, venueCover } from "@/lib/utils";
@@ -24,23 +24,25 @@ export default async function VenuePage({
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ date?: string; guests?: string; meal?: string; tab?: string }>;
 }) {
-  const { slug } = await params;
-  const query = await searchParams;
+  const [{ slug }, query, t, tb, tn, session] = await Promise.all([
+    params,
+    searchParams,
+    getTranslations("venue"),
+    getTranslations("booking"),
+    getTranslations("nav"),
+    auth(),
+  ]);
   const initialMeal = MEAL_TYPES.includes(query.meal as (typeof MEAL_TYPES)[number])
     ? (query.meal as (typeof MEAL_TYPES)[number])
     : undefined;
   const initialTab = query.tab === "menu" || query.tab === "events" || query.tab === "reviews" ? query.tab : undefined;
-  const t = await getTranslations("venue");
-  const tb = await getTranslations("booking");
-  const tn = await getTranslations("nav");
-  const session = await auth();
   const venue = await prisma.venue.findUnique({
     where: { slug },
     include: {
       events: {
         where: { startsAt: { gte: new Date() } },
         orderBy: { startsAt: "asc" },
-        include: { reservations: true },
+        include: { reservations: { select: { guests: true, status: true } } },
       },
       menus: {
         where: { published: true },
@@ -61,13 +63,6 @@ export default async function VenuePage({
   if (!venue) notFound();
 
   const isOwner = session?.user?.id === venue.ownerId;
-  const isTeam = Boolean(
-    session?.user?.id &&
-      (await prisma.staffMembership.findFirst({
-        where: { venueId: venue.id, userId: session.user.id },
-        select: { id: true },
-      })),
-  );
   const isPublic = venue.verificationStatus === "VERIFIED";
   if (!isPublic && !isOwner) {
     return (
@@ -79,11 +74,16 @@ export default async function VenuePage({
   }
 
   const day = todayKey();
-  const reservedByMeal = Object.fromEntries(
-    await Promise.all(
-      MEAL_TYPES.map(async (meal) => [meal, await tableGuestsForSlot(venue.id, day, meal)] as const),
-    ),
-  );
+  const [membership, reservedByMeal] = await Promise.all([
+    session?.user?.id
+      ? prisma.staffMembership.findFirst({
+          where: { venueId: venue.id, userId: session.user.id },
+          select: { id: true },
+        })
+      : Promise.resolve(null),
+    tableGuestsForDay(venue.id, day),
+  ]);
+  const isTeam = Boolean(membership);
 
   const addressLine = [venue.address && venue.address !== venue.city ? venue.address : null, venue.phone]
     .filter(Boolean)
@@ -91,40 +91,46 @@ export default async function VenuePage({
 
   return (
     <div>
-      <section className="relative overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={venueCover(venue.type, venue.coverUrl)}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/80 to-black/35" />
-        <div className="relative mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 sm:py-16">
-          <PageBack href="/search" label={tn("venues")} onImage />
-          <div>
-            <p className="text-sm font-medium text-cream/80">
-              {t(`types.${venue.type}`)} · {venue.city}
+      <section className="mx-auto max-w-6xl px-4 pt-6">
+        <PageBack href="/search" label={tn("venues")} />
+        <div className="-mt-4 overflow-hidden rounded-xl bg-surface-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={venueCover(venue.type, venue.coverUrl)}
+            alt=""
+            decoding="async"
+            fetchPriority="high"
+            className="h-56 w-full object-cover sm:h-80"
+          />
+        </div>
+        <div className="pt-8">
+          <p className="text-[13px] font-medium text-muted">
+            {t(`types.${venue.type}`)} · {venue.city}
+          </p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-cream sm:text-4xl">{venue.name}</h1>
+          {addressLine || venue.proofUrl ? (
+            <p className="mt-2.5 text-sm text-muted">
+              {addressLine}
+              {addressLine && venue.proofUrl ? " · " : null}
+              {venue.proofUrl ? (
+                <a
+                  href={venue.proofUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-cream underline underline-offset-[3px]"
+                >
+                  {t("maps")}
+                </a>
+              ) : null}
             </p>
-            <h1 className="mt-3 text-4xl font-bold tracking-tight text-cream sm:text-5xl">{venue.name}</h1>
-            {venue.description ? (
-              <p className="mt-4 max-w-2xl text-base leading-7 text-cream/85">{venue.description}</p>
-            ) : null}
-            {addressLine || venue.proofUrl ? (
-              <p className="mt-5 text-sm font-medium text-cream/70">
-                {addressLine}
-                {addressLine && venue.proofUrl ? " · " : null}
-                {venue.proofUrl ? (
-                  <a href={venue.proofUrl} target="_blank" rel="noreferrer" className="hover:text-cream hover:underline">
-                    {t("maps")}
-                  </a>
-                ) : null}
-              </p>
-            ) : null}
-          </div>
+          ) : null}
+          {venue.description ? (
+            <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-cream">{venue.description}</p>
+          ) : null}
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-8 lg:py-10">
+      <section className="mx-auto max-w-6xl px-4 pb-20 pt-8">
         <VenueOffers
           promos={venue.promotions.filter(isPromoLive).map((promo) => ({
             id: promo.id,
@@ -194,8 +200,8 @@ export default async function VenuePage({
           }
           tableAside={
             <>
-              <h2 className="text-lg font-bold">{t("tableTitle")}</h2>
-              <p className="mt-2 text-sm font-medium text-paper-muted">{t("tableSubtitle")}</p>
+              <h2 className="text-lg font-semibold">{t("tableTitle")}</h2>
+              <p className="mt-1.5 text-[13px] text-paper-muted">{t("tableSubtitle")}</p>
               {isPublic && session?.user ? (
                 <div className="mt-6">
                   <TableBookingForm

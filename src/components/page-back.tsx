@@ -14,7 +14,7 @@ export function PageBack({
       href={href}
       className={
         onImage
-          ? "flex items-center gap-1.5 text-sm font-medium text-cream/80 hover:text-white"
+          ? "flex items-center gap-1.5 text-sm font-medium text-muted hover:text-cream"
           : "mb-8 flex items-center gap-1.5 text-sm font-medium text-muted transition hover:text-cream"
       }
     >

@@ -55,14 +55,14 @@ export function BookingForm({ eventId, price, remaining, locale, initialGuests }
           <GuestCount value={guests} onChange={setGuests} max={remaining} />
         </div>
 
-        <div className="rounded-2xl border border-paper-line p-4">
+        <div className="rounded-xl border border-paper-line p-4">
           <p className="font-semibold">{t("onsite")}</p>
           <p className="mt-1 text-sm font-medium text-paper-muted">{t("onsiteHint")}</p>
         </div>
 
         <div className="flex items-center justify-between border-t border-paper-line pt-4">
           <span className="font-medium text-paper-muted">{t("total")}</span>
-          <span className="text-2xl font-bold">{formatMoney(price * guests, locale)}</span>
+          <span className="text-2xl font-semibold">{formatMoney(price * guests, locale)}</span>
         </div>
 
         {error ? (

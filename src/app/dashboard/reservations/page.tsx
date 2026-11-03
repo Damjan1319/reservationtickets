@@ -102,30 +102,30 @@ export default async function TableReservationsPage({
 
       <div className="mt-8 space-y-8">
         {hours.size === 0 ? (
-          <p className="text-cream/70">{t("emptyReservations")}</p>
+          <p className="text-muted">{t("emptyReservations")}</p>
         ) : (
           [...hours.entries()].map(([hour, rows]) => (
             <section key={hour}>
-              <h2 className="text-base font-bold text-cream">{hour}</h2>
+              <h2 className="text-base font-semibold text-cream">{hour}</h2>
               <div className="mt-3 space-y-3">
                 {rows.map((item) => (
                   <article
                     key={item.id}
                     className={
                       item.status === "PENDING"
-                        ? "flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-cream/35 bg-surface p-5 sm:p-6"
-                        : "flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-surface p-5 sm:p-6"
+                        ? "flex flex-wrap items-center justify-between gap-3 rounded-xl border border-cream/35 bg-surface p-5 sm:p-6"
+                        : "flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-surface p-5 sm:p-6"
                     }
                   >
                     <div>
-                      <p className="text-xl font-bold tracking-tight text-cream">
+                      <p className="text-xl font-semibold tracking-tight text-cream">
                         {item.mealType ? tb(`meals.${item.mealType}`) : t("tables")} · {item.guests}
                       </p>
-                      <p className="mt-1 text-sm text-cream/85">
+                      <p className="mt-1 text-sm text-cream">
                         {item.user.name}
-                        <span className="mt-0.5 block text-cream/55">{item.user.email}</span>
+                        <span className="mt-0.5 block text-muted">{item.user.email}</span>
                       </p>
-                      <p className="mt-1 text-xs text-cream/55">{formatTime(item.visitAt, locale)}</p>
+                      <p className="mt-1 text-xs text-muted">{formatTime(item.visitAt, locale)}</p>
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <DecideButtons id={item.id} status={item.status} />

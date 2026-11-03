@@ -213,7 +213,7 @@ export function Scanner({ locale, onNeedList }: { locale: string; onNeedList?: (
     <div className="flex h-full min-h-0 flex-1 flex-col gap-3">
       <div
         id="qr-reader"
-        className="relative min-h-[min(72dvh,640px)] flex-1 overflow-hidden rounded-3xl bg-black [&_img]:hidden [&_video]:absolute [&_video]:inset-0 [&_video]:h-full [&_video]:w-full [&_video]:object-cover"
+        className="relative min-h-[min(72dvh,640px)] flex-1 overflow-hidden rounded-xl bg-black [&_img]:hidden [&_video]:absolute [&_video]:inset-0 [&_video]:h-full [&_video]:w-full [&_video]:object-cover"
       />
       {!cameraOn ? (
         <button
@@ -283,11 +283,11 @@ export function Scanner({ locale, onNeedList }: { locale: string; onNeedList?: (
           <div
             role="dialog"
             aria-modal="true"
-            className="w-full max-w-md rounded-3xl bg-paper p-6 text-paper-text shadow-2xl sm:p-8"
+            className="w-full max-w-md rounded-xl bg-paper p-6 text-paper-text shadow-2xl sm:p-8"
             onClick={(event) => event.stopPropagation()}
           >
             {error ? (
-              <p className="text-3xl font-bold leading-snug">{t(error)}</p>
+              <p className="text-3xl font-semibold leading-snug">{t(error)}</p>
             ) : ticket && when ? (
               <div className="space-y-5">
                 <p
@@ -299,7 +299,7 @@ export function Scanner({ locale, onNeedList }: { locale: string; onNeedList?: (
                 </p>
 
                 <div>
-                  <h2 className="text-3xl font-bold tracking-tight">{ticket.guestName}</h2>
+                  <h2 className="text-3xl font-semibold tracking-tight">{ticket.guestName}</h2>
                   <p className="mt-2 text-lg font-semibold leading-snug">
                     {t("people", { count: ticket.guests })}
                     <span className="text-paper-muted"> · </span>
@@ -311,7 +311,7 @@ export function Scanner({ locale, onNeedList }: { locale: string; onNeedList?: (
                   <p className="mt-1 text-sm text-paper-muted">{ticket.guestEmail}</p>
                 </div>
 
-                {used ? <p className="text-2xl font-bold">{t("letIn")}</p> : null}
+                {used ? <p className="text-2xl font-semibold">{t("letIn")}</p> : null}
               </div>
             ) : null}
 

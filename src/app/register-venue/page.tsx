@@ -8,7 +8,7 @@ export default async function RegisterVenuePage() {
 
   return (
     <div className="mx-auto max-w-xl px-4 py-16">
-      <div className="rounded-2xl border border-paper-line bg-paper p-6 text-paper-text sm:p-8">
+      <div className="rounded-xl border border-paper-line bg-paper p-6 text-paper-text sm:p-8">
         <h1 className="text-2xl font-semibold tracking-tight">{t("registerTitle")}</h1>
         <p className="mt-2 text-sm text-paper-muted">{t("registerSubtitle")}</p>
         <div className="mt-8">

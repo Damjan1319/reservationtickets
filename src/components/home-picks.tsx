@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
-import { SearchResultCard } from "@/components/search-result-card";
+import { getLocale, getTranslations } from "next-intl/server";
+import { VenueTile } from "@/components/venue-tile";
 import { searchHref, type SearchQuery, type SearchVenue } from "@/lib/search";
+import { formatDateTime, formatMoney } from "@/lib/utils";
 
 export async function HomePicks({
   goingOut,
@@ -12,52 +13,84 @@ export async function HomePicks({
   sitDown: SearchVenue[];
   query: SearchQuery;
 }) {
-  const t = await getTranslations("search");
-  const th = await getTranslations("home");
+  const [t, th, tv, tr, locale] = await Promise.all([
+    getTranslations("search"),
+    getTranslations("home"),
+    getTranslations("venue"),
+    getTranslations("review"),
+    getLocale(),
+  ]);
+  const eventQuery: SearchQuery = { ...query, occasion: "EVENTS", kind: "event" };
+  const tableQuery: SearchQuery = { ...query, kind: "table" };
+
+  function eventStatus(venue: SearchVenue) {
+    const next = venue.nextEvent;
+    if (!next) return { status: t("noEvents"), statusTone: "muted" as const };
+    const parts = [formatDateTime(new Date(next.startsAt), locale), t("eventLeft", { count: next.left })];
+    if (next.price > 0) parts.push(t("fromPrice", { price: formatMoney(next.price, locale) }));
+    return { status: parts.join(" · "), statusTone: next.left > 0 ? ("ok" as const) : ("bad" as const) };
+  }
+
+  function tableStatus(venue: SearchVenue) {
+    if (venue.closed) return { status: t("closed"), statusTone: "bad" as const };
+    if (venue.tableLeft == null) return { status: t("tableOpen"), statusTone: "ok" as const };
+    return venue.bookableTable
+      ? { status: t("tableLeft", { count: venue.tableLeft }), statusTone: "ok" as const }
+      : { status: t("tableFull"), statusTone: "bad" as const };
+  }
+
+  const sections = [
+    {
+      key: "out",
+      title: t("goingOut"),
+      hint: t("goingOutHint"),
+      empty: t("goingOutEmpty"),
+      href: searchHref(eventQuery),
+      venues: goingOut,
+      query: eventQuery,
+      status: eventStatus,
+    },
+    {
+      key: "sit",
+      title: t("sitDown"),
+      hint: t("sitDownHint"),
+      empty: t("sitDownEmpty"),
+      href: searchHref(tableQuery),
+      venues: sitDown,
+      query: tableQuery,
+      status: tableStatus,
+    },
+  ];
 
   return (
     <>
-      <section id="venues" className="mx-auto max-w-6xl px-4 py-8 sm:py-10">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-bold tracking-normal text-cream sm:text-3xl">{t("goingOut")}</h2>
-            <p className="mt-2 text-sm font-medium tracking-normal text-cream/70">{t("goingOutHint")}</p>
+      {sections.map((section) => (
+        <section key={section.key} className="mx-auto max-w-6xl px-4 pb-16">
+          <div className="flex items-baseline justify-between gap-4 border-t border-line pt-6">
+            <div>
+              <h2 className="text-xl font-semibold text-cream">{section.title}</h2>
+              <p className="mt-1 text-sm text-muted">{section.hint}</p>
+            </div>
+            <Link href={section.href} className="shrink-0 text-sm font-medium text-muted hover:text-cream">
+              {th("ctaGuest")} →
+            </Link>
           </div>
-          <Link href={searchHref({ ...query, occasion: "EVENTS", kind: "event" })} className="text-sm font-semibold text-cream/75 hover:text-cream">
-            {th("ctaGuest")}
-          </Link>
-        </div>
-        {goingOut.length === 0 ? (
-          <p className="mt-6 font-medium text-cream/80">{t("goingOutEmpty")}</p>
-        ) : (
-          <div className="mt-6 grid gap-4">
-            {goingOut.map((venue) => (
-              <SearchResultCard key={venue.id} venue={venue} query={{ ...query, occasion: "EVENTS", kind: "event" }} />
-            ))}
-          </div>
-        )}
-      </section>
-
-      <section className="mx-auto max-w-6xl px-4 pb-8 sm:pb-10">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-bold tracking-normal text-cream sm:text-3xl">{t("sitDown")}</h2>
-            <p className="mt-2 text-sm font-medium tracking-normal text-cream/70">{t("sitDownHint")}</p>
-          </div>
-          <Link href={searchHref({ ...query, kind: "table" })} className="text-sm font-semibold text-cream/75 hover:text-cream">
-            {th("ctaGuest")}
-          </Link>
-        </div>
-        {sitDown.length === 0 ? (
-          <p className="mt-6 font-medium text-cream/80">{t("sitDownEmpty")}</p>
-        ) : (
-          <div className="mt-6 grid gap-4">
-            {sitDown.map((venue) => (
-              <SearchResultCard key={venue.id} venue={venue} query={{ ...query, kind: "table" }} />
-            ))}
-          </div>
-        )}
-      </section>
+          {section.venues.length === 0 ? (
+            <p className="mt-6 text-sm text-muted">{section.empty}</p>
+          ) : (
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {section.venues.map((venue) => (
+                <VenueTile
+                  key={venue.id}
+                  venue={venue}
+                  query={section.query}
+                  labels={{ type: tv(`types.${venue.type}`), reviews: tr("countLabel"), ...section.status(venue) }}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      ))}
     </>
   );
 }

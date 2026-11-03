@@ -15,14 +15,14 @@ export default async function SettingsPage() {
   return (
     <div>
       <PageHeader title={t("title")} />
-      <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-cream/70">
+      <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted">
         <span>{tv("publicLink")}</span>
         <code className="rounded-full border border-line bg-surface px-3 py-1 text-cream">
           {venuePublicHost(context.venue.slug)}
         </code>
         <CopyLink value={`https://${venuePublicHost(context.venue.slug)}`} />
       </div>
-      <div className="mt-8 max-w-xl rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
+      <div className="mt-8 max-w-xl rounded-xl border border-paper-line bg-paper p-5 text-paper-text sm:p-6">
         <VenueSettingsForm venue={context.venue} />
       </div>
     </div>

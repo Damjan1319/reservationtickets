@@ -83,7 +83,7 @@ export function TableBookingForm({
                   "rounded-xl border px-2.5 py-2.5 text-sm font-semibold",
                   mealType === meal
                     ? "border-paper-text bg-paper-text text-paper"
-                    : "border-paper-line bg-white text-paper-text hover:border-paper-text/50",
+                    : "border-paper-line bg-paper text-paper-text hover:border-paper-text/50",
                 )}
               >
                 {t(`meals.${meal}`)}
@@ -100,7 +100,7 @@ export function TableBookingForm({
             required
             min={todayInputValue()}
             defaultValue={initialDate && initialDate >= todayInputValue() ? initialDate : todayInputValue()}
-            className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 font-semibold text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
+            className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 font-semibold text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
           />
         </label>
 
@@ -112,7 +112,7 @@ export function TableBookingForm({
             type="time"
             required
             defaultValue={`${String(MEAL_HOURS[mealType]).padStart(2, "0")}:00`}
-            className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 font-semibold text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
+            className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 font-semibold text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
           />
         </label>
 

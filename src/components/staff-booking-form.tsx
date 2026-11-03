@@ -42,10 +42,10 @@ export function StaffBookingForm({ events }: { events: EventOption[] }) {
             type="button"
             onClick={() => setKind(next)}
             className={cn(
-              "rounded-2xl border px-3 py-3 text-sm font-semibold",
+              "rounded-xl border px-3 py-3 text-sm font-semibold",
               kind === next
                 ? "border-paper-text bg-paper-text text-paper"
-                : "border-paper-line bg-white text-paper-text hover:border-paper-text/50",
+                : "border-paper-line bg-paper text-paper-text hover:border-paper-text/50",
             )}
           >
             {next === "TABLE" ? td("tables") : td("tickets")}
@@ -80,10 +80,10 @@ export function StaffBookingForm({ events }: { events: EventOption[] }) {
                 type="button"
                 onClick={() => setMealType(meal)}
                 className={cn(
-              "rounded-2xl border px-3 py-3 text-sm font-semibold",
+              "rounded-xl border px-3 py-3 text-sm font-semibold",
               mealType === meal
                 ? "border-paper-text bg-paper-text text-paper"
-                : "border-paper-line bg-white text-paper-text hover:border-paper-text/50",
+                : "border-paper-line bg-paper text-paper-text hover:border-paper-text/50",
                 )}
               >
                 {t(`meals.${meal}`)}

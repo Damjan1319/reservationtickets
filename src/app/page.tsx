@@ -25,33 +25,32 @@ export default async function Home() {
         title={t("title")}
         subtitle={t("subtitle")}
         ctaVenue={t("ctaVenue")}
+        ctaVenueLink={t("ctaVenueLink")}
         cities={cities}
         searchDefaults={defaults}
       />
 
-      <section className="mx-auto max-w-6xl px-4 pt-10 pb-6 sm:pt-12">
-        <h2 className="text-2xl font-bold tracking-tight text-cream sm:text-3xl">{ts("browseTypes")}</h2>
+      <section className="mx-auto max-w-6xl px-4 pb-16">
+        <div className="border-t border-line pt-6">
+          <h2 className="text-xl font-semibold text-cream">{ts("browseTypes")}</h2>
+        </div>
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
           {VENUE_TYPES.filter((item) => item !== "BAR").map((type) => (
-            <Link
-              key={type}
-              href={searchHref({ ...defaults, type })}
-              className="group relative overflow-hidden rounded-2xl border border-line"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={venueCover(type)}
-                alt=""
-                className="h-44 w-full object-cover transition duration-300 group-hover:scale-[1.03] sm:h-52"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-              <p className="absolute bottom-4 left-4 text-xl font-bold text-cream">{tv(`types.${type}`)}</p>
+            <Link key={type} href={searchHref({ ...defaults, type })} prefetch className="group flex flex-col gap-3">
+              <span className="block overflow-hidden rounded-xl bg-surface-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={venueCover(type)}
+                  alt=""
+                  decoding="async"
+                  className="h-40 w-full object-cover transition duration-300 group-hover:scale-[1.02] sm:h-44"
+                />
+              </span>
+              <span className="text-base font-semibold text-cream">{tv(`types.${type}`)}</span>
             </Link>
           ))}
         </div>
       </section>
-
-      <CityDestinations destinations={destinations} defaults={defaults} />
 
       <HomePicks
         goingOut={featured.filter((venue) => venue.hasEventOnDate).slice(0, 6)}
@@ -59,20 +58,36 @@ export default async function Home() {
         query={defaults}
       />
 
-      <section className="mx-auto max-w-6xl px-4 pb-16 pt-4 sm:pb-20">
-        <p className="text-sm font-medium text-cream/70">{t("howTitle")}</p>
+      <CityDestinations destinations={destinations} defaults={defaults} />
+
+      <section className="mx-auto max-w-6xl px-4 pb-16">
+        <div className="border-t border-line pt-6">
+          <h2 className="text-xl font-semibold text-cream">{t("howTitle")}</h2>
+        </div>
         <div className="mt-6 grid gap-8 md:grid-cols-3">
           {[
-            ["01", t("step1Title"), t("step1Body")],
-            ["02", t("step2Title"), t("step2Body")],
-            ["03", t("step3Title"), t("step3Body")],
+            ["1", t("step1Title"), t("step1Body")],
+            ["2", t("step2Title"), t("step2Body")],
+            ["3", t("step3Title"), t("step3Body")],
           ].map(([num, title, body]) => (
             <div key={num}>
-              <p className="text-xs font-semibold tracking-wide text-cream/45">{num}</p>
-              <h2 className="mt-2 text-lg font-bold tracking-tight text-cream">{title}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-cream/70">{body}</p>
+              <p className="text-[13px] font-semibold text-muted">{num}</p>
+              <h3 className="mt-2 text-base font-semibold text-cream">{title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-20 sm:pb-24">
+        <div className="flex flex-col items-start justify-between gap-6 rounded-xl bg-surface-2/70 p-8 sm:flex-row sm:items-center sm:p-10">
+          <div>
+            <h2 className="text-2xl font-semibold text-cream">{t("venueBoxTitle")}</h2>
+            <p className="mt-2 text-[15px] text-muted">{t("venueBoxBody")}</p>
+          </div>
+          <Link href="/register-venue" className="btn btn-primary shrink-0 !px-5 !py-3 !text-[15px]">
+            {t("venueBoxCta")}
+          </Link>
         </div>
       </section>
     </div>

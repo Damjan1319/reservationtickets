@@ -23,14 +23,14 @@ export default async function StaffPage() {
         {members.map((member) => (
           <div
             key={member.id}
-            className="flex items-center justify-between gap-3 rounded-2xl border border-line bg-surface px-5 py-4"
+            className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface px-5 py-4"
           >
             <div>
               <p className="font-semibold text-cream">{member.user.name}</p>
-              <p className="text-sm text-cream/65">{member.user.email}</p>
+              <p className="text-sm text-muted">{member.user.email}</p>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-xs font-semibold text-cream/55">
+              <span className="text-xs font-semibold text-muted">
                 {member.role === "OWNER" ? t("roleOwner") : t("roleStaff")}
               </span>
               {member.role === "STAFF" ? (
@@ -49,7 +49,7 @@ export default async function StaffPage() {
           </div>
         ))}
       </div>
-      <div className="mt-8 max-w-xl rounded-2xl border border-paper-line bg-paper p-6 text-paper-text">
+      <div className="mt-8 max-w-xl rounded-xl border border-paper-line bg-paper p-6 text-paper-text">
         <AddStaffForm />
       </div>
     </div>

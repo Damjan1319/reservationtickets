@@ -101,7 +101,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
             const file = event.target.files?.[0];
             setPreview(file ? URL.createObjectURL(file) : venueCover(venue.type, venue.coverUrl));
           }}
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-sm text-paper-text outline-none file:mr-3 file:rounded-lg file:border-0 file:bg-paper-text file:px-3 file:py-1.5 file:font-semibold file:text-paper focus:border-paper-text"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-sm text-paper-text outline-none file:mr-3 file:rounded-lg file:border-0 file:bg-paper-text file:px-3 file:py-1.5 file:font-semibold file:text-paper focus:border-paper-text"
         />
         <span className="block text-xs text-paper-muted">{ts("coverHint")}</span>
       </label>
@@ -111,7 +111,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
           name="name"
           defaultValue={venue.name}
           required
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
@@ -119,7 +119,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
         <select
           name="type"
           defaultValue={venue.type}
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         >
           {VENUE_TYPES.map((type) => (
             <option key={type} value={type}>
@@ -134,7 +134,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
           name="city"
           defaultValue={venue.city}
           required
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
@@ -143,7 +143,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
           name="address"
           defaultValue={venue.address}
           required
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
@@ -153,7 +153,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
           defaultValue={venue.description}
           required
           rows={4}
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
@@ -161,7 +161,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
         <input
           value={venue.pib}
           readOnly
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-muted"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-muted"
         />
       </label>
       <label className="block space-y-2">
@@ -171,7 +171,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
           type="tel"
           defaultValue={venue.phone}
           required
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
@@ -181,7 +181,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
           type="url"
           defaultValue={venue.proofUrl}
           required
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
       </label>
       <label className="block space-y-2">
@@ -191,7 +191,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
           type="number"
           min={0}
           defaultValue={venue.tableCapacity}
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
         <span className="block text-xs text-paper-muted">{ts("tableCapacityHint")}</span>
       </label>
@@ -202,7 +202,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
             name="opensAt"
             type="time"
             defaultValue={venue.opensAt}
-            className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
+            className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
           />
         </label>
         <label className="block space-y-2">
@@ -211,11 +211,11 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
             name="closesAt"
             type="time"
             defaultValue={venue.closesAt}
-            className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
+            className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none [color-scheme:light] focus:border-paper-text"
           />
         </label>
       </div>
-      <label className="flex items-center gap-3 rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text">
+      <label className="flex items-center gap-3 rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text">
         <input name="closed" type="checkbox" defaultChecked={venue.closed} className="h-4 w-4" />
         <span className="text-sm font-semibold">{ts("closed")}</span>
       </label>
@@ -227,7 +227,7 @@ export function VenueSettingsForm({ venue }: VenueSettingsFormProps) {
           min={15}
           max={240}
           defaultValue={venue.noShowMinutes}
-          className="w-full rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+          className="w-full rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none focus:border-paper-text"
         />
         <span className="block text-xs text-paper-muted">{ts("noShowHint")}</span>
       </label>

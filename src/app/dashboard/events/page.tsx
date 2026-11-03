@@ -31,7 +31,7 @@ export default async function DashboardEventsPage() {
         }
       />
       {events.length === 0 ? (
-        <p className="mt-8 text-cream/70">{t("emptyEvents")}</p>
+        <p className="mt-8 text-muted">{t("emptyEvents")}</p>
       ) : (
         <div className="mt-6 space-y-3">
           {events.map((event) => {
@@ -39,15 +39,15 @@ export default async function DashboardEventsPage() {
             return (
               <div
                 key={event.id}
-                className="flex flex-col gap-3 rounded-2xl border border-line bg-surface p-5 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-3 rounded-xl border border-line bg-surface p-5 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
-                  <p className="text-xl font-bold tracking-tight text-cream">{event.title}</p>
-                  <p className="mt-1 text-sm font-medium text-cream/80">
+                  <p className="text-xl font-semibold tracking-tight text-cream">{event.title}</p>
+                  <p className="mt-1 text-sm font-medium text-cream">
                     {te("act")} · {event.artist.trim() || context.venue.name}
                   </p>
-                  <p className="mt-1 text-sm text-cream/65">{formatDateTime(event.startsAt, locale)}</p>
-                  <p className="mt-1 text-sm text-cream/55">
+                  <p className="mt-1 text-sm text-muted">{formatDateTime(event.startsAt, locale)}</p>
+                  <p className="mt-1 text-sm text-muted">
                     {reserved}/{event.capacity}
                   </p>
                 </div>

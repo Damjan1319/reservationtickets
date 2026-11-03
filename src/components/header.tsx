@@ -4,6 +4,7 @@ import { auth, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { getStaffContext } from "@/lib/staff";
 import { HeaderBack } from "@/components/header-back";
+import { Logo } from "@/components/logo";
 import { SiteNav } from "@/components/site-nav";
 import { getTheme } from "@/lib/theme";
 
@@ -34,16 +35,16 @@ export async function Header() {
     : [
         { href: "/", label: t("home") },
         { href: "/register-venue", label: t("registerVenue") },
-        { href: "/login", label: t("login") },
+        { href: "/login", label: t("login"), kind: "primary" as const },
       ];
 
   return (
-    <header className="site-header sticky top-0 z-40 bg-bg/80 backdrop-blur-md">
-      <div className="relative mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3">
+    <header className="site-header sticky top-0 z-40 bg-bg/90 backdrop-blur-md">
+      <div className="relative mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4">
         <div className="flex min-w-0 items-center gap-1">
           <HeaderBack label={tc("back")} />
-          <Link href="/" className="text-[1.15rem] font-semibold tracking-tight text-cream">
-            {tc("appName")}
+          <Link href="/" aria-label={tc("appName")}>
+            <Logo />
           </Link>
         </div>
         <SiteNav

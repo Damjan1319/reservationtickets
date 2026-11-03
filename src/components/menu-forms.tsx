@@ -13,7 +13,7 @@ export function CreateMenuForm() {
 
   return (
     <form
-      className="grid gap-3 rounded-2xl border border-paper-line bg-paper p-5 text-paper-text sm:grid-cols-[1fr_10rem_auto]"
+      className="grid gap-3 rounded-xl border border-paper-line bg-paper p-5 text-paper-text sm:grid-cols-[1fr_10rem_auto]"
       onSubmit={(event) => {
         event.preventDefault();
         const form = event.currentTarget;
@@ -32,11 +32,11 @@ export function CreateMenuForm() {
         name="title"
         required
         placeholder={t("menuTitle")}
-        className="rounded-xl border border-paper-line bg-white px-4 py-3 text-paper-text outline-none focus:border-paper-text"
+        className="rounded-xl border border-paper-line bg-paper px-4 py-3 text-paper-text outline-none focus:border-paper-text"
       />
       <select
         name="kind"
-        className="rounded-xl border border-paper-line bg-white px-3 py-3 text-sm font-semibold text-paper-text outline-none"
+        className="rounded-xl border border-paper-line bg-paper px-3 py-3 text-sm font-semibold text-paper-text outline-none"
       >
         {MENU_KINDS.map((kind) => (
           <option key={kind} value={kind}>
@@ -107,7 +107,7 @@ export function AddMenuItemForm({ menuId }: { menuId: string }) {
         name="name"
         required
         placeholder={t("itemName")}
-        className="rounded-xl border border-paper-line bg-white px-3 py-2.5 text-sm text-paper-text outline-none focus:border-paper-text"
+        className="rounded-xl border border-paper-line bg-paper px-3 py-2.5 text-sm text-paper-text outline-none focus:border-paper-text"
       />
       <input
         name="price"
@@ -116,17 +116,17 @@ export function AddMenuItemForm({ menuId }: { menuId: string }) {
         step={1}
         defaultValue={0}
         placeholder={t("itemPrice")}
-        className="rounded-xl border border-paper-line bg-white px-3 py-2.5 text-sm text-paper-text outline-none focus:border-paper-text"
+        className="rounded-xl border border-paper-line bg-paper px-3 py-2.5 text-sm text-paper-text outline-none focus:border-paper-text"
       />
       <input
         name="section"
         placeholder={t("itemSection")}
-        className="rounded-xl border border-paper-line bg-white px-3 py-2.5 text-sm text-paper-text outline-none focus:border-paper-text"
+        className="rounded-xl border border-paper-line bg-paper px-3 py-2.5 text-sm text-paper-text outline-none focus:border-paper-text"
       />
       <input
         name="description"
         placeholder={t("itemDescription")}
-        className="rounded-xl border border-paper-line bg-white px-3 py-2.5 text-sm text-paper-text outline-none focus:border-paper-text"
+        className="rounded-xl border border-paper-line bg-paper px-3 py-2.5 text-sm text-paper-text outline-none focus:border-paper-text"
       />
       <button type="submit" disabled={pending} className="btn btn-primary sm:col-span-2">
         {t("addItem")}

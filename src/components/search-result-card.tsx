@@ -1,125 +1,164 @@
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { isEventIntent, isTableIntent, resultHref, type SearchQuery, type SearchVenue } from "@/lib/search";
-import { RatingBadge } from "@/components/review-form";
 import { formatDateTime, formatMoney } from "@/lib/utils";
 
-export async function SearchResultCard({
+type SearchText = Awaited<ReturnType<typeof getTranslations<"search">>>;
+type VenueText = Awaited<ReturnType<typeof getTranslations<"venue">>>;
+
+export async function SearchResultList({
+  venues,
+  query,
+  className = "grid gap-4",
+}: {
+  venues: SearchVenue[];
+  query: SearchQuery;
+  className?: string;
+}) {
+  const [t, tv, tr, locale] = await Promise.all([
+    getTranslations("search"),
+    getTranslations("venue"),
+    getTranslations("review"),
+    getLocale(),
+  ]);
+  const countLabel = tr("countLabel");
+
+  return (
+    <div className={className}>
+      {venues.map((venue, index) => (
+        <SearchResultCard
+          key={venue.id}
+          venue={venue}
+          query={query}
+          t={t}
+          tv={tv}
+          countLabel={countLabel}
+          locale={locale}
+          eagerImage={index === 0}
+        />
+      ))}
+    </div>
+  );
+}
+
+function SearchResultCard({
   venue,
   query,
+  t,
+  tv,
+  countLabel,
+  locale,
+  eagerImage,
 }: {
   venue: SearchVenue;
   query: SearchQuery;
+  t: SearchText;
+  tv: VenueText;
+  countLabel: string;
+  locale: string;
+  eagerImage: boolean;
 }) {
-  const t = await getTranslations("search");
-  const tv = await getTranslations("venue");
-  const tr = await getTranslations("review");
-  const locale = await getLocale();
   const href = resultHref(venue, query);
   const eventMode = isEventIntent(query);
   const tableMode = isTableIntent(query);
   const cta = eventMode ? t("takeTicket") : tableMode ? t("seeMenu") : t("seeVenue");
 
   return (
-    <article className="relative overflow-hidden rounded-2xl border border-paper-line bg-paper text-paper-text md:grid md:grid-cols-[220px_1fr_200px]">
+    <article className="relative flex flex-col gap-4 border-t border-line py-5 text-paper-text sm:flex-row sm:gap-5">
       <Link href={href} className="absolute inset-0 z-10" aria-label={`${venue.name}. ${cta}`} />
 
-      <div className="relative h-48 md:h-full md:min-h-[11.5rem]">
+      <div className="h-44 w-full shrink-0 overflow-hidden rounded-xl bg-surface-2 sm:h-32 sm:w-44">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={venue.coverUrl} alt="" className="h-full w-full object-cover" />
+        <img
+          src={venue.coverUrl}
+          alt=""
+          decoding="async"
+          loading={eagerImage ? "eager" : "lazy"}
+          className="h-full w-full object-cover"
+        />
       </div>
 
-      <div className="relative flex flex-col justify-between p-5">
-        <div>
-          <p className="text-xs font-semibold text-paper-muted">
-            {tv(`types.${venue.type}`)} · {venue.city}
-            {venue.hasMenu && !eventMode ? ` · ${t("hasMenu")}` : ""}
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+        <p className="text-xs font-medium text-paper-muted">
+          {tv(`types.${venue.type}`)} · {venue.city}
+          {venue.hasMenu && !eventMode ? ` · ${t("hasMenu")}` : ""}
+        </p>
+        <h2 className="text-lg font-semibold tracking-[-0.01em]">{venue.name}</h2>
+        <p className="text-[13px] text-paper-muted">
+          {venue.ratingAvg && venue.ratingCount > 0 ? `★ ${venue.ratingAvg.toFixed(1)} · ${venue.ratingCount} ${countLabel}` : null}
+          {venue.ratingAvg && venue.ratingCount > 0 && venue.address && venue.address !== venue.city ? " · " : null}
+          {venue.address && venue.address !== venue.city ? venue.address : null}
+        </p>
+        {venue.promoTitle ? (
+          <p className="mt-1 self-start rounded-full border border-paper-line px-2.5 py-0.5 text-xs font-medium">
+            {venue.promoTitle}
           </p>
-          {venue.promoTitle ? (
-            <p className="mt-2 inline-flex rounded-full bg-paper-text px-2.5 py-1 text-xs font-semibold text-paper">
-              {venue.promoTitle}
-            </p>
-          ) : null}
-          <h2 className="mt-1 text-xl font-bold tracking-tight">{venue.name}</h2>
-          <div className="mt-2">
-            <RatingBadge overall={venue.ratingAvg} count={venue.ratingCount} label={tr("countLabel")} />
-          </div>
-          {venue.address && venue.address !== venue.city ? (
-            <p className="mt-1 text-sm font-medium text-paper-muted">{venue.address}</p>
-          ) : null}
-          {venue.description && !eventMode ? (
-            <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-paper-muted">{venue.description}</p>
-          ) : null}
-          {eventMode && venue.events.length > 0 ? (
-            <ul className="relative z-20 mt-3 space-y-2">
-              {venue.events.map((event) => (
-                <li key={event.id}>
-                  <Link
-                    href={`/v/${venue.slug}/events/${event.id}?guests=${query.guests}`}
-                    className="text-sm font-semibold hover:underline"
-                  >
-                    {event.title}
-                    <span className="mt-0.5 block font-medium text-paper-muted">
-                      {formatDateTime(new Date(event.startsAt), locale)}
-                      {event.price > 0 ? ` · ${formatMoney(event.price, locale)}` : ""}
-                      {` · ${t("eventLeft", { count: event.left })}`}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : null}
-        </div>
-        {!eventMode ? (
-          <p className="mt-4 text-sm font-medium text-paper-muted">
-            {t("hours", { opens: venue.opensAt, closes: venue.closesAt })}
-          </p>
+        ) : null}
+        {venue.description && !eventMode ? (
+          <p className="line-clamp-2 text-sm leading-relaxed text-paper-muted">{venue.description}</p>
+        ) : null}
+        {eventMode && venue.events.length > 0 ? (
+          <ul className="relative z-20 mt-1 space-y-2">
+            {venue.events.map((event) => (
+              <li key={event.id}>
+                <Link
+                  href={`/v/${venue.slug}/events/${event.id}?guests=${query.guests}`}
+                  className="text-sm font-semibold hover:underline"
+                >
+                  {event.title}
+                  <span className="mt-0.5 block font-normal text-paper-muted">
+                    {formatDateTime(new Date(event.startsAt), locale)}
+                    {event.price > 0 ? ` · ${formatMoney(event.price, locale)}` : ""}
+                    {` · ${t("eventLeft", { count: event.left })}`}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         ) : null}
       </div>
 
-      <div className="relative flex flex-col justify-between border-t border-paper-line p-5 md:border-l md:border-t-0">
-        <div className="space-y-1.5 text-sm font-semibold">
+      <div className="flex shrink-0 flex-row items-end justify-between gap-3 sm:w-48 sm:flex-col sm:text-right">
+        <div className="space-y-1 text-sm">
           {eventMode ? (
             venue.nextEvent ? (
               <>
-                <p>
+                <p className="font-semibold text-success">
                   {t("eventLeft", { count: venue.nextEvent.left })}
                   {venue.nextEvent.price > 0
                     ? ` · ${t("fromPrice", { price: formatMoney(venue.nextEvent.price, locale) })}`
                     : null}
                 </p>
-                <p className="font-medium text-paper-muted">
-                  {formatDateTime(new Date(venue.nextEvent.startsAt), locale)}
-                </p>
+                <p className="text-[13px] text-paper-muted">{formatDateTime(new Date(venue.nextEvent.startsAt), locale)}</p>
               </>
             ) : (
-              <p className="font-medium text-paper-muted">{t("noEvents")}</p>
+              <p className="text-paper-muted">{t("noEvents")}</p>
             )
           ) : (
             <>
               {venue.closed ? (
-                <p className="text-danger">{t("closed")}</p>
+                <p className="font-semibold text-danger">{t("closed")}</p>
               ) : venue.tableLeft != null ? (
-                <p className={venue.bookableTable ? "text-paper-text" : "text-danger"}>
+                <p className={venue.bookableTable ? "font-semibold text-success" : "font-semibold text-danger"}>
                   {venue.bookableTable ? t("tableLeft", { count: venue.tableLeft }) : t("tableFull")}
                 </p>
               ) : (
-                <p>{t("tableOpen")}</p>
+                <p className="font-semibold">{t("tableOpen")}</p>
               )}
               {!tableMode && venue.nextEvent ? (
-                <p className="font-medium text-paper-muted">
+                <p className="text-[13px] text-paper-muted">
                   {t("eventLeft", { count: venue.nextEvent.left })}
                   {venue.nextEvent.price > 0
                     ? ` · ${t("fromPrice", { price: formatMoney(venue.nextEvent.price, locale) })}`
                     : null}
                 </p>
-              ) : null}
+              ) : (
+                <p className="text-[13px] text-paper-muted">{t("hours", { opens: venue.opensAt, closes: venue.closesAt })}</p>
+              )}
             </>
           )}
         </div>
-        <div className="mt-4">
-          <span className="btn btn-primary btn-full pointer-events-none">{cta}</span>
-        </div>
+        <span className="btn btn-ghost pointer-events-none shrink-0">{cta}</span>
       </div>
     </article>
   );

@@ -74,7 +74,7 @@ export function VenueMenu({ menus }: { menus: Menu[] }) {
   if (sections.length === 0) return null;
 
   return (
-    <div className="rounded-2xl border border-paper-line bg-paper text-paper-text">
+    <div className="rounded-xl border border-paper-line bg-paper text-paper-text">
       {sections.length > 1 ? (
         <div className="flex gap-2 overflow-x-auto border-b border-paper-line px-4 py-3">
           <button
@@ -85,7 +85,7 @@ export function VenueMenu({ menus }: { menus: Menu[] }) {
             }}
             className={cn(
               "shrink-0 rounded-full px-3 py-1.5 text-sm font-semibold",
-              filter === "all" ? "bg-paper-text text-paper" : "bg-white text-paper-muted hover:text-paper-text",
+              filter === "all" ? "bg-paper-text text-paper" : "bg-paper text-paper-muted hover:text-paper-text",
             )}
           >
             {t("allSections")}
@@ -102,7 +102,7 @@ export function VenueMenu({ menus }: { menus: Menu[] }) {
                 "shrink-0 rounded-full px-3 py-1.5 text-sm font-semibold",
                 filter === section.key
                   ? "bg-paper-text text-paper"
-                  : "bg-white text-paper-muted hover:text-paper-text",
+                  : "bg-paper text-paper-muted hover:text-paper-text",
               )}
             >
               {section.label}
