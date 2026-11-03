@@ -26,6 +26,7 @@ export default async function Home() {
         subtitle={t("subtitle")}
         ctaVenue={t("ctaVenue")}
         ctaVenueLink={t("ctaVenueLink")}
+        card={{ status: t("heroCardStatus"), title: t("heroCardTitle"), meta: t("heroCardMeta") }}
         cities={cities}
         searchDefaults={defaults}
       />
@@ -34,19 +35,28 @@ export default async function Home() {
         <div className="border-t border-line pt-6">
           <h2 className="text-xl font-semibold text-cream">{ts("browseTypes")}</h2>
         </div>
-        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
           {VENUE_TYPES.filter((item) => item !== "BAR").map((type) => (
-            <Link key={type} href={searchHref({ ...defaults, type })} prefetch className="group flex flex-col gap-3">
-              <span className="block overflow-hidden rounded-xl bg-surface-2">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={venueCover(type)}
-                  alt=""
-                  decoding="async"
-                  className="h-40 w-full object-cover transition duration-300 group-hover:scale-[1.02] sm:h-44"
-                />
+            <Link
+              key={type}
+              href={searchHref({ ...defaults, type })}
+              prefetch
+              className="group flex items-center gap-4 rounded-xl border border-line p-3 pr-4 transition hover:border-cream/25"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={venueCover(type)}
+                alt=""
+                decoding="async"
+                className="h-16 w-16 shrink-0 rounded-lg bg-surface-2 object-cover saturate-[.8]"
+              />
+              <span className="min-w-0 flex-1">
+                <span className="block text-base font-semibold text-cream">{tv(`types.${type}`)}</span>
+                <span className="mt-0.5 block truncate text-[13px] text-muted">{t(`typeHints.${type}`)}</span>
               </span>
-              <span className="text-base font-semibold text-cream">{tv(`types.${type}`)}</span>
+              <span aria-hidden className="text-muted transition group-hover:translate-x-0.5 group-hover:text-cream">
+                →
+              </span>
             </Link>
           ))}
         </div>

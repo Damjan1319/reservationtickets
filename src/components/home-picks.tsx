@@ -64,7 +64,9 @@ export async function HomePicks({
 
   return (
     <>
-      {sections.map((section) => (
+      {sections
+        .filter((section) => section.venues.length > 0)
+        .map((section) => (
         <section key={section.key} className="mx-auto max-w-6xl px-4 pb-16">
           <div className="flex items-baseline justify-between gap-4 border-t border-line pt-6">
             <div>

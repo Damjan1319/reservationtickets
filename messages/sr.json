@@ -56,7 +56,16 @@
     "ctaVenueLink": "Otvori profil",
     "venueBoxTitle": "Imaš restoran, kafić ili klub?",
     "venueBoxBody": "Rezervacije, karte i skener na ulazu na jednom mestu.",
-    "venueBoxCta": "Otvori lokal"
+    "venueBoxCta": "Otvori lokal",
+    "typeHints": {
+      "RESTAURANT": "Ručak, večera i proslave",
+      "CAFE": "Kafa, doručak i druženje",
+      "CLUB": "Žurke, DJ i živa svirka",
+      "BAR": "Kokteli i piće"
+    },
+    "heroCardStatus": "Potvrđeno",
+    "heroCardTitle": "Sto za 2 · danas 19:30",
+    "heroCardMeta": "QR je u tvom nalogu"
   },
   "search": {
     "where": "Grad?",

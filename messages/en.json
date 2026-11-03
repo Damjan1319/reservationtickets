@@ -56,7 +56,16 @@
     "ctaVenueLink": "Create a profile",
     "venueBoxTitle": "Run a restaurant, café or club?",
     "venueBoxBody": "Reservations, tickets and a door scanner in one place.",
-    "venueBoxCta": "List your venue"
+    "venueBoxCta": "List your venue",
+    "typeHints": {
+      "RESTAURANT": "Lunch, dinner and celebrations",
+      "CAFE": "Coffee, breakfast and catching up",
+      "CLUB": "Parties, DJs and live music",
+      "BAR": "Cocktails and drinks"
+    },
+    "heroCardStatus": "Confirmed",
+    "heroCardTitle": "Table for 2 · today 19:30",
+    "heroCardMeta": "Your QR is in your account"
   },
   "search": {
     "where": "City?",
